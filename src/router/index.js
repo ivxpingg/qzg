@@ -4,6 +4,8 @@ import iView from 'iview';
 import routes from './routers';
 import { getToken } from '@/lib/util';
 import store from '../store/store';
+import Config from '../config';
+import MD5 from 'md5';
 Vue.use(Router);
 const router = new Router({
     base: '/',
@@ -14,38 +16,17 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();
-    // let router = new Router();
-    next();
-    // if (to.path === 'login' || !to.meta.requireAuth) {
-    //     next();
-    //     return;
-    // }
-    // if (to.meta.requireAuth && getToken()) {
-    //     next();
-    // }
-    // else {
-    //     next({
-    //         name: 'login'
-    //     })
-    // }
 
-
-    // if (!token && to.name !== LOGIN_PAGE_NAME) {
-    //     // 未登录且要跳转的页面不是登录页
-    //     next({
-    //         name: LOGIN_PAGE_NAME // 跳转到登录页
-    //     })
-    // } else if (!token && to.name === LOGIN_PAGE_NAME) {
-    //     // 未登陆且要跳转的页面是登录页
-    //     next() // 跳转
-    // } else if (token && to.name === LOGIN_PAGE_NAME) {
-    //     // 已登录且要跳转的页面是登录页
-    //     next({
-    //         name: 'home' // 跳转到home页
-    //     })
-    // } else {
-    //     next();
-    // }
+    if(to.query.loginName !== undefined) {
+        let loginName = to.query.loginName;
+        let password = MD5(to.query.password + Config.password_key);
+        store._actions.handleLogin[0]({loginName , password }).then(res => {
+            next();
+        });
+    }
+    else {
+        next();
+    }
 });
 
 router.afterEach(() => {

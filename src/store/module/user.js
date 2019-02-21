@@ -34,18 +34,16 @@ export default {
     actions: {
         // 登录
         handleLogin ({ commit }, {loginName, password}) {
+
             loginName = loginName.trim();
             return new Promise((resolve, reject) => {
                 axios({
                     method: 'post',
                     url: '/ajaxLogin',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                    },
-                    data: {
+                    data: JSON.stringify({
                         loginName,
                         password
-                    }
+                    })
                 }).then((res) => {
                     commit('setToken', res.data.token);
                     setTagNavListInLocalstorage([]);
