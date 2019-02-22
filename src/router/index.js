@@ -21,7 +21,9 @@ router.beforeEach((to, from, next) => {
         let loginName = to.query.loginName;
         let password = MD5(to.query.password + Config.password_key);
         store._actions.handleLogin[0]({loginName , password }).then(res => {
-            next();
+            store._actions.getMenuList[0]().then(res => {
+                next();
+            });
         });
     }
     else {

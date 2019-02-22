@@ -47,6 +47,7 @@ export default {
     },
     mutations: {
         setMenuList (state, mList) {
+
             setMenuAuth(mList, state.auth);
             state.menuList = transformMenu(mList);
         },
@@ -90,8 +91,9 @@ export default {
     actions: {
         getMenuList({commit}) {
             return new Promise(((resolve, reject) => {
+                // 临时测试添加的清除
+                setMenuListInLocalstorage(null);
                 let menuList = getMenuListInLocalstorage();
-
                 if (!menuList) {
                     axios({
                         method: 'get',

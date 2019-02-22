@@ -13,7 +13,7 @@ export default {
         return {};
     },
     created() {
-        // this.getMenuList();
+        this.getMenuList();
     },
     mounted() {
         let that = this;

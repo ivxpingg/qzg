@@ -219,10 +219,38 @@ const StaffEducationAndTraining = [
     }
 ];
 
+
+// 系统管理
+const SystemManage = [
+    {
+        path: '/SystemManage',
+        name: 'SystemManage',
+        component: Main,
+        meta: {
+            icon: 'ios-settings',
+            title: '系统管理',
+            requireAuth: true
+        },
+        children: [
+            {
+                path: 'dataDict',
+                name: 'dataDict',
+                meta: {
+                    icon: '_data-dict',
+                    title: '数据字典',
+                    requireAuth: true
+                },
+                component: () => import('@/views/SystemManage/dataDict/dataDict.vue')
+            }
+        ]
+    }
+]
+
 export default [
     ...Login,
     ...Home,
     ...DocumentManage,
     ...OrganizationManage,
-    ...StaffEducationAndTraining
+    ...StaffEducationAndTraining,
+    ...SystemManage
 ]

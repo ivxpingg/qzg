@@ -18,7 +18,14 @@
         }
       }
   }
+
+  // 针对IE9做滚动条修复
+  .ivu-table-body {
+    overflow: auto\9;
+  }
 }
+
+
 
 /**
 * 权限 隐藏和显示

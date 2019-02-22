@@ -6,13 +6,15 @@ import router from './router';
 import store from './store/store';
 import Ajax from '@/lib/axios';
 import '@/style/app.scss';
-
+import vIvxFilterBox from './components/ivxFilterBox/ivxFilterBox';
 
 Vue.config.productionTip = process.env.NODE_ENV === 'development';
 
 Vue.use(iView, {
     transfer: true
 });
+
+Vue.component('vIvxFilterBox', vIvxFilterBox);
 
 Vue.prototype.$http = Ajax;
 
