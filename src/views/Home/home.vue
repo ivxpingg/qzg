@@ -1,6 +1,8 @@
 <template>
     <div class="home-container" ref="home">
-        <vUploader @on-uploadSuccess="onUploadSuccess" @on-removeFile="onRemoveFile" >
+        <vUploader @on-uploadSuccess="onUploadSuccess"
+                   fileType="head_portrait"
+                   @on-removeFile="onRemoveFile" >
 
             <Button type="primary" icon="ios-cloud-upload-outline">上传文件</Button>
         </vUploader>
@@ -15,11 +17,7 @@
         data() {
             return { }
         },
-        mounted () {
-
-
-
-        },
+        mounted () {},
         methods: {
 
             onUploadSuccess(response, file, fileList) {

@@ -1,10 +1,10 @@
 <template>
-    <div class="webuploader-container">
+    <div class="uploader-container">
         <div class="btns">
             <div ref="btn"><slot></slot></div>
         </div>
         <!--用来存放文件信息-->
-        <vUploadList ref="vUploadList" :files="files" @removeFile="removeFile"></vUploadList>
+        <vUploadList v-if="!hiddenList" ref="vUploadList" :files="files" @removeFile="removeFile"></vUploadList>
     </div>
 </template>
 
@@ -35,18 +35,36 @@
                 default() {
                     return {};
                 }
+            },
+            fileType: {
+                type: String,
+                default: ''
+            },
+            hiddenList: {
+                type: Boolean,
+                default() {
+                    return false
+                }
+            },
+            // 是否手动初始化上传组件，组件如果在隐藏元素下，初始化会有问题，需要调用手动初始化
+            handlerInit: {
+                type: Boolean,
+                default() {
+                    return false;
+                }
             }
+
         },
         computed: {
             _serverUrl() {
-                return this.server || this.action;
+                return this.server || this.action + this.fileType;
             }
         },
         data() {
             return {
                 uploader: null,
                 // 上传地址
-                action: Config[Config.env].origin + Config[Config.env].ajaxUrl + '/file/upload/user_attach',
+                action: Config[Config.env].origin + Config[Config.env].ajaxUrl + '/file/upload/',
                 swf: Config[Config.env].origin + '/webuploader/Uploader.swf',
                 // 文件列表队列
                 files: [],
@@ -59,9 +77,8 @@
             this.initEvent();
         },
         methods: {
-            init() {
-            },
             initWebuploader() {
+
                 if ( !WebUploader.Uploader.support() ) {
                     alert( 'Web Uploader 不支持您的浏览器！如果你使用的是IE浏览器，请尝试升级 flash 播放器');
                     throw new Error( 'WebUploader does not support the browser you are using.' );
@@ -73,7 +90,6 @@
                         id: this.$refs.btn,
                         multiple: this.multiple
                     },
-
                     accept: this.accept,
                     thumb: {
                         width: 110,
@@ -212,8 +228,10 @@
 </script>
 
 <style lang="scss">
-    .webuploader-container {
+    .uploader-container {
         .webuploader-container {
+            width: 99px;
+            height: 33px;
             position: relative;
         }
         .webuploader-element-invisible {
@@ -225,6 +243,7 @@
             position: relative;
             display: inline-block;
         }
+
         /*.webuploader-pick {*/
             /*position: relative;*/
             /*display: inline-block;*/

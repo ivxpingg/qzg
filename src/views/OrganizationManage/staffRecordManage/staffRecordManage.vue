@@ -47,6 +47,13 @@
             <Button type="primary" icon="md-add" @click="addInStaff">新增在编人员</Button>
             <Button type="primary" icon="md-add" @click="addInStaff">新增编外人员</Button>
             <Button type="info" icon="md-download" @click="addInStaff">导出花名册</Button>
+
+            <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">
+                <Option v-for="item in dict_employeeType"
+                        :key="item.id"
+                        :value="item.value"
+                        :label="item.label"></Option>
+            </Select>
         </vIvxFilterBox>
 
         <div class="ivx-table-box">
@@ -65,10 +72,21 @@
         </div>
 
         <!--在编人员-->
-        <vInStaffHandle ref="modal_inStaffHandle"></vInStaffHandle>
+        <vInStaffHandle ref="modal_inStaffHandle"
+                        :employeeId="inStaff_employeeId"
+                        :type="inStaffType"></vInStaffHandle>
 
         <!--新增编外人员-->
-        <vOutStaffHandle></vOutStaffHandle>
+        <vOutStaffHandle ref="modal_outStaffHandle"
+                         :employeeId="outStaff_employeeId"
+                         :type="outStaffType"></vOutStaffHandle>
+        <!--任职记录-->
+        <vWorkRecord ref="modal_workRecord"
+                     :employeeId="workRecord_employeeId"></vWorkRecord>
+        <!--人事调整-->
+        <vStaffAdjust ref="modal_staffAdjust"
+                      :employeeId="staffAdjust_employeeId"
+                      :employeeName="staffAdjust_employeeName"></vStaffAdjust>
     </div>
 </template>
 
@@ -77,10 +95,12 @@
     import authMixin from '../../../lib/mixin/authMixin';
     import vInStaffHandle from './addOrEditOrView/inStaffHandle';
     import vOutStaffHandle from './addOrEditOrView/outStaffHandle';
+    import vWorkRecord from './workRecord/workRecord';
+    import vStaffAdjust from './staffAdjust/staffAdjust';
     export default {
         name: 'staffRecordManage',  // 员工档案管理
         mixins: [comMixin, authMixin],
-        components: {vInStaffHandle, vOutStaffHandle},
+        components: {vInStaffHandle, vOutStaffHandle, vWorkRecord, vStaffAdjust},
         computed: {
             _tableColumns() {
                 let column = [{ title: '操作', minWidth: 360, align: 'center',
@@ -95,8 +115,16 @@
                                 },
                                 on: {
                                     click: () => {
-                                        this.editCurrentRow.departmentId = params.row.departmentId;
-                                        this.$refs.modal_editDepartment.modalValue = true;
+                                        if (params.row.employeeType === 'in-staff') {
+                                            this.inStaffType = 'edit';
+                                            this.inStaff_employeeId = params.row.employeeId;
+                                            this.$refs.modal_inStaffHandle.modalValue = true;
+                                        }
+                                        else if (params.row.employeeType === 'out-staff') {
+                                            this.outStaffType = 'edit';
+                                            this.outStaff_employeeId = params.row.employeeId;
+                                            this.$refs.modal_outStaffHandle.modalValue = true;
+                                        }
                                     }
                                 }
                             }, '编辑'));
@@ -110,8 +138,16 @@
                             },
                             on: {
                                 click: () => {
-                                    this.editCurrentRow.departmentId = params.row.departmentId;
-                                    this.$refs.modal_editDepartment.modalValue = true;
+                                    if (params.row.employeeType === 'in-staff') {
+                                        this.inStaffType = 'view';
+                                        this.inStaff_employeeId = params.row.employeeId;
+                                        this.$refs.modal_inStaffHandle.modalValue = true;
+                                    }
+                                    else if (params.row.employeeType === 'out-staff') {
+                                        this.outStaffType = 'view';
+                                        this.outStaff_employeeId = params.row.employeeId;
+                                        this.$refs.modal_outStaffHandle.modalValue = true;
+                                    }
                                 }
                             }
                         }, '查看'));
@@ -124,13 +160,13 @@
                             },
                             on: {
                                 click: () => {
-                                    this.editCurrentRow.departmentId = params.row.departmentId;
-                                    this.$refs.modal_editDepartment.modalValue = true;
+                                    this.workRecord_employeeId = params.row.departmentId;
+                                    this.$refs.modal_workRecord.modalValue = true;
                                 }
                             }
                         }, '任职记录'));
 
-                        if (!this.auth_update) {
+                        if (this.auth_update) {
                             list.push(h('Button', {
                                 props: {
                                     type: 'primary',
@@ -139,7 +175,9 @@
                                 },
                                 on: {
                                     click: () => {
-
+                                        this.staffAdjust_employeeId = params.row.employeeId;
+                                        this.staffAdjust_employeeName = params.row.employeeName;
+                                        this.$refs.modal_staffAdjust.modalValue = true;
                                     }
                                 }
                             }, '人事调整'));
@@ -156,6 +194,7 @@
         },
         data() {
             return {
+                valu: true,
                 searchParams: {
                     current: 1,        // 当前第几页
                     size: 10,          // 每页几行
@@ -164,6 +203,7 @@
                         departmentId: '',
                         employeeStatus: '',
                         employeeName: '',
+                        employeeType: 'in-staff',
                         operator: '',
                         beginTime: '',
                         endTime: ''
@@ -190,10 +230,27 @@
                 ],
                 tableLoading: false,
 
+                // vInStaffHandle 组件状态 add/edit/view
+                inStaffType: 'add',
+                inStaff_employeeId: '',
+                // vOutStaffHandle 组件状态 add/edit/view
+                outStaffType: 'add',
+                outStaff_employeeId: '',
+
+                // 任职记录
+                workRecord_employeeId: '',
+                // 人事调整
+                staffAdjust_employeeId: '',
+                staffAdjust_employeeName: '',
+
                 // 字典
                 dict_employeeStatus: [],
+                dict_employeeType: [],
                 dict_department: []
             };
+        },
+        mounted() {
+            this.getDicts(['employeeStatus', 'employeeType']);
         },
         methods: {
             onChage_daterange(value) {
@@ -226,6 +283,8 @@
                 })
             },
             addInStaff() {
+                this.inStaffType = 'add';
+                this.inStaff_employeeId = '';
                 this.$refs.modal_inStaffHandle.modalValue = true;
             }
         }

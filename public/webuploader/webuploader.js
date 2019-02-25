@@ -753,8 +753,8 @@
             stop: 'stop-upload',
             getFile: 'get-file',
             getFiles: 'get-files',
-            addFile: 'addOrEditOrView-file',
-            addFiles: 'addOrEditOrView-file',
+            addFile: 'add-file',
+            addFiles: 'add-file',
             sort: 'sort-files',
             removeFile: 'remove-file',
             cancelFile: 'cancel-file',
@@ -764,7 +764,7 @@
             makeThumb: 'make-thumb',
             md5File: 'md5-file',
             getDimension: 'get-dimension',
-            addButton: 'addOrEditOrView-btn',
+            addButton: 'add-btn',
             predictRuntimeType: 'predict-runtime-type',
             refresh: 'refresh',
             disable: 'disable',
@@ -1501,7 +1501,7 @@
     
                 dnd.once( 'ready', deferred.resolve );
                 dnd.on( 'drop', function( files ) {
-                    me.request( 'addOrEditOrView-file', [ files ]);
+                    me.request( 'add-file', [ files ]);
                 });
     
                 // 检测文件是否全部允许添加。
@@ -1592,7 +1592,7 @@
     
                 paste.once( 'ready', deferred.resolve );
                 paste.on( 'paste', function( files ) {
-                    me.owner.request( 'addOrEditOrView-file', [ files ]);
+                    me.owner.request( 'add-file', [ files ]);
                 });
                 paste.init();
     
@@ -1936,7 +1936,7 @@
     
                     picker.once( 'ready', deferred.resolve );
                     picker.on( 'select', function( files ) {
-                        me.owner.request( 'addOrEditOrView-file', [ files ]);
+                        me.owner.request( 'add-file', [ files ]);
                     });
                     picker.on('dialogopen', function() {
                         me.owner.trigger('dialogOpen', picker.button);
@@ -2895,7 +2895,7 @@
     
                     if ( !(file instanceof File) ) {
                         if ( !this._ruid ) {
-                            throw new Error('Can\'t addOrEditOrView external files.');
+                            throw new Error('Can\'t add external files.');
                         }
                         file = new File( this._ruid, file );
                     }

@@ -81,7 +81,8 @@ Ajax.interceptors.response.use(function (response) {
             iview.LoadingBar.finish();
             break;
         case 'E0008':
-            router.push('/login');
+            window.location.href = Config.loginUrl;
+            // router.push('/login');
             break;
         default:
             iview.LoadingBar.error();

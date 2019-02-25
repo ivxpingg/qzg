@@ -7,6 +7,7 @@ import store from './store/store';
 import Ajax from '@/lib/axios';
 import '@/style/app.scss';
 import vIvxFilterBox from './components/ivxFilterBox/ivxFilterBox';
+import vWebUploader from './components/webuploader/webuploader';
 
 Vue.config.productionTip = process.env.NODE_ENV === 'development';
 
@@ -15,6 +16,7 @@ Vue.use(iView, {
 });
 
 Vue.component('vIvxFilterBox', vIvxFilterBox);
+Vue.component('vWebUploader', vWebUploader);
 
 Vue.prototype.$http = Ajax;
 

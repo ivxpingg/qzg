@@ -11,10 +11,24 @@ export default {
             handler(val) {
                 this.modalValue = val;
             }
+        },
+        modalValue: {
+            immediate: true,
+            handler(val) {
+                if (val) {
+                    this.modalOpenTime++;
+                }
+            }
+        }
+    },
+    computed: {
+        isFirstOpen() {
+            return this.modalOpenTime === 1;
         }
     },
     data() {
         return {
+            modalOpenTime: 0,
             modalValue: false
         }
     },
