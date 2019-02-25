@@ -73,10 +73,11 @@
 </template>
 
 <script>
+    import vIvxFilterBox from '../../../components/ivxFilterBox/ivxFilterBox';
     import vEditDict from './editDict/editDict';
     export default {
         name: 'dataDict',
-        components: {vEditDict},
+        components: {vIvxFilterBox, vEditDict},
         data() {
             return {
                 searchParams: {
@@ -179,7 +180,7 @@
                     if (valid) {
                         this.$http({
                             method: 'post',
-                            url: '/dict/addOrEditOrView',
+                            url: '/dict/add',
                             data: JSON.stringify(this.format_dict)
                         }).then(res => {
                             if(res.code === 'SUCCESS') {
