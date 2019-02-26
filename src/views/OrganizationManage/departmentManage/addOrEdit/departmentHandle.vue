@@ -97,22 +97,16 @@
              */
             getData() {
                 this.$http({
-                    method: 'post',
-                    url: '/',
-                    data: JSON.stringify(this.formData)
+                    method: 'get',
+                    url: '/department/query',
+                    params: {
+                        departmentId: this.departmentId
+                    }
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
-                        this.$Message.success({
-                            content: '添加部门成功！'
-                        });
-                        this.$emit('modal-callback');
-                        this.saveBtnLoading = false;
-                        this.modalValue = false;
-                        // 表单初始化
-                        this.resetFormData();
+                        Object.assign(this.formData, res.data);
                     }
                 }).catch(e => {
-                    this.saveBtnLoading = false;
                 })
             },
             save() {
@@ -129,7 +123,7 @@
                         this.saveBtnLoading = true;
                         this.$http({
                             method: 'post',
-                            url: '/',
+                            url: '/department/add',
                             data: JSON.stringify(this.formData)
                         }).then(res => {
                             if(res.code === 'SUCCESS') {
@@ -156,7 +150,7 @@
                         this.saveBtnLoading = true;
                         this.$http({
                             method: 'post',
-                            url: '/',
+                            url: '/department/update',
                             data: JSON.stringify(this.formData)
                         }).then(res => {
                             if(res.code === 'SUCCESS') {

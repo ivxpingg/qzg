@@ -3,12 +3,12 @@
         <vIvxFilterBox>
             <Form inline>
                 <FormItem label="归属部门:" :label-width="65">
-                    <!--<Select v-model="searchParams.condition.operateType" style="width: 100px;">-->
-                        <!--<Option v-for="item in dict_operateType"-->
-                                <!--:key="item.id"-->
-                                <!--:value="item.value"-->
-                                <!--:label="item.label"></Option>-->
-                    <!--</Select>-->
+                    <Select v-model="searchParams.condition.departmentId" style="width: 100px;">
+                        <Option v-for="item in dict_department"
+                                :key="item.departmentId"
+                                :value="item.departmentId"
+                                :label="item.unitName + '-' + item.departmentName"></Option>
+                    </Select>
                 </FormItem>
                 <FormItem label="员工状态:" :label-width="65">
                     <Select v-model="searchParams.condition.employeeStatus" style="width: 100px;">
@@ -45,7 +45,7 @@
         </vIvxFilterBox>
         <vIvxFilterBox>
             <Button type="primary" icon="md-add" @click="addInStaff">新增在编人员</Button>
-            <Button type="primary" icon="md-add" @click="addInStaff">新增编外人员</Button>
+            <Button type="primary" icon="md-add" @click="addOutStaff">新增编外人员</Button>
             <Button type="info" icon="md-download" @click="addInStaff">导出花名册</Button>
 
             <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">
@@ -74,12 +74,14 @@
         <!--在编人员-->
         <vInStaffHandle ref="modal_inStaffHandle"
                         :employeeId="inStaff_employeeId"
-                        :type="inStaffType"></vInStaffHandle>
+                        :type="inStaffType"
+                        @modal-callback="getData"></vInStaffHandle>
 
         <!--新增编外人员-->
         <vOutStaffHandle ref="modal_outStaffHandle"
                          :employeeId="outStaff_employeeId"
-                         :type="outStaffType"></vOutStaffHandle>
+                         :type="outStaffType"
+                         @modal-callback="getData"></vOutStaffHandle>
         <!--任职记录-->
         <vWorkRecord ref="modal_workRecord"
                      :employeeId="workRecord_employeeId"></vWorkRecord>
@@ -106,7 +108,7 @@
                 let column = [{ title: '操作', minWidth: 360, align: 'center',
                     render: (h, params) => {
                         let list = [];
-                        if (!this.auth_update) {
+                        if (this.auth_update) {
                             list.push(h('Button', {
                                 props: {
                                     type: 'primary',
@@ -194,7 +196,6 @@
         },
         data() {
             return {
-                valu: true,
                 searchParams: {
                     current: 1,        // 当前第几页
                     size: 10,          // 每页几行
@@ -211,7 +212,11 @@
                 },
                 tableColumns: [
                     { title: '序号', width: 65, align: 'center', type: 'index', },
-                    { title: '时间', width: 150, align: 'center', key: 'insTime' },
+                    { title: '时间', width: 150, align: 'center', key: 'insTime',
+                        render: (h, params) => {
+                            return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
+                        }
+                    },
                     { title: '员工名称', width: 120, align: 'center', key: 'employeeName' },
                     { title: '部门', width: 120, align: 'center', key: 'departmentName' },
                     { title: '联系电话', width: 120, align: 'center', key: 'phone' },
@@ -246,11 +251,12 @@
                 // 字典
                 dict_employeeStatus: [],
                 dict_employeeType: [],
-                dict_department: []
+                dict_department: [],
             };
         },
         mounted() {
             this.getDicts(['employeeStatus', 'employeeType']);
+            this.getDeparmentList('', 'dict_department');
         },
         methods: {
             onChage_daterange(value) {
@@ -286,6 +292,11 @@
                 this.inStaffType = 'add';
                 this.inStaff_employeeId = '';
                 this.$refs.modal_inStaffHandle.modalValue = true;
+            },
+            addOutStaff() {
+                this.outStaffType = 'add';
+                this.outStaff_employeeId = '';
+                this.$refs.modal_outStaffHandle.modalValue = true;
             }
         }
     }

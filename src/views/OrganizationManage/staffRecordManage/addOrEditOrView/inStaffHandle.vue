@@ -82,14 +82,14 @@
                                     @on-change="onChage_joinPartyDate"
                                     placeholder="选择时间"></DatePicker>
                     </FormItem>
-                    <FormItem label="任职单位:">
-                        <Select v-model="formData.sex" :style="formInputStyle">
-                            <Option v-for="item in dict_sex"
-                                    :key="item.id"
-                                    :value="item.value"
-                                    :label="item.label"></Option>
-                        </Select>
-                    </FormItem>
+                    <!--<FormItem label="任职单位:">-->
+                        <!--<Select v-model="formData.sex" :style="formInputStyle">-->
+                            <!--<Option v-for="item in dict_unitList"-->
+                                    <!--:key="item.unitName"-->
+                                    <!--:value="item.unitName"-->
+                                    <!--:label="item.unitName"></Option>-->
+                        <!--</Select>-->
+                    <!--</FormItem>-->
                     <FormItem label="职务:">
                         <Select v-model="formData.sex" :style="formInputStyle">
                             <Option v-for="item in dict_sex"
@@ -217,7 +217,7 @@
                     headPortrait: '',
                     employeeName: '',  // 员工名称
                     sex: '',
-                    birthday: '2018-02',
+                    birthday: '',
                     nation: '',       // 民族
                     nativePlace: '',  // 籍贯
                     idNumber: '',
@@ -246,7 +246,8 @@
 
                 // 字典
                 dict_sex: [],
-
+                dict_unitList: [],
+                dict_jobList: []
             };
         },
         watch: {
@@ -265,6 +266,7 @@
         },
         mounted() {
             this.getDicts(['sex']);
+            this.getUnitList('dict_unitList');
         },
         methods: {
             // 初始化表单数据
@@ -272,8 +274,6 @@
                 Object.assign(this.formData, this.initFormData);
             },
             getRandom() { return Math.random(); },
-            getUnitList() {},
-            getJobList() {},
             onChage_birthday(value) { this.formData.birthday = value; },
             onChage_joinArmyDate(value) { this.formData.joinArmyDate = value; },
             onChage_joinPartyDate(value) { this.formData.joinPartyDate = value; },

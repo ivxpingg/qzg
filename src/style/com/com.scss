@@ -59,21 +59,6 @@
   }
 }
 
-/**
-
- */
-.modal-body-padding0 {
-  .ivu-modal-body {
-    padding: 0 0 6px;
-  }
+textarea.ivu-input {
+  font-size: 12px;
 }
-.six-modal-body-padding0 {
-  padding: 0;
-}
-
-// 弹出框内
-// <div class="ivu-modal-footer six-modal-footer-padding-bottom-0"></div>
-.six-modal-footer-padding-bottom-0 {
-  padding-bottom: 0;
-}
-

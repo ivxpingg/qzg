@@ -20,12 +20,14 @@
         </div>
 
         <!--新增部门-->
-        <vDepartmentHandle ref="modal_addDepartment" key="add"></vDepartmentHandle>
+        <vDepartmentHandle ref="modal_addDepartment" key="add" @modal-callback="getData"></vDepartmentHandle>
 
         <!--编辑部门-->
         <vDepartmentHandle ref="modal_editDepartment"
                            type="edit"
-                           :departmentId="editCurrentRow.departmentId" key="edit"></vDepartmentHandle>
+                           :departmentId="editCurrentRow.departmentId"
+                           key="edit"
+                           @modal-callback="getData"></vDepartmentHandle>
 
     </div>
 </template>
@@ -74,7 +76,7 @@
                                             onOk: () => {
                                                 this.$http({
                                                     method: 'get',
-                                                    url: '/',
+                                                    url: '/department/delete',
                                                     params: {
                                                         departmentId: params.row.departmentId
                                                     }
@@ -101,6 +103,7 @@
             }
         },
         mounted() {
+            this.getData();
         },
         data() {
             return {
@@ -112,10 +115,14 @@
                 },
                 tableColumns: [
                     { title: '序号', width: 65, align: 'center', type: 'index', },
-                    { title: '创建时间', width: 150, align: 'center', key: 'insTime' },
+                    { title: '创建时间', width: 150, align: 'center', key: 'insTime',
+                        render: (h, params) => {
+                            return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
+                        }
+                    },
                     { title: '单位名称', minWidth: 120, align: 'center', key: 'unitName' },
                     { title: '部门名称', minWidth: 120, align: 'center', key: 'departmentName' },
-                    { title: '创建人', width: 100, align: 'center', key: 'operator' },
+                    { title: '创建人', width: 100, align: 'center', key: 'createName' },
                     { title: '在岗人数', width: 120, align: 'center', key: 'onDutyNum' },
                     { title: '简介', minWidth: 120, align: 'center', key: 'intro' },
                 ],
@@ -143,10 +150,11 @@
         },
         methods: {
             getData() {
+                this.editCurrentRow.departmentId = '';
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/department/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;

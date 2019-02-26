@@ -45,5 +45,59 @@ export default {
                 }
             });
         },
+        // 获取单位列表
+        getUnitList(key) {
+            this.$http({
+                method: 'post',
+                url: '/department/unitList'
+            }).then(res => {
+                if(res.code === 'SUCCESS') {
+                    this[key] = res.data || [];
+                }
+            });
+        },
+        // 根据单位名称获取部门列表
+        getDeparmentList(unitName, key) {
+            this.$http({
+                method: 'get',
+                url: '/department/departmentListByUnit',
+                params: {
+                    unitName: unitName
+                }
+            }).then(res => {
+                debugger
+                if(res.code === 'SUCCESS') {
+                    this[key] = res.data || [];
+                }
+            });
+        },
+        /**
+         * 获取职务列表
+         * @param key
+         */
+        getJobList(key) {
+            this.$http({
+                method: 'post',
+                url: '/',
+                data: JSON.stringify({
+                    current: 1,        // 当前第几页
+                    size: 1000,          // 每页几行
+                    total: 0,
+                })
+            }).then(res => {
+                if(res.code === 'SUCCESS') {
+                    this[key] = res.data.records || [];
+                }
+            });
+        },
+        /**
+         * 转化时间格式
+         * @param value 11225555421
+         * @param format ps: 'YYYY-MM-DD HH:mm:ss'
+         * @returns {string}
+         */
+        timeFormat(value, format) {
+            return value ? this.$moment(value).format(format) : '';
+        }
     }
 }
