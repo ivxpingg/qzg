@@ -65,7 +65,6 @@ export default {
                     unitName: unitName
                 }
             }).then(res => {
-                debugger
                 if(res.code === 'SUCCESS') {
                     this[key] = res.data || [];
                 }

@@ -41,15 +41,32 @@
                   :total="searchParams.total"
                   @on-change="onPageChange"></Page>
         </div>
+
+        <!--培训课程add/edit/view-->
+        <vCourseHandle ref="modal_courseHandle"
+                       :type="courseHandleType"
+                       :courseId="currentRow.courseId"></vCourseHandle>
+        <!--通知-->
+        <vNotificationCourse ref="modal_notificationCourse"
+                             :courseId="modal_notificationCourse_props.courseId"
+                             :courseName="modal_notificationCourse_props.courseName"
+                             @modal-callback="resetProps"></vNotificationCourse>
+        <!--查看人员-->
+        <vCheckPersons ref="modal_checkPersons"
+                       :courseId="modal_checkPersons_props.courseId"></vCheckPersons>
     </div>
 </template>
 
 <script>
     import comMixin from '../../../lib/mixin/comMixin';
     import authMixin from '../../../lib/mixin/authMixin';
+    import vCourseHandle from './addEditView/courseHandle';
+    import vNotificationCourse from './notification/notificationCourse';
+    import vCheckPersons from './checkPersons/checkPersons';
     export default {
         name: 'trainingCourseManage', // 培训课程管理
         mixins: [comMixin, authMixin],
+        components: {vCourseHandle, vNotificationCourse, vCheckPersons},
         computed: {
             _tableColumns() {
                 let column = [{ title: '操作', minWidth: 360, align: 'center',
@@ -64,12 +81,12 @@
                                 },
                                 on: {
                                     click: () => {
-                                        this.jobHandleType = 'edit';
-                                        this.currentRow.jobId = params.row.jobId;
-                                        this.$refs.modal_jobHandle.modalValue = true;
+                                        this.modal_notificationCourse_props.courseId = params.row.courseId;
+                                        this.modal_notificationCourse_props.courseName = params.row.courseName;
+                                        this.$refs.modal_notificationCourse.modalValue = true;
                                     }
                                 }
-                            }, '编辑'));
+                            }, '通知'));
                         }
 
                         list.push(h('Button', {
@@ -80,12 +97,27 @@
                             },
                             on: {
                                 click: () => {
-                                    this.jobHandleType = 'view';
-                                    this.currentRow.jobId = params.row.jobId;
-                                    this.$refs.modal_jobHandle.modalValue = true;
+                                    if (this.auth_update) { this.courseHandleType = 'edit'; }
+                                    else { this.courseHandleType = 'view'; }
+                                    this.currentRow.courseId = params.row.jobId;
+                                    this.$refs.modal_courseHandle.modalValue = true;
                                 }
                             }
                         }, '查看'));
+
+                        list.push(h('Button', {
+                            props: {
+                                type: 'info',
+                                size: 'small',
+                                icon: 'ios-eye'
+                            },
+                            on: {
+                                click: () => {
+                                    this.modal_checkPersons_props.courseId = params.row.courseId;
+                                    this.$refs.modal_checkPersons.modalValue = true;
+                                }
+                            }
+                        }, '查看学员'));
 
                         if (this.auth_del) {
                             list.push(h('Button', {
@@ -98,13 +130,13 @@
                                     click: () => {
                                         this.$Modal.confirm({
                                             title: '提示',
-                                            content: `确定要删除《${params.row.dutyName}》职务？`,
+                                            content: `确定要删除《${params.row.courseName}》课程？`,
                                             onOk: () => {
                                                 this.$http({
                                                     method: 'get',
-                                                    url: '/job/delete',
+                                                    url: '//delete',
                                                     params: {
-                                                        jobId: params.row.jobId
+                                                        courseId: params.row.courseId
                                                     }
                                                 }).then((res) => {
                                                     if (res.code === 'SUCCESS') {
@@ -141,26 +173,45 @@
                 },
                 tableColumns: [
                     { title: '序号', width: 65, align: 'center', type: 'index', },
-                    { title: '时间', width: 150, align: 'center', key: 'insTime',
+                    { title: '培训名称', width: 120, align: 'center', key: 'courseName' },
+                    { title: '发起部门', width: 120, align: 'center', key: 'departmentName' },
+                    { title: '培训时间', width: 180, align: 'center',
                         render: (h, params) => {
-                            return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
+                            let str = this.timeFormat(params.row.startTime, 'YYYY-MM-DD') + ' ~ ' + this.timeFormat(params.row.endTime, 'YYYY-MM-DD');
+                            return h('div', str);
                         }
                     },
-                    { title: '职务名称', width: 120, align: 'center', key: 'dutyName' },
-                    { title: '归属单位', width: 120, align: 'center', key: 'unitName' },
-                    { title: '职级', width: 120, align: 'center', key: 'jobLevelLabel' },
-                    { title: '工资职级', width: 120, align: 'center', key: 'wageLevelLabel' }
+                    { title: '培训地点', width: 120, align: 'center', key: 'address' },
+                    { title: '状态', width: 120, align: 'center', key: 'courseStatusLabel' },
+                    { title: '学员人数', width: 120, align: 'center', key: 'userNum' },
                 ],
                 tableData: [
                     {
-                        insTime: '2018-09-21  08:50:08',
-                        dutyName: '主任',
-                        unitName: '办公室',
-                        jobLevelLabel: '干部',
-                        wageLevelLabel: '九级职员'
+                        courseName: 'java',
+                        departmentName: '办公室',
+                        startTime: '2018-09-21',
+                        endTime: '2018-09-21',
+                        address: '办公室',
+                        courseStatusLabel: '报名中',
+                        userNum: 20
                     }
                 ],
                 tableLoading: false,
+
+                // vCourseHandle 组件状态 add/edit/view
+                courseHandleType: 'add',
+                currentRow: {
+                    courseId: ''
+                },
+                // 通知
+                modal_notificationCourse_props: {
+                    courseId: '',
+                    courseName: ''
+                },
+                // 查看学员
+                modal_checkPersons_props: {
+                    courseId: ''
+                },
 
                 dict_departmentList: []
             };
@@ -169,8 +220,17 @@
             this.getDeparmentList('', 'dict_departmentList');
         },
         methods: {
+            // 重置子组件参数
+            resetProps() {
+                this.currentRow.courseId = '';
+                this.modal_notificationCourse_props.courseId = '';
+                this.modal_notificationCourse_props.courseName = '';
+                this.modal_checkPersons_props.courseId = '';
+            },
             addTrainingCourse() {
-
+                this.courseHandleType = 'add';
+                this.currentRow.courseId = '';
+                this.$refs.modal_courseHandle.modalValue = true;
             },
             resetSearchParams() {
                 this.searchParams.condition.departmentId = '';
