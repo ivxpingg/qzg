@@ -56,10 +56,11 @@
 </template>
 
 <script>
+    import modalMixin from '../../../../lib/mixin/modalMixin';
     import comMixin from '../../../../lib/mixin/comMixin';
     export default {
         name: 'staffAdjust',
-        mixins: [comMixin],
+        mixins: [modalMixin, comMixin],
         props: {
             employeeId: {
                 type: String,

@@ -11,7 +11,9 @@ import vIvxFilterBox from './components/ivxFilterBox/ivxFilterBox';
 import vWebUploader from './components/webuploader/webuploader';
 import Cookies from 'js-cookie';
 
-Cookies.set('DomAuthSessId', 'B0419288C8E84E97B01A9F20A3EEE18A', {expires: 1});
+if (process.env.NODE_ENV === 'development') {
+    Cookies.set('DomAuthSessId', 'A2A1ADACAEA20D9E93B4FF3C19A81196', {expires: 1});
+}
 
 Vue.config.productionTip = process.env.NODE_ENV === 'development';
 

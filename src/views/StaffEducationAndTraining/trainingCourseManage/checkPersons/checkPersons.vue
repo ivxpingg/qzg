@@ -62,7 +62,7 @@
                         this.getData();
                     }
                     else {
-                        this.resetFormData();
+                        this.tableData = [];
                     }
                 }
             }

@@ -102,6 +102,8 @@
                     wageLevel: ''
                 },
                 rules: {},
+
+                dict_sex: []
             };
         },
         watch: {
@@ -119,7 +121,7 @@
             }
         },
         mounted() {
-
+            this.getDicts(['sex']);
         },
         methods: {
             // 初始化表单数据

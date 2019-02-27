@@ -4,7 +4,7 @@
             <Form inline>
                 <FormItem label="归属部门:" :label-width="65">
                     <Select v-model="searchParams.condition.departmentId" style="width: 100px;">
-                        <Option v-for="item in dict_department"
+                        <Option v-for="item in dict_departmentList"
                                 :key="item.departmentId"
                                 :value="item.departmentId"
                                 :label="item.unitName + '-' + item.departmentName"></Option>
@@ -173,7 +173,9 @@
                 jobHandleType: 'add',
                 currentRow: {
                     jobId: ''
-                }
+                },
+
+                dict_departmentList: []
             };
         },
         mounted() {
