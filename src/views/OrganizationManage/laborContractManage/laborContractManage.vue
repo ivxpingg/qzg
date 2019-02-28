@@ -141,17 +141,17 @@
                             return h('div', this.timeFormat(params.row.expirationDate, 'YYYY-MM-DD'));
                         }
                     },
-                    { title: '状态', width: 120, align: 'center', key: 'contractStatus' },
+                    { title: '状态', width: 120, align: 'center', key: 'contractStatusLabel' },
                     { title: '管理人', width: 120, align: 'center', key: 'createName' }
                 ],
                 tableData: [
                     {
-                        insTime: '2018-09-21 08:50:08',
-                        employeeName: '小陈',
-                        signDate: '2018-09-21',
-                        expirationDate: '2018-09-21',
-                        contractStatus: '合同期',
-                        createName: '陈主任'
+                        // insTime: '2018-09-21 08:50:08',
+                        // employeeName: '小陈',
+                        // signDate: '2018-09-21',
+                        // expirationDate: '2018-09-21',
+                        // contractStatusLabel: '合同期',
+                        // createName: '陈主任'
                     }
                 ],
                 tableLoading: false,
@@ -184,13 +184,13 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/laborContract/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;
                     if (res.code === 'SUCCESS') {
                         this.tableData = res.data.records;
-                        this.searchParams.total = res.data.page.total;
+                        this.searchParams.total = res.data.total;
                     }
                 }).catch(() => {
                     this.tableLoading = false;

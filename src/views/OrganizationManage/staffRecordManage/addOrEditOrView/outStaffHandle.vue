@@ -46,12 +46,12 @@
                     <FormItem label="出生年月:">
                         <DatePicker :value="formData.birthday"
                                     :style="formInputStyle"
-                                    type="month"
+                                    type="date"
                                     @on-change="onChage_birthday"
                                     placeholder="选择时间" ></DatePicker>
                     </FormItem>
                     <FormItem label="年龄:">
-                        <Input  placeholder="自动计算" readonly  :style="formInputStyle"/>
+                        <Input :value="age"  placeholder="自动计算" readonly  :style="formInputStyle"/>
                     </FormItem>
                     <FormItem label="身份证:" prop="idNumber">
                         <Input v-model="formData.idNumber" placeholder="请输入身份证" :style="formInputStyle" />
@@ -61,27 +61,35 @@
                     </FormItem>
 
                     <FormItem label="任职单位:">
-                        <Select v-model="formData.sex" :style="formInputStyle">
-                            <Option v-for="item in dict_sex"
-                                    :key="item.id"
-                                    :value="item.value"
-                                    :label="item.label"></Option>
+                        <Select v-model="formData.departmentId" :style="formInputStyle">
+                            <Option v-for="item in departmentList"
+                                    :key="item.departmentId"
+                                    :value="item.departmentId"
+                                    :label="item.unitName + '-' + item.departmentName "></Option>
                         </Select>
                     </FormItem>
                     <FormItem label="职务:">
-                        <Select v-model="formData.sex" :style="formInputStyle">
-                            <Option v-for="item in dict_sex"
-                                    :key="item.id"
-                                    :value="item.value"
-                                    :label="item.label"></Option>
+                        <Select v-model="formData.jobId" :style="formInputStyle">
+                            <Option v-for="item in jobList"
+                                    :key="item.jobId"
+                                    :value="item.jobId"
+                                    :label="item.dutyName"></Option>
                         </Select>
                     </FormItem>
                     <FormItem label="任职时间:">
                         <DatePicker :value="formData.onJobTime"
                                     :style="formInputStyle"
-                                    type="month"
+                                    type="date"
                                     @on-change="onChage_onJobTime"
                                     placeholder="选择时间"></DatePicker>
+                    </FormItem>
+                    <FormItem label="员工状态:" prop="employeeStatus">
+                        <Select v-model="formData.employeeStatus" :style="formInputStyle">
+                            <Option v-for="item in dict_employeeStatus"
+                                    :key="item.id"
+                                    :value="item.value"
+                                    :label="item.label"></Option>
+                        </Select>
                     </FormItem>
                 </Form>
             </i-col>
@@ -134,6 +142,12 @@
             },
             isView() {
                 return this.type === 'view';
+            },
+            age() {
+                return this.formData.birthday ?
+                    ((this.$moment().year() - this.$moment(this.formData.birthday).year()) > 0 ?
+                        (this.$moment().year() - this.$moment(this.formData.birthday).year()) : 0) : '';
+
             }
         },
         created() {
@@ -161,6 +175,7 @@
                     departmentId: '',    // 部门Id
                     jobId: '',       // 职务ID
                     onJobTime: '',   // 任职时间
+                    employeeStatus: ''
                 },
                 rules: {
                     employeeName: [{ required: true, message: '姓名不能为空！', trigger: 'blur' }],
@@ -171,6 +186,9 @@
 
                 // 字典
                 dict_sex: [],
+                dict_employeeStatus: [],
+                departmentList: [],
+                jobList: [],
             };
         },
         watch: {
@@ -185,10 +203,16 @@
                         this.resetFormData();
                     }
                 }
-            }
+            },
+            'formData.departmentId'(val) {
+                if (val) {
+                    this.getJobList('jobList', val);
+                }
+            },
         },
         mounted() {
-            this.getDicts(['sex']);
+            this.getDicts(['sex', 'employeeStatus']);
+            this.getDeparmentList('', 'departmentList');
         },
         methods: {
             // 初始化表单数据
@@ -246,7 +270,7 @@
             addSubmit() {
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/employee/add',
                     data: JSON.stringify(this.formData)
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
@@ -265,7 +289,7 @@
             editSubmit() {
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/employee/update',
                     data: JSON.stringify(this.formData)
                 }).then(res => {
                     if(res.code === 'SUCCESS') {

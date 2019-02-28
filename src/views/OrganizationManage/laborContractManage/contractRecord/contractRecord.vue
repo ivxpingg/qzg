@@ -138,7 +138,7 @@
                         this.getData();
                     }
                     else {
-                       // this.tableData = [];
+                       this.tableData = [];
                     }
                 }
             }

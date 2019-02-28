@@ -3,8 +3,8 @@
         <vIvxFilterBox>
             <Form inline>
                 <FormItem label="归属部门:" :label-width="65">
-                    <Select v-model="searchParams.condition.departmentId" style="width: 100px;">
-                        <Option v-for="item in dict_departmentList"
+                    <Select v-model="searchParams.condition.departmentId" style="width: 200px;">
+                        <Option v-for="item in departmentList"
                                 :key="item.departmentId"
                                 :value="item.departmentId"
                                 :label="item.unitName + '-' + item.departmentName"></Option>
@@ -45,7 +45,7 @@
         <vJobHandle ref="modal_jobHandle"
                     :type="jobHandleType"
                     :jobId="currentRow.jobId"
-                    @call-back="getData"></vJobHandle>
+                    @modal-callback="getData"></vJobHandle>
     </div>
 </template>
 
@@ -159,13 +159,13 @@
                     { title: '工资职级', width: 120, align: 'center', key: 'wageLevelLabel' }
                 ],
                 tableData: [
-                    {
-                        insTime: '2018-09-21  08:50:08',
-                        dutyName: '主任',
-                        unitName: '办公室',
-                        jobLevelLabel: '干部',
-                        wageLevelLabel: '九级职员'
-                    }
+                    // {
+                    //     insTime: '2018-09-21  08:50:08',
+                    //     dutyName: '主任',
+                    //     unitName: '办公室',
+                    //     jobLevelLabel: '干部',
+                    //     wageLevelLabel: '九级职员'
+                    // }
                 ],
                 tableLoading: false,
 
@@ -175,11 +175,12 @@
                     jobId: ''
                 },
 
-                dict_departmentList: []
+                departmentList: []
             };
         },
         mounted() {
             this.getData();
+            this.getDeparmentList('', 'departmentList');
         },
         methods:{
             addJob() {
@@ -195,7 +196,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/job/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;

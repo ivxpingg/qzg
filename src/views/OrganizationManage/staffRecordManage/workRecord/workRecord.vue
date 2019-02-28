@@ -17,9 +17,10 @@
 
 <script>
     import modalMixin from '../../../../lib/mixin/modalMixin';
+    import comMixin from '../../../../lib/mixin/comMixin';
     export default {
         name: 'workRecord',
-        mixins: [modalMixin],
+        mixins: [modalMixin, comMixin],
         props: {
             employeeId: {
                 type: String,
@@ -34,22 +35,29 @@
                     { title: '变动类型', width: 120, align: 'center', key: 'changeTypeLabel' },
                     { title: '变动时间', width: 150, align: 'center', key: 'changeTime' },
                     { title: '变动结果', minWidth: 120, align: 'center', key: 'changeResult' },
-                    { title: '操作人', width: 120, align: 'center', key: 'create' },
-                    { title: '操作时间', width: 150, align: 'center', key: 'insTime' }
+                    { title: '操作人', width: 120, align: 'center', key: 'createName' },
+                    { title: '操作时间', width: 150, align: 'center', key: 'insTime',
+                        render: (h, params) => {
+                            return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
+                        }
+                    }
                 ],
                 tableData: [
                     {
-                        employeeName: '姓名',
-                        changeTypeLabel: '辞职',
-                        changeTime: '2018-10-10 09:09:09',
-                        changeResult: '单位1调动至单位2',
-                        create: '陈科长',
-                        insTime: '2018-10-10 09:09:09'
+                        // employeeName: '姓名',
+                        // changeTypeLabel: '辞职',
+                        // changeTime: '2018-10-10 09:09:09',
+                        // changeResult: '单位1调动至单位2',
+                        // create: '陈科长',
+                        // insTime: '2018-10-10 09:09:09'
                     }
                 ],
             };
         },
         watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
             employeeId(val) {
                 if(val) {
                     this.getData();
@@ -61,14 +69,14 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'get',
-                    url: '/',
+                    url: '/employeeRecord/query',
                     params: {
                         employeeId: this.employeeId
                     }
                 }).then((res) => {
                     this.tableLoading = false;
                     if (res.code === 'SUCCESS') {
-                        this.tableData = res.data;
+                        this.tableData = res.data || [];
                     }
                 }).catch(() => {
                     this.tableLoading = false;

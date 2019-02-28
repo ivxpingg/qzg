@@ -11,29 +11,39 @@
               :model="formData"
               :rules="rules"
               :label-width="80">
-            <FormItem label="岗位名称:" prop="employeeName">
-                <Input v-model="formData.employeeName" placeholder="请输入岗位名称" :style="formInputStyle" />
+            <FormItem label="岗位名称:" prop="dutyName">
+                <Input v-model="formData.dutyName" placeholder="请输入岗位名称" :style="formInputStyle" />
             </FormItem>
-            <FormItem label="归属单位:">
-                <Select v-model="formData.sex" :style="formInputStyle">
-                    <Option v-for="item in dict_sex"
+            <FormItem label="归属单位:" prop="departmentId">
+                <Select v-model="formData.departmentId" :style="formInputStyle">
+                    <Option v-for="item in departmentList"
+                            :key="item.departmentId"
+                            :value="item.departmentId"
+                            :label="item.unitName + '-' + item.departmentName"></Option>
+                </Select>
+            </FormItem>
+            <FormItem label="职级:" prop="jobLevel">
+                <Select v-model="formData.jobLevel" :style="formInputStyle">
+                    <Option v-for="item in dict_jobLevel"
                             :key="item.id"
                             :value="item.value"
                             :label="item.label"></Option>
                 </Select>
             </FormItem>
-            <FormItem label="职级:">
-                <Input  placeholder="自动载入" :style="formInputStyle" />
+            <FormItem label="工资职级:" prop="wageLevel">
+                <Select v-model="formData.wageLevel" :style="formInputStyle">
+                    <Option v-for="item in dict_wageLevel"
+                            :key="item.id"
+                            :value="item.value"
+                            :label="item.label"></Option>
+                </Select>
             </FormItem>
-            <FormItem label="工资职级:">
-                <Input  placeholder="自动载入" :style="formInputStyle" />
-            </FormItem>
-            <FormItem label="岗位简介:" prop="employeeName">
-                <Input v-model="formData.employeeName"
+            <FormItem label="岗位简介:" prop="intro">
+                <Input v-model="formData.intro"
                        type="textarea"
                        :rows="3"
                        placeholder="请输入岗位简介"
-                       :style="formInputStyle" />
+                       style="width: 690px;" />
             </FormItem>
         </Form>
 
@@ -99,11 +109,19 @@
                     dutyName: '',
                     departmentId: '',
                     jobLevel: '',
-                    wageLevel: ''
+                    wageLevel: '',
+                    intro: ''
                 },
-                rules: {},
+                rules: {
+                    dutyName: [{ required: true, message: '岗位不能为空！', trigger: 'blur' }],
+                    departmentId: [{ required: true, message: '岗位不能为空！', trigger: 'blur' }],
+                    jobLevel: [{ required: true, message: '职级不能为空！', trigger: 'blur' }],
+                    wageLevel: [{ required: true, message: '工资职级不能为空！', trigger: 'blur' }]
+                },
 
-                dict_sex: []
+                departmentList: [],
+                dict_jobLevel: [],
+                dict_wageLevel: []
             };
         },
         watch: {
@@ -111,7 +129,7 @@
                 immediate: true,
                 handler(val) {
                     if (val) {
-                        this.formData.employeeId = val;
+                        this.formData.jobId = val;
                         this.getData();
                     }
                     else {
@@ -121,7 +139,8 @@
             }
         },
         mounted() {
-            this.getDicts(['sex']);
+            this.getDicts(['jobLevel', 'wageLevel']);
+            this.getDeparmentList('', 'departmentList');
         },
         methods: {
             // 初始化表单数据
@@ -131,23 +150,14 @@
             getData() {
                 this.$http({
                     method: 'get',
-                    url: '/',
+                    url: '/job/query',
                     params: {
-                        employeeId: this.employeeId
+                        jobId: this.jobId
                     }
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
-                        this.$Message.success({
-                            content: '添加部门成功！'
-                        });
-                        this.$emit('modal-callback');
-                        this.saveBtnLoading = false;
-                        this.modalValue = false;
-                        // 表单初始化
-                        this.resetFormData();
+                        Object.assign(this.formData, res.data);
                     }
-                }).catch(e => {
-                    this.saveBtnLoading = false;
                 })
             },
             save() {
@@ -170,12 +180,12 @@
             addSubmit() {
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/job/add',
                     data: JSON.stringify(this.formData)
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
                         this.$Message.success({
-                            content: '添加员工成功！'
+                            content: '添加职务成功！'
                         });
                         this.$emit('modal-callback');
                         this.saveBtnLoading = false;
@@ -189,12 +199,12 @@
             editSubmit() {
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/job/update',
                     data: JSON.stringify(this.formData)
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
                         this.$Message.success({
-                            content: '更新员工成功！'
+                            content: '更新职务成功！'
                         });
                         this.$emit('modal-callback');
                         this.saveBtnLoading = false;

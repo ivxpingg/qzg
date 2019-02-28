@@ -71,7 +71,7 @@
                     intro: '',
                 },
                 rules: {
-                    unitName: [{ required: true, message: '项目不能为空！', trigger: 'blur' }],
+                    unitName: [{ required: true, message: '单位名称不能为空！', trigger: 'blur' }],
                     departmentName: [{ required: true, message: '部门名称不能为空！', trigger: 'blur' }],
                     intro: [{ required: true, message: '部门简介不能为空！', trigger: 'blur' }],
                 },

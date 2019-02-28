@@ -3,7 +3,7 @@
         <vIvxFilterBox>
             <Form inline>
                 <FormItem label="归属部门:" :label-width="65">
-                    <Select v-model="searchParams.condition.departmentId" style="width: 100px;">
+                    <Select v-model="searchParams.condition.departmentId">
                         <Option v-for="item in dict_department"
                                 :key="item.departmentId"
                                 :value="item.departmentId"
@@ -11,29 +11,29 @@
                     </Select>
                 </FormItem>
                 <FormItem label="员工状态:" :label-width="65">
-                    <Select v-model="searchParams.condition.employeeStatus" style="width: 100px;">
+                    <Select v-model="searchParams.condition.employeeStatus" style="width: 70px;">
                         <Option v-for="item in dict_employeeStatus"
                                 :key="item.id"
                                 :value="item.value"
                                 :label="item.label"></Option>
                     </Select>
                 </FormItem>
-                <FormItem label="姓名:" :label-width="65">
+                <FormItem label="姓名:" :label-width="45">
                     <Input v-model="searchParams.condition.employeeName"
                            style="width: 120px;"
                            placeholder="姓名"/>
                 </FormItem>
-                <FormItem label="创建人:" :label-width="65">
+                <FormItem label="创建人:" :label-width="55">
                     <Input v-model="searchParams.condition.operator"
-                           style="width: 200px;"
+                           style="width: 100px;"
                            placeholder="创建人"/>
                 </FormItem>
-                <FormItem label="时间:" :label-width="65">
+                <FormItem label="时间:" :label-width="45">
                     <DatePicker ref="datePicker"
                                 type="daterange"
                                 @on-change="onChage_daterange"
                                 placeholder="选择时间"
-                                style="width: 200px;"></DatePicker>
+                                style="width: 180px;"></DatePicker>
                 </FormItem>
                 <FormItem>
                     <Button type="primary" icon="ios-search" @click="getData">检索</Button>
@@ -46,6 +46,7 @@
         <vIvxFilterBox>
             <Button type="primary" icon="md-add" @click="addInStaff">新增在编人员</Button>
             <Button type="primary" icon="md-add" @click="addOutStaff">新增编外人员</Button>
+            <Button type="info" icon="md-clipboard" @click="openRecordView">人事变动记录</Button>
             <Button type="info" icon="md-download" @click="addInStaff">导出花名册</Button>
 
             <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">
@@ -89,6 +90,8 @@
         <vStaffAdjust ref="modal_staffAdjust"
                       :employeeId="staffAdjust_employeeId"
                       :employeeName="staffAdjust_employeeName"></vStaffAdjust>
+        <!--人事变动记录-->
+        <vRecordView ref="modal_recordView"></vRecordView>
     </div>
 </template>
 
@@ -99,10 +102,11 @@
     import vOutStaffHandle from './addOrEditOrView/outStaffHandle';
     import vWorkRecord from './workRecord/workRecord';
     import vStaffAdjust from './staffAdjust/staffAdjust';
+    import vRecordView from './recordView/recordView';
     export default {
         name: 'staffRecordManage',  // 员工档案管理
         mixins: [comMixin, authMixin],
-        components: {vInStaffHandle, vOutStaffHandle, vWorkRecord, vStaffAdjust},
+        components: {vInStaffHandle, vOutStaffHandle, vWorkRecord, vStaffAdjust, vRecordView},
         computed: {
             _tableColumns() {
                 let column = [{ title: '操作', minWidth: 360, align: 'center',
@@ -162,7 +166,7 @@
                             },
                             on: {
                                 click: () => {
-                                    this.workRecord_employeeId = params.row.departmentId;
+                                    this.workRecord_employeeId = params.row.employeeId;
                                     this.$refs.modal_workRecord.modalValue = true;
                                 }
                             }
@@ -254,7 +258,19 @@
                 dict_department: [],
             };
         },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler(val) {
+                    this.getData();
+                }
+            }
+        },
         mounted() {
+            this.getData();
             this.getDicts(['employeeStatus', 'employeeType']);
             this.getDeparmentList('', 'dict_department');
         },
@@ -276,13 +292,13 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/employee/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;
                     if (res.code === 'SUCCESS') {
                         this.tableData = res.data.records;
-                        this.searchParams.total = res.data.page.total;
+                        this.searchParams.total = res.data.total;
                     }
                 }).catch(() => {
                     this.tableLoading = false;
@@ -297,6 +313,9 @@
                 this.outStaffType = 'add';
                 this.outStaff_employeeId = '';
                 this.$refs.modal_outStaffHandle.modalValue = true;
+            },
+            openRecordView() {
+                this.$refs.modal_recordView.modalValue = true;
             }
         }
     }

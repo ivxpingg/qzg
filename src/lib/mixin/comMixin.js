@@ -73,15 +73,19 @@ export default {
         /**
          * 获取职务列表
          * @param key
+         * @param departmentId
          */
-        getJobList(key) {
+        getJobList(key, departmentId) {
             this.$http({
                 method: 'post',
-                url: '/',
+                url: '/job/list',
                 data: JSON.stringify({
                     current: 1,        // 当前第几页
                     size: 1000,          // 每页几行
                     total: 0,
+                    condition: {
+                        departmentId: departmentId || ''
+                    }
                 })
             }).then(res => {
                 if(res.code === 'SUCCESS') {
@@ -97,6 +101,17 @@ export default {
          */
         timeFormat(value, format) {
             return value ? this.$moment(value).format(format) : '';
+        },
+
+        assign(target, source) {
+            if (!source) {
+                return;
+            }
+            for (let k in target) {
+                if (source[k]) {
+                    target[k] = source[k];
+                }
+            }
         }
     }
 }

@@ -127,6 +127,14 @@
                 },
             };
         },
+        watch: {
+            employeeId(val) {
+                this.formData.employeeId = val;
+            },
+            employeeName(val) {
+                this.formData.employeeName = val;
+            }
+        },
         methods: {
             onChage_signDate(value) { this.formData.signDate = value; },
             onChage_expirationDate(value) { this.formData.expirationDate = value; },
@@ -160,7 +168,7 @@
             addSubmit() {
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/laborContract/add',
                     data: JSON.stringify(this.formData)
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
@@ -179,7 +187,7 @@
             editSubmit() {
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/laborContract/add',
                     data: JSON.stringify(this.formData)
                 }).then(res => {
                     if(res.code === 'SUCCESS') {

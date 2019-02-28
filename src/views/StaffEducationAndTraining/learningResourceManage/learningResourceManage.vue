@@ -43,7 +43,13 @@
         </div>
 
         <!--添加资源-->
-        <vAddResources ref="modal_addResources" @call-back="getData"></vAddResources>
+        <vResourcesHandle ref="modal_resourcesHandle"
+                          :type="modal_resourcesHandle_props.type"
+                          :resourceId="modal_resourcesHandle_props.resourceId"
+                          @call-back="getData"></vResourcesHandle>
+
+        <!--查看附件-->
+        <vViewFiles ref="modal_viewFiles" :data="resourcesFiles"></vViewFiles>
 
     </div>
 </template>
@@ -51,11 +57,12 @@
 <script>
     import comMixin from '../../../lib/mixin/comMixin';
     import authMixin from '../../../lib/mixin/authMixin';
-    import vAddResources from './add/addResources';
+    import viewFilesMixin from '../../Common/viewFiles/mixin';
+    import vResourcesHandle from './add/resourcesHandle';
     export default {
         name: 'learningResourceManage',  // 资源管理
-        mixins: [comMixin, authMixin],
-        components: {vAddResources},
+        mixins: [comMixin, authMixin, viewFilesMixin],
+        components: {vResourcesHandle},
         computed: {
             _tableColumns() {
                 let column = [{ title: '操作', minWidth: 260, align: 'center',
@@ -71,6 +78,9 @@
                             on: {
                                 click: () => {
                                     // this.propsRow.resourceId = params.row.resourceId;
+                                    this.getData_vViewFile(params.row.resourceId, 'learning_resource', 'resourcesFiles');
+                                    this.$refs.modal_viewFiles.modalValue = true;
+
                                 }
                             }
                         }, '查看资源'));
@@ -107,6 +117,37 @@
                             }, '发布'));
                         }
 
+                        if (params.row.publishStatus === 'published' && this.auth_update) {
+                            list.push(h('Button', {
+                                props: {
+                                    type: 'error',
+                                    size: 'small',
+                                    icon: 'ios-trash'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.$Modal.confirm({
+                                            title: '提示',
+                                            content: `确定要下架《${params.row.resourceName}》？`,
+                                            onOk: () => {
+                                                this.$http({
+                                                    method: 'get',
+                                                    url: '/',
+                                                    params: {
+                                                        resourceId: params.row.resourceId
+                                                    }
+                                                }).then((res) => {
+                                                    if (res.code === 'SUCCESS') {
+                                                        this.$Message.success('下架成功！');
+                                                        this.getData();
+                                                    }
+                                                }).catch(() => {})
+                                            }
+                                        })
+                                    }
+                                }
+                            }, '下架'));
+                        }
                         if (this.auth_update) {
                             list.push(h('Button', {
                                 props: {
@@ -116,7 +157,9 @@
                                 },
                                 on: {
                                     click: () => {
-
+                                        this.modal_resourcesHandle_props.type = 'edit';
+                                        this.modal_resourcesHandle_props.resourceId = params.row.resourceId;
+                                        this.$refs.modal_resourcesHandle.modalValue = true;
                                     }
                                 }
                             }, '编辑'));
@@ -193,15 +236,24 @@
                         resourceName: '资源名称1',
                         resourceTypeLabel: '视频',
                         publishTime: '2018-09-21',
-                        publishStatus: 'published',
-                        publishStatusLabel: '已发布',
+                        publishStatus: 'unpublished',
+                        publishStatusLabel: '未发布',
                         pageView: 10
                     }
                 ],
                 tableLoading: false,
 
+                // modal_addResources add/edit/view
+                modal_resourcesHandle_props: {
+                    type: 'add',
+                    resourceId: ''
+                },
+
                 // 字典
-                dict_resourceType: []
+                dict_resourceType: [],
+
+                // 附件列表
+                resourcesFiles: []
             };
         },
         mounted() {
@@ -209,7 +261,9 @@
         },
         methods: {
             addResources() {
-                this.$refs.modal_addResources.modalValue = true;
+                this.modal_resourcesHandle_props.type = 'add';
+                this.modal_resourcesHandle_props.resourceId = '';
+                this.$refs.modal_resourcesHandle.modalValue = true;
             },
             resetSearchParams() {
                 this.searchParams.condition.resourceId = '';
