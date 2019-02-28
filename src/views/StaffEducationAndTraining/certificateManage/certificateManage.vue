@@ -185,7 +185,7 @@
                     this.tableLoading = false;
                     if (res.code === 'SUCCESS') {
                         this.tableData = res.data.records;
-                        this.searchParams.total = res.data.page.total;
+                        this.searchParams.total = res.data.total;
                     }
                 }).catch(() => {
                     this.tableLoading = false;
