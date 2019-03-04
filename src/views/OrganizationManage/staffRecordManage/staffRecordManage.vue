@@ -47,7 +47,7 @@
             <Button type="primary" icon="md-add" @click="addInStaff">新增在编人员</Button>
             <Button type="primary" icon="md-add" @click="addOutStaff">新增编外人员</Button>
             <Button type="info" icon="md-clipboard" @click="openRecordView">人事变动记录</Button>
-            <Button type="info" icon="md-download" @click="addInStaff">导出花名册</Button>
+            <!--<Button type="info" icon="md-download" @click="addInStaff">导出花名册</Button>-->
 
             <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">
                 <Option v-for="item in dict_employeeType"
