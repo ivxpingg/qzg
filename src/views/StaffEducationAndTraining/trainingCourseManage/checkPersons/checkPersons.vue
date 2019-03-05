@@ -58,7 +58,6 @@
                 immediate: true,
                 handler(val) {
                     if (val) {
-                        this.formData.courseId = val;
                         this.getData();
                     }
                     else {
@@ -71,7 +70,7 @@
             getData() {
                 this.$http({
                     method: 'get',
-                    url: '/',
+                    url: '/course/queryUser',
                     params: {
                         courseId: this.courseId
                     }

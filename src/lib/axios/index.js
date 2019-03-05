@@ -62,6 +62,14 @@ const Ajax = axios.create({
 
 //ajax请求前拦截器
 Ajax.interceptors.request.use(function (config) {
+    if (config.url.indexOf('?') > -1) {
+        config.url += `&t=${new Date().getTime()}`;
+    }
+    else {
+        config.url += `?t=${new Date().getTime()}`;
+    }
+
+
     if (config.method === 'post' && utils.isUndefined(config.headers['Content-Type'])) {
         config.headers['Content-Type'] = 'application/json;charset=utf-8';
     }

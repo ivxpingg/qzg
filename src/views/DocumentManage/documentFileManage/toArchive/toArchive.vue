@@ -10,14 +10,14 @@
                                 :label="item.label"></Option>
                     </Select>
                 </FormItem>
-                <FormItem label="文件状态:" :label-width="65">
-                    <Select v-model="searchParams.condition.archiveStatus" style="width: 70px;">
-                        <Option v-for="item in dict_archiveStatus"
-                                :key="item.id"
-                                :value="item.value"
-                                :label="item.label"></Option>
-                    </Select>
-                </FormItem>
+                <!--<FormItem label="文件状态:" :label-width="65">-->
+                    <!--<Select v-model="searchParams.condition.archiveStatus" style="width: 70px;">-->
+                        <!--<Option v-for="item in dict_archiveStatus"-->
+                                <!--:key="item.id"-->
+                                <!--:value="item.value"-->
+                                <!--:label="item.label"></Option>-->
+                    <!--</Select>-->
+                <!--</FormItem>-->
                 <FormItem label="文件关键字:" :label-width="85">
                     <Input v-model="searchParams.condition.archiveTitle"
                            style="width: 120px;"
@@ -118,7 +118,7 @@
                     total: 0,           // 总行数
                     condition: {
                         archiveSource: '',
-                        archiveStatus: '',
+                        archiveStatus: 'wait_archive',
                         archiveTitle: '',
                         operator: '',
                         beginTime: '',
@@ -153,6 +153,7 @@
             };
         },
         mounted() {
+            this.getData();
             this.getDicts(['archiveSource', 'archiveStatus']);
         },
         methods: {
@@ -162,7 +163,6 @@
             },
             resetSearchParams() {
                 this.searchParams.condition.archiveSource = '';
-                this.searchParams.condition.archiveStatus = '';
                 this.searchParams.condition.archiveTitle = '';
                 this.searchParams.condition.operator = '';
                 this.searchParams.condition.beginTime = '';
@@ -173,7 +173,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/employee/list',
+                    url: '/archive/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;

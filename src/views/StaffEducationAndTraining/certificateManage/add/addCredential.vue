@@ -14,7 +14,7 @@
                     <Option v-for="item in userList"
                             :key="item.userId"
                             :value="item.userId"
-                            :label="item.userName"></Option>
+                            :label="item.name"></Option>
                 </Select>
             </FormItem>
             <FormItem label="毕业课程:" prop="courseId">
@@ -32,6 +32,12 @@
                             :value="item.value"
                             :label="item.label"></Option>
                 </Select>
+            </FormItem>
+            <FormItem label="结束时间:" prop="issueDate">
+                <DatePicker :value="formData.issueDate"
+                            type="date"
+                            @on-change="onChage_issueDate"
+                            placeholder="选择时间" ></DatePicker>
             </FormItem>
             <!--<FormItem label="证书名称:" prop="courseName">-->
                 <!--<Input v-model="formData.courseName" placeholder="请输入证书名称" />-->
@@ -56,6 +62,9 @@
     export default {
         name: 'addCredential',  // 新建证书
         mixins: [modalMixin, comMixin],
+        props: {
+
+        },
         created() {
             // 获取表单初始值
             Object.assign(this.initFormData, this.formData);
@@ -70,6 +79,7 @@
                     userId: '',
                     courseId: '',
                     certificateType: '',
+                    issueDate: '',
                     issuer: ''   // 发放人
                 },
                 rules: {
@@ -86,12 +96,51 @@
             };
         },
         mounted() {
+            this.getUserList();
+            this.getCourseList();
             this.getDicts(['certificateType']);
         },
         methods: {
+            onChage_issueDate(value) {
+                this.formData.issueDate = value;
+            },
             // 初始化表单数据
             resetFormData() {
                 Object.assign(this.formData, this.initFormData);
+            },
+            getUserList() {
+                this.$http({
+                    method: 'post',
+                    url: '/user/list',
+                    data: JSON.stringify( {
+                        current: 1,        // 当前第几页
+                        size: 100,          // 每页几行
+                        total: 0,           // 总行数
+                        condition: {}
+                    })
+                }).then((res) => {
+                    this.tableLoading = false;
+                    if (res.code === 'SUCCESS') {
+                        this.userList = res.data.records;
+                    }
+                })
+            },
+            getCourseList() {
+                this.$http({
+                    method: 'post',
+                    url: '/course/list',
+                    data: JSON.stringify( {
+                        current: 1,        // 当前第几页
+                        size: 100,          // 每页几行
+                        total: 0,           // 总行数
+                        condition: {}
+                    })
+                }).then((res) => {
+                    this.tableLoading = false;
+                    if (res.code === 'SUCCESS') {
+                        this.courseList = res.data.records;
+                    }
+                })
             },
             save() {
                 this.saveBtnLoading = true;
@@ -99,15 +148,15 @@
                     if (valid) {
                         this.$http({
                             method: 'post',
-                            url: '/',
+                            url: '/certificate/add',
                             data: JSON.stringify(this.formData)
                         }).then(res => {
+                            this.saveBtnLoading = false;
                             if(res.code === 'SUCCESS') {
                                 this.$Message.success({
                                     content: '添加成功！'
                                 });
                                 this.$emit('modal-callback');
-                                this.saveBtnLoading = false;
                                 this.modalValue = false;
                                 // 表单初始化
                                 this.resetFormData();

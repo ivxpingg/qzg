@@ -46,7 +46,7 @@
         <vResourcesHandle ref="modal_resourcesHandle"
                           :type="modal_resourcesHandle_props.type"
                           :resourceId="modal_resourcesHandle_props.resourceId"
-                          @call-back="getData"></vResourcesHandle>
+                          @modal-callback="getData"></vResourcesHandle>
 
         <!--查看附件-->
         <vViewFiles ref="modal_viewFiles" :data="resourcesFiles"></vViewFiles>

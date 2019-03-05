@@ -12,7 +12,7 @@ import vWebUploader from './components/webuploader/webuploader';
 import Cookies from 'js-cookie';
 
 if (process.env.NODE_ENV === 'development') {
-    Cookies.set('DomAuthSessId', '274897F4FC6037749A459BB4DE17CC28', {expires: 1});
+    Cookies.set('DomAuthSessId', 'FBEF25CF64EC68C6CE43730266421EA9', {expires: 1});
 }
 
 Vue.config.productionTip = process.env.NODE_ENV === 'development';

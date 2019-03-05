@@ -46,12 +46,12 @@
         <vLaborContractHandle ref="modal_laborContractHandle"
                               :employeeName="currentRow.employeeId"
                               :employeeId="currentRow.employeeName"
-                              @call-back="getData"></vLaborContractHandle>
+                              @modal-callback="getData"></vLaborContractHandle>
 
         <!--签订记录-->
         <vContractRecord ref="modal_contractRecord"
                          :laborContractId="currentRow.laborContractId"
-                         @call-back="getData"></vContractRecord>
+                         @modal-callback="getData"></vContractRecord>
 
     </div>
 </template>

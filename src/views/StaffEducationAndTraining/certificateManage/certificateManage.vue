@@ -43,7 +43,7 @@
         </div>
 
         <!--新建证书-->
-        <vAddCredential ref="modal_addCredential" @call-back="getData"></vAddCredential>
+        <vAddCredential ref="modal_addCredential" @modal-callback="getData"></vAddCredential>
 
     </div>
 </template>
@@ -90,7 +90,7 @@
                                             onOk: () => {
                                                 this.$http({
                                                     method: 'get',
-                                                    url: '//delete',
+                                                    url: '/certificate/delete',
                                                     params: {
                                                         certificateId: params.row.certificateId
                                                     }
@@ -167,6 +167,9 @@
                 dict_courseList: []
             };
         },
+        mounted() {
+            this.getData();
+        },
         methods: {
             addCredential() {
                 this.$refs.modal_addCredential.modalValue = true;
@@ -179,7 +182,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/certificate/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;

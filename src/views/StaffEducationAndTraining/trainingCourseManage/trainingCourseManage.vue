@@ -52,7 +52,7 @@
                              :courseName="modal_notificationCourse_props.courseName"
                              @modal-callback="resetProps"></vNotificationCourse>
         <!--查看人员-->
-        <vCheckPersons ref="modal_checkPersons"
+        <vCheckPersons ref="modal_checkPersons" key="xue"
                        :courseId="modal_checkPersons_props.courseId"></vCheckPersons>
     </div>
 </template>
@@ -72,7 +72,7 @@
                 let column = [{ title: '操作', minWidth: 360, align: 'center',
                     render: (h, params) => {
                         let list = [];
-                        if (this.auth_update) {
+                        if (this.auth_update && params.row.userNum) {
                             list.push(h('Button', {
                                 props: {
                                     type: 'primary',
@@ -99,7 +99,7 @@
                                 click: () => {
                                     if (this.auth_update) { this.courseHandleType = 'edit'; }
                                     else { this.courseHandleType = 'view'; }
-                                    this.currentRow.courseId = params.row.jobId;
+                                    this.currentRow.courseId = params.row.courseId;
                                     this.$refs.modal_courseHandle.modalValue = true;
                                 }
                             }
@@ -134,7 +134,7 @@
                                             onOk: () => {
                                                 this.$http({
                                                     method: 'get',
-                                                    url: '//delete',
+                                                    url: '/course/delete',
                                                     params: {
                                                         courseId: params.row.courseId
                                                     }
@@ -218,6 +218,7 @@
         },
         mounted() {
             this.getDeparmentList('', 'dict_departmentList');
+            this.getData();
         },
         methods: {
             // 重置子组件参数
@@ -240,7 +241,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/course/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;

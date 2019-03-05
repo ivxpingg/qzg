@@ -62,3 +62,9 @@
 textarea.ivu-input {
   font-size: 12px;
 }
+
+// 针对IE9做的样式兼容
+.ivu-tree ul li {
+    margin: 0\9;
+    padding: 8px 0\9;
+}

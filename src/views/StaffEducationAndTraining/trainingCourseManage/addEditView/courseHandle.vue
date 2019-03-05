@@ -49,7 +49,13 @@
                 <Input v-model="formData.courseContent" placeholder="请输入培训内容" :style="formInputStyle" />
             </FormItem>
             <FormItem label="培训类型:" prop="courseType">
-                <Input v-model="formData.courseType" placeholder="请输入培训类型" :style="formInputStyle" />
+                <Select v-model="formData.courseType" :style="formInputStyle">
+                    <Option v-for="item in dict_courseType"
+                            :key="item.id"
+                            :value="item.value"
+                            :label="item.label"></Option>
+                </Select>
+                <!--<Input v-model="formData.courseType" placeholder="请输入培训类型" :style="formInputStyle" />-->
             </FormItem>
             <FormItem >
                 <div style="width: 690px;">
@@ -111,6 +117,9 @@
                 return this.type === 'view';
             }
         },
+        created() {
+            Object.assign(this.initFormData, this.formData);
+        },
         data() {
             return {
                 formInputStyle: {
@@ -136,7 +145,8 @@
                 rules: {},
 
                 // 字典
-                dict_departmentList: []
+                dict_departmentList: [],
+                dict_courseType: []
             };
         },
         watch: {
@@ -155,6 +165,7 @@
         },
         mounted() {
             this.getDeparmentList('', 'dict_departmentList');
+            this.getDicts(['courseType']);
         },
         methods: {
             // 初始化表单数据
@@ -181,13 +192,16 @@
             getData() {
                 this.$http({
                     method: 'get',
-                    url: '/',
+                    url: '/course/query',
                     params: {
                         courseId: this.courseId
                     }
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
-                        this.tableData = res.data;
+                        Object.assign(this.formData, res.data, {
+                            startTime: this.timeFormat(res.data.startTime, 'YYYY-MM-DD'),
+                            endTime: this.timeFormat(res.data.endTime, 'YYYY-MM-DD'),
+                        });
                     }
                 })
             },
@@ -211,17 +225,18 @@
             addSubmit() {
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/course/add',
                     data: JSON.stringify(this.formData)
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
                         this.$Message.success({
-                            content: '添加员工成功！'
+                            content: '添加课程成功！'
                         });
                         this.$emit('modal-callback');
                         this.saveBtnLoading = false;
                         this.modalValue = false;
                         // 表单初始化
+                        this.resetFormData();
                     }
                 }).catch(e => {
                     this.saveBtnLoading = false;
@@ -235,7 +250,7 @@
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
                         this.$Message.success({
-                            content: '更新员工成功！'
+                            content: '更新成功！'
                         });
                         this.$emit('modal-callback');
                         this.saveBtnLoading = false;

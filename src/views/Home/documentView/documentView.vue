@@ -58,7 +58,7 @@
     import authMixin from '../../../lib/mixin/authMixin';
     import viewFileMixin from '../../Common/viewFiles/mixin';
     export default {
-        name: 'documentView',
+        name: 'documentView',   // 公文查阅
         mixins: [comMixin, authMixin, viewFileMixin],
         data() {
             return {

@@ -122,6 +122,7 @@
         },
         mounted() {
             this.getDicts(['courseStatus']);
+            this.getData();
         },
         methods: {
             resetSearchParams() {
@@ -132,7 +133,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/period/coursePeriod',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;

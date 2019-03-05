@@ -11,19 +11,31 @@
               :rules="rules"
               :label-width="80">
             <FormItem label="签订人员:" prop="employeeId">
-                <Input v-model="formData.employeeId" placeholder="" :style="formInputStyle" />
+                <Select v-model="formData.employeeId" :disabled="!!employeeId" :style="formInputStyle">
+                    <Option v-for="item in employeeList"
+                            :key="item.employeeId"
+                            :value="item.employeeId"
+                            :label="item.employeeName"></Option>
+                </Select>
+                <!--<Input v-model="formData.employeeId" placeholder="" :style="formInputStyle" />-->
             </FormItem>
-            <FormItem label="任职岗位:">
-                <Input  placeholder="" :style="formInputStyle" />
+            <FormItem label="任职岗位:" prop="jobId">
+                <Select v-model="formData.jobId" :style="formInputStyle">
+                    <Option v-for="item in jobList"
+                            :key="item.jobId"
+                            :value="item.jobId"
+                            :label="item.dutyName"></Option>
+                </Select>
+                <!--<Input  placeholder="" :style="formInputStyle" />-->
             </FormItem>
-            <FormItem label="签订时间:">
+            <FormItem label="签订时间:" prop="signDate">
                 <DatePicker :value="formData.signDate"
                             :style="formInputStyle"
                             type="date"
                             @on-change="onChage_signDate"
                             placeholder="选择时间" ></DatePicker>
             </FormItem>
-            <FormItem label="到期时间:">
+            <FormItem label="到期时间:" prop="expirationDate">
                 <DatePicker :value="formData.expirationDate"
                             :style="formInputStyle"
                             type="date"
@@ -37,7 +49,7 @@
                               false-value="0">合同到期提醒</Checkbox>
                 </div>
             </FormItem>
-            <FormItem label="">
+            <FormItem label="合同:" prop="fileIds">
                 <vWebUploader
                         v-if="modalValue"
                         ref="webUploader"
@@ -115,16 +127,22 @@
                     laborContractId: '',
                     employeeId: '',
                     employeeName: '',
-                    departmentId: '',
+                    jobId: '',
                     signDate: '',
                     expirationDate: '',
                     remind: '0',
                     fileIds: []
                 },
                 rules: {
+                    employeeId: [{ required: true, message: '签订人员不能为空！', trigger: 'blur' }],
+                    jobId: [{ required: true, message: '岗位不能为空！', trigger: 'blur' }],
                     signDate: [{ required: true, message: '签订时间不能为空！', trigger: 'blur' }],
                     expirationDate: [{ required: true, message: '到期时间不能为空！', trigger: 'blur' }],
+                    fileIds: [{ required: true, type: 'array', message: '请上传合同！', trigger: 'blur' }],
                 },
+
+                employeeList: [],
+                jobList: []
             };
         },
         watch: {
@@ -135,7 +153,49 @@
                 this.formData.employeeName = val;
             }
         },
+        mounted() {
+            this.getEmployeeList();
+            this.getJobList();
+        },
         methods: {
+            // 初始化表单数据
+            resetFormData() {
+                Object.assign(this.formData, this.initFormData);
+            },
+            getJobList() {
+                this.$http({
+                    method: 'post',
+                    url: '/job/list',
+                    data: JSON.stringify({
+                        current: 1,        // 当前第几页
+                        size: 100,          // 每页几行
+                        total: 0,           // 总行数
+                        condition: {}
+                    })
+                }).then((res) => {
+                    this.tableLoading = false;
+                    if (res.code === 'SUCCESS') {
+                        this.jobList = res.data.records;
+                    }
+                })
+            },
+            getEmployeeList() {
+                this.$http({
+                    method: 'post',
+                    url: '/employee/list',
+                    data: JSON.stringify( {
+                        current: 1,        // 当前第几页
+                        size: 100,          // 每页几行
+                        total: 0,           // 总行数
+                        condition: {}
+                    })
+                }).then((res) => {
+                    this.tableLoading = false;
+                    if (res.code === 'SUCCESS') {
+                        this.employeeList = res.data.records;
+                    }
+                })
+            },
             onChage_signDate(value) { this.formData.signDate = value; },
             onChage_expirationDate(value) { this.formData.expirationDate = value; },
             // 合同移除
@@ -179,6 +239,8 @@
                         this.saveBtnLoading = false;
                         this.modalValue = false;
                         // 表单初始化
+                        this.resetFormData();
+
                     }
                 }).catch(e => {
                     this.saveBtnLoading = false;
@@ -187,7 +249,7 @@
             editSubmit() {
                 this.$http({
                     method: 'post',
-                    url: '/laborContract/add',
+                    url: '/laborContract/update',
                     data: JSON.stringify(this.formData)
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
@@ -198,6 +260,7 @@
                         this.saveBtnLoading = false;
                         this.modalValue = false;
                         // 表单初始化
+                        this.resetFormData();
                     }
                 }).catch(e => {
                     this.saveBtnLoading = false;
