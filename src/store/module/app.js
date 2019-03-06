@@ -92,7 +92,7 @@ export default {
         getMenuList({commit}) {
             return new Promise(((resolve, reject) => {
                 // 临时测试添加的清除
-                setMenuListInLocalstorage(null);
+                // setMenuListInLocalstorage(null);
                 let menuList = getMenuListInLocalstorage();
                 if (!menuList) {
                     axios({

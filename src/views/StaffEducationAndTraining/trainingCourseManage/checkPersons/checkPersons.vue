@@ -31,7 +31,7 @@
             return {
                 tableColumns: [
                     { title: '序号', width: 65, align: 'center', type: 'index', },
-                    { title: '员工名称', width: 120, align: 'center', key: 'employeeName' },
+                    { title: '员工名称', width: 120, align: 'center', key: 'userName' },
                     { title: '报名时间', width: 180, align: 'center',
                         render: (h, params) => {
                             let str = this.timeFormat(params.row.signTime, 'YYYY-MM-DD HH:mm:ss');
@@ -39,16 +39,16 @@
                         }
                     },
                     { title: '电话', width: 120, align: 'center', key: 'phone' },
-                    { title: '部门', minWidth: 120, align: 'center', key: 'departmentName' },
+                    { title: '部门', minWidth: 120, align: 'center', key: 'roleName' },
 
                 ],
                 tableData: [
-                    {
-                        employeeName: '小陈',
-                        signTime: '2018-09-21',
-                        phone: '13592625355',
-                        departmentName: '办公室'
-                    }
+                    // {
+                    //     employeeName: '小陈',
+                    //     signTime: '2018-09-21',
+                    //     phone: '13592625355',
+                    //     roleName: '办公室'
+                    // }
                 ],
                 tableLoading: false,
             };

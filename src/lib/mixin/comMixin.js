@@ -12,7 +12,7 @@ export default {
          * @param type [String]
          * @param key [String]
          */
-        getDict(type, key) {
+        getDict(type, key, callback) {
             this.$http({
                 method: 'get',
                 url: '/dict/getListByType',
@@ -23,6 +23,9 @@ export default {
                 if(res.code) {
                     this[key] = res.data;
                 }
+                if (callback) {
+                    callback();
+                }
             })
         },
         /**
@@ -30,7 +33,7 @@ export default {
          * @param list [Array]
          * @return null
          */
-        getDicts(list) {
+        getDicts(list, callback) {
             this.$http({
                 method: 'get',
                 url: '/dict/getListByTypes',
@@ -42,6 +45,9 @@ export default {
                     list.forEach(v => {
                         this[`dict_${v}`] = res.data[v] || [];
                     });
+                }
+                if (callback) {
+                    callback();
                 }
             });
         },

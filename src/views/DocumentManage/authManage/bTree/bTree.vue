@@ -1,6 +1,6 @@
 <template>
     <div class="bTree-container ivu-card ivu-card-dis-hover" :bordered="false">
-        <vIvxFilterBox>
+        <vIvxFilterBox v-if="search">
             <Form>
                 <FormItem>
                     <Input placeholder="检索组织结构" >
@@ -11,14 +11,16 @@
         </vIvxFilterBox>
         <div class="tree-box">
             <Tree :data="groupTreeData"
-                  @on-select-change="onSelectChange" :load-data="loadData"></Tree>
+                  @on-select-change="onSelectChange"></Tree>
         </div>
     </div>
 </template>
 
 <script>
+    import comMixin from '../../../../lib/mixin/comMixin';
     export default {
         name: 'bTree',
+        mixins: [comMixin],
         props: {
             roleId: {
                 type: String,
@@ -28,12 +30,18 @@
             expandLevel: {
                 type: Number,
                 default: 1
-            }
+            },
+            search: {
+                type: Boolean,
+                default: true
+            },
         },
         data() {
             return {
                 menuList: [],
-                groupTreeData: []
+                groupTreeData: [],
+
+                dict_permission: []
             };
         },
         watch: {
@@ -46,7 +54,7 @@
             }
         },
         mounted() {
-            this.getData();
+            this.getDicts(['permission'], this.getData);
         },
         methods: {
             loadData(item, callback) {
@@ -77,15 +85,19 @@
                 children.forEach((val) => {
                     let item = {};
                     Object.assign(item, val);
-                    item.title = item.name;
+                    item.title = item.name || item.userName;
                     item.expand = false;// level <= this.expandLevel;
                     item.children = [];
-                    item.loading = false;
+                    // item.loading = false;
                     item.selected = false;
                     item.render = this.render;
                     attr.push(item);
+
                     if (val.children) {
                         item.children = this.transformTreeData(val.children, level + 1);
+                    }
+                    else if(val.userList) {
+                        item.children = this.transformTreeData(val.userList, level + 1);
                     }
                 });
                 return attr;
@@ -95,14 +107,16 @@
                 let attr = [];
                 let cls = 'ivu-tree-title';
 
-                attr.push(h('Icon', {
-                    props: {
-                        type: 'md-person'
-                    },
-                    style: {
-                        marginRight: '5px'
-                    }
-                }));
+                if (data.userName) {
+                    attr.push(h('Icon', {
+                        props: {
+                            type: 'md-person'
+                        },
+                        style: {
+                            marginRight: '5px'
+                        }
+                    }));
+                }
 
                 attr.push(h('span', data.title));
 

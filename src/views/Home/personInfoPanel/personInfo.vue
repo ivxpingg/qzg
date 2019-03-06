@@ -74,7 +74,16 @@
                 float: left;
                 height: 100px;
                 width: 50%;
-                border: 1px solid #dcdee2;
+                border-width: 0 0 1px 1px;
+                border-style: solid;
+                border-color: #dcdee2;
+
+                &:nth-child(1), &:nth-child(2) {
+                    border-top-width: 1px ;
+                }
+                &:nth-child(2n) {
+                    border-right-width: 1px ;
+                }
 
                 .title {
                     margin-top: 20px;
@@ -85,7 +94,7 @@
                 }
                 .value {
                     font-size: 20px;
-                    color: #333;
+                    color: #2d8cf0;
                     text-align: center;
                 }
             }

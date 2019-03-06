@@ -2,16 +2,19 @@
     <div class="resource-container">
         <Carousel v-model="value" loop autoplay :height="200">
             <CarouselItem>
-                <div class="demo-carousel" style="height: 200px; background-color: red;">1</div>
+                <div class="demo-carousel" style="height: 200px; background-color: red;">
+                    <img src="./images/slideshow1.png" style="width: 100%" alt="">
+                </div>
             </CarouselItem>
             <CarouselItem>
-                <div class="demo-carousel" style="height: 200px; background-color: blueviolet;">2</div>
+                <div class="demo-carousel" style="height: 200px; background-color: blueviolet;">
+                    <img src="./images/slideshow2.png" style="width: 100%" alt="">
+                </div>
             </CarouselItem>
             <CarouselItem>
-                <div class="demo-carousel" style="height: 200px; background-color: yellowgreen;">3</div>
-            </CarouselItem>
-            <CarouselItem>
-                <div class="demo-carousel" style="height: 200px; background-color: palegoldenrod;">4</div>
+                <div class="demo-carousel" style="height: 200px; background-color: yellowgreen;">
+                    <img src="./images/slideshow3.png" style="width: 100%" alt="">
+                </div>
             </CarouselItem>
         </Carousel>
 
@@ -129,5 +132,6 @@
 
 <style lang="scss" scoped>
     .resource-container {
+
     }
 </style>

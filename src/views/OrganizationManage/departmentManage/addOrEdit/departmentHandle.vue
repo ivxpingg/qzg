@@ -153,12 +153,12 @@
                             url: '/department/update',
                             data: JSON.stringify(this.formData)
                         }).then(res => {
+                            this.saveBtnLoading = false;
                             if(res.code === 'SUCCESS') {
                                 this.$Message.success({
                                     content: '编辑部门成功！'
                                 });
                                 this.$emit('modal-callback');
-                                this.saveBtnLoading = false;
                                 this.modalValue = false;
                                 // 表单初始化
                                 this.resetFormData();

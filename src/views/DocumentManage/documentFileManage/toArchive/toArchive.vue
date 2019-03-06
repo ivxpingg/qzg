@@ -73,20 +73,6 @@
                 let column = [{ title: '操作', minWidth: 180, align: 'center',
                     render: (h, params) => {
                         let list = [];
-                        if (this.auth_update) {
-                            list.push(h('Button', {
-                                props: {
-                                    type: 'primary',
-                                    size: 'small',
-                                    icon: 'ios-create'
-                                },
-                                on: {
-                                    click: () => {
-
-                                    }
-                                }
-                            }, '归档'));
-                        }
 
                         list.push(h('Button', {
                             props: {
@@ -100,6 +86,32 @@
                                 }
                             }
                         }, '查看'));
+
+                        list.push(h('Dropdown', {
+                            props: {
+                                type: 'primary',
+                                size: 'small',
+                                icon: 'ios-create'
+                            },
+                            style: {
+                                marginLeft: '10px'
+                            },
+                            on: {
+                                'on-click': (archiveType) => {
+                                    this.toArchive(archiveType, params.row);
+                                }
+                            }
+                        }, [h('a',[ '归档',  h('Icon', { props: { type: 'ios-arrow-down' } }) ]),
+                            h('DropdownMenu', {
+                                props: {},
+                                slot: 'list'
+                            } ,this.dict_archiveType.map(item => {
+                                return h('DropdownItem', {
+                                    props:{
+                                        name: item.value
+                                    }
+                                }, item.label)
+                            })) ]));
 
                         return h('div',{
                             style: { },
@@ -150,11 +162,12 @@
                 // 字典
                 dict_archiveSource: [],
                 dict_archiveStatus: [],
+                dict_archiveType: []
             };
         },
         mounted() {
             this.getData();
-            this.getDicts(['archiveSource', 'archiveStatus']);
+            this.getDicts(['archiveSource', 'archiveStatus', 'archiveType']);
         },
         methods: {
             onChage_daterange(value) {
@@ -169,6 +182,23 @@
                 this.searchParams.condition.endTime = '';
                 this.$refs.datePicker.handleClear();
             },
+            // 归档
+            toArchive(archiveType, row) {
+                this.$http({
+                    method: 'get',
+                    url: '/archive/handleArchive',
+                    params: {
+                        archiveId: row.archiveId,
+                        archiveType: archiveType
+                    }
+                }).then((res) => {
+                    if (res.code === 'SUCCESS') {
+                        this.$Message.success('归档成功!');
+                        this.getData();
+                    }
+                })
+            },
+
             getData() {
                 this.tableLoading = true;
                 this.$http({

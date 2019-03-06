@@ -44,29 +44,84 @@
             </Form>
         </vIvxFilterBox>
 
-        <div class="ivx-table-box">
-            <Table border
-                   height="540"
-                   :loading="tableLoading"
-                   :columns="_tableColumns"
-                   :data="tableData"></Table>
-            <Page prev-text="上一页"
-                  next-text="下一页"
-                  show-total
-                  :current="searchParams.current"
-                  :page-size="searchParams.size"
-                  :total="searchParams.total"
-                  @on-change="onPageChange"></Page>
+        <div class="box-panel">
+            <div class="left-panel">
+                <vIvxFilterBox style="padding-top: 10px;">
+                    <Form :label-width="35">
+                        <FormItem><Button type="primary" @click="onClick_newArchiveType">新建档案</Button></FormItem>
+                    </Form>
+                </vIvxFilterBox>
+
+                <div class="dict-list">
+                    <div class="item" v-for="item in dict_archiveType"
+                         @click="archiveTypeSelect(item)"
+                         :key="item.id">
+                        <Icon type="md-filing" size="60" :color="getColor(item.value)" />
+                        <p>{{item.label}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="right-panel">
+                <div class="ivx-table-box">
+                    <Table border
+                           height="540"
+                           :loading="tableLoading"
+                           :columns="_tableColumns"
+                           :data="tableData"></Table>
+                    <Page prev-text="上一页"
+                          next-text="下一页"
+                          show-total
+                          :current="searchParams.current"
+                          :page-size="searchParams.size"
+                          :total="searchParams.total"
+                          @on-change="onPageChange"></Page>
+                </div>
+            </div>
         </div>
+
+        <Modal v-model="modal_addDict"
+               title="添加字典"
+               draggable
+               ok-text="保存"
+               @on-ok="addDict_click"
+               :width="400">
+            <Form ref="formAdd"
+                  :model="formData"
+                  :rules="rules"
+                  :label-width="55">
+                <FormItem label="类型:" prop="type">
+                    <Input v-model="formData.type" placeholder="字典类型" />
+                </FormItem>
+                <FormItem label="描述:" prop="description">
+                    <Input v-model="formData.description" placeholder="描述" />
+                </FormItem>
+                <FormItem label="键值:" prop="label">
+                    <Input v-model="formData.label" placeholder="键值" />
+                </FormItem>
+                <FormItem label="值:" prop="value">
+                    <Input v-model="formData.value" placeholder="值" />
+                </FormItem>
+                <FormItem label="排序:" prop="sort">
+                    <Input v-model="formData.sort" number placeholder="排序，如：1，2，3" />
+                </FormItem>
+            </Form>
+        </Modal>
+
+        <!--授权-->
+        <vAuthorize ref="modal_authorize"
+                    :archiveId="modal_authorize_props.archiveId"></vAuthorize>
+
     </div>
 </template>
 
 <script>
     import comMixin from '../../../../lib/mixin/comMixin';
     import authMixin from '../../../../lib/mixin/authMixin';
+    import vAuthorize from './authorize/authorize';
     export default {
         name: 'archived',
         mixins: [comMixin, authMixin],
+        components: {vAuthorize},
         computed: {
             _tableColumns() {
                 let column = [{ title: '操作', minWidth: 180, align: 'center',
@@ -85,6 +140,20 @@
                                 }
                             }
                         }, '查看'));
+
+                        list.push(h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small',
+                                icon: 'md-contacts'
+                            },
+                            on: {
+                                click: () => {
+                                    this.modal_authorize_props.archiveId = params.row.archiveId;
+                                    this.$refs.modal_authorize.modalValue = true;
+                                }
+                            }
+                        }, '授权'));
 
                         return h('div',{
                             style: { },
@@ -105,6 +174,7 @@
                         archiveSource: '',
                         archiveStatus: 'complete_archive',
                         archiveTitle: '',
+                        archiveType: '',
                         operator: '',
                         beginTime: '',
                         endTime: ''
@@ -135,13 +205,34 @@
                 // 字典
                 dict_archiveSource: [],
                 dict_archiveStatus: [],
+                dict_archiveType: [],
+
+                // 添加档案类型
+                modal_addDict: false,
+                formData: {
+                    type: '',
+                    description: '',
+                    label: '',
+                    value: '',
+                    sort: 0
+                },
+                rules: {},
+
+                //
+                modal_authorize_props: {
+                    archiveId: ''
+                }
+
             };
         },
         mounted() {
             this.getData();
-            this.getDicts(['archiveSource', 'archiveStatus']);
+            this.getDicts(['archiveSource', 'archiveStatus', 'archiveType']);
         },
         methods: {
+            getColor(value) {
+                return value === this.searchParams.condition.archiveType ? '#2d8cf0' : '#5cadff';
+            },
             onChage_daterange(value) {
                 this.searchParams.condition.beginTime = value[0];
                 this.searchParams.condition.endTime = value[1];
@@ -149,11 +240,24 @@
             resetSearchParams() {
                 this.searchParams.condition.archiveSource = '';
                 this.searchParams.condition.archiveTitle = '';
+                this.searchParams.condition.archiveType = '';
                 this.searchParams.condition.operator = '';
                 this.searchParams.condition.beginTime = '';
                 this.searchParams.condition.endTime = '';
                 this.$refs.datePicker.handleClear();
             },
+            archiveTypeSelect(item) {
+                this.searchParams.condition.archiveType = item.value;
+            },
+            // 新建档案
+            onClick_newArchiveType() {
+                this.modal_addDict = true;
+            },
+            // 新建档案保存
+            addDict_click() {
+
+            },
+            // 授权
             getData() {
                 this.tableLoading = true;
                 this.$http({
@@ -176,5 +280,31 @@
 
 <style lang="scss" scoped>
     .archived-container {
+        .box-panel {
+            overflow: hidden;
+
+            .left-panel {
+                float: left;
+                width: 150px;
+
+                .dict-list {
+                    .item {
+                        margin-top: 10px;
+                        text-align: center;
+                        cursor: pointer;
+
+                        p {
+                            font-size: 14px;
+                            text-align: center;
+                        }
+
+                    }
+                }
+            }
+            .right-panel {
+                float: left;
+                width: calc(100% - 150px);
+            }
+        }
     }
 </style>
