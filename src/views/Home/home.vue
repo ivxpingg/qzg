@@ -5,15 +5,19 @@
                 <Card title="资源中心" :dis-hover="true">
                     <Tabs v-model="name" :animated="false">
                         <TabPane label="学习资源" name="resource" icon="logo-buffer">
-                            <vResource v-if="name === 'resource'">
-
-                            </vResource>
+                            <div style="height: 800px; overflow-y: auto;">
+                                <vResource v-if="name === 'resource'"></vResource>
+                            </div>
                         </TabPane>
                         <TabPane label="培训课程" name="course" icon="md-albums">
-                            <vCourse v-if="name === 'course'"></vCourse>
+                            <div style="height: 800px; overflow-y: auto;">
+                                <vCourse v-if="name === 'course'"></vCourse>
+                            </div>
                         </TabPane>
                         <TabPane label="公文查阅" name="documentView" icon="md-document">
-                            <vDocumentView v-if="name === 'documentView'"></vDocumentView>
+                            <div style="height: 800px; overflow-y: auto;">
+                               <vDocumentView v-if="name === 'documentView'"></vDocumentView>
+                            </div>
                         </TabPane>
                     </Tabs>
                 </Card>

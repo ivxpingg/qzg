@@ -146,7 +146,7 @@
 <style lang="scss" scoped>
     .course-container {
         .course-list-panel{
-            height: 520px;
+            height: 670px;
             overflow-y: auto;
             margin-bottom: 10px;
             .item {

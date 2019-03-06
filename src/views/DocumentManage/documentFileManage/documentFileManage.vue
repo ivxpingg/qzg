@@ -23,7 +23,7 @@
         components: {vToArchive,vArchived,vApplyManage},
         data() {
             return {
-                name: 'toArchive'
+                name: 'applyMange'
             };
         }
     }

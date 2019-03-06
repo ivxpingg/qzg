@@ -31,7 +31,8 @@
 
 <style lang="scss" scoped>
     .courseOfStudy-container {
-        overflow: hidden;
+        height: 410px;
+        overflow-y: auto;
         .item {
             overflow: hidden;
             .left-panel {

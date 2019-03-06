@@ -10,6 +10,11 @@
                                 :label="item.label"></Option>
                     </Select>
                 </FormItem>
+                <FormItem label="文件关键字:" :label-width="85">
+                    <Input v-model="searchParams.condition.archiveTitle"
+                           style="width: 120px;"
+                           placeholder="文件关键字"/>
+                </FormItem>
                 <FormItem label="时间:" :label-width="45">
                     <DatePicker ref="datePicker"
                                 type="daterange"
@@ -18,25 +23,20 @@
                                 style="width: 180px;"></DatePicker>
                 </FormItem>
 
-                <FormItem label="文件关键字:" :label-width="85">
-                    <Input v-model="searchParams.condition.archiveTitle"
-                           style="width: 120px;"
-                           placeholder="文件关键字"/>
-                </FormItem>
-                <FormItem label="档案类别:" :label-width="65">
-                    <Select v-model="searchParams.condition.archiveType" style="width: 70px;">
-                        <Option v-for="item in dict_archiveType"
-                                :key="item.id"
-                                :value="item.value"
-                                :label="item.label"></Option>
-                    </Select>
-                </FormItem>
+                <!--<FormItem label="档案类别:" :label-width="65">-->
+                    <!--<Select v-model="searchParams.condition.archiveType" style="width: 70px;">-->
+                        <!--<Option v-for="item in dict_archiveType"-->
+                                <!--:key="item.id"-->
+                                <!--:value="item.value"-->
+                                <!--:label="item.label"></Option>-->
+                    <!--</Select>-->
+                <!--</FormItem>-->
             </Form>
         </vIvxFilterBox>
 
         <div class="ivx-table-box">
             <Table border
-                   height="540"
+                   height="680"
                    :loading="tableLoading"
                    :columns="tableColumns"
                    :data="tableData"></Table>
@@ -70,7 +70,6 @@
                         archiveSource: '',
                         archiveStatus: '',
                         archiveTitle: '',
-                        archiveType: '',
                         operator: '',
                         beginTime: '',
                         endTime: ''
@@ -170,14 +169,13 @@
 
                 // 字典
                 dict_archiveSource: [],
-                dict_archiveType: [],
 
                 // 附件
                 fileList: []
             };
         },
         mounted() {
-            this.getDicts(['archiveSource', 'archiveType']);
+            this.getDicts(['archiveSource']);
         },
         methods: {
             onChage_daterange(value) {

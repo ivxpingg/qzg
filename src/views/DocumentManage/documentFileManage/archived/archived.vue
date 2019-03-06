@@ -83,28 +83,34 @@
                title="添加字典"
                draggable
                ok-text="保存"
-               @on-ok="addDict_click"
                :width="400">
             <Form ref="formAdd"
                   :model="formData"
                   :rules="rules"
-                  :label-width="55">
-                <FormItem label="类型:" prop="type">
-                    <Input v-model="formData.type" placeholder="字典类型" />
-                </FormItem>
-                <FormItem label="描述:" prop="description">
-                    <Input v-model="formData.description" placeholder="描述" />
-                </FormItem>
-                <FormItem label="键值:" prop="label">
+                  :label-width="80">
+                <!--<FormItem label="类型:" prop="type">-->
+                    <!--<Input v-model="formData.type" placeholder="字典类型" />-->
+                <!--</FormItem>-->
+                <!--<FormItem label="描述:" prop="description">-->
+                    <!--<Input v-model="formData.description" placeholder="描述" />-->
+                <!--</FormItem>-->
+                <FormItem label="类别名称:" prop="label">
                     <Input v-model="formData.label" placeholder="键值" />
                 </FormItem>
-                <FormItem label="值:" prop="value">
-                    <Input v-model="formData.value" placeholder="值" />
-                </FormItem>
+                <!--<FormItem label="值:" prop="value">-->
+                    <!--<Input v-model="formData.value" placeholder="值" />-->
+                <!--</FormItem>-->
                 <FormItem label="排序:" prop="sort">
                     <Input v-model="formData.sort" number placeholder="排序，如：1，2，3" />
                 </FormItem>
             </Form>
+
+            <div slot="footer">
+                <Button type="primary"
+                        size="large"
+                        :loading="loading_add"
+                        @click="addDict_click">保存</Button>
+            </div>
         </Modal>
 
         <!--授权-->
@@ -209,15 +215,21 @@
 
                 // 添加档案类型
                 modal_addDict: false,
+                loading_add: false,
                 formData: {
-                    type: '',
-                    description: '',
+                    // type: '',
+                    // description: '',
                     label: '',
-                    value: '',
+                    // value: '',
                     sort: 0
                 },
-                rules: {},
-
+                rules: {
+                    label:  [{ required: true, message: '类别名称不能为空！', trigger: 'blur' }],
+                    sort:  [
+                        { type: 'number', message: '请输入整数！', trigger: 'blur' },
+                        { required: true, type: 'number', message: '排序不能为空！', trigger: 'blur' }
+                    ],
+                },
                 //
                 modal_authorize_props: {
                     archiveId: ''
@@ -255,7 +267,28 @@
             },
             // 新建档案保存
             addDict_click() {
-
+                this.loading_add = true;
+                this.$refs.formAdd.validate((valid) => {
+                    if (valid) {
+                        this.$http({
+                            method: 'post',
+                            url: '/archive/addArchiveType',
+                            data: JSON.stringify(this.formData)
+                        }).then((res) => {
+                            this.loading_add = false;
+                            if (res.code === 'SUCCESS') {
+                                this.$Message.success('添加成功!');
+                                this.getDicts(['archiveType']);
+                                this.modal_addDict = false;
+                            }
+                        }).catch(() => {
+                            this.loading_add = false;
+                        })
+                    }
+                    else {
+                        this.loading_add = false;
+                    }
+                });
             },
             // 授权
             getData() {

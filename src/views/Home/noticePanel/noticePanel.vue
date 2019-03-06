@@ -81,7 +81,7 @@
             return {
                 searchParams: {
                     current: 1,      // 当前第几页
-                    size: 10,      // 每页几行
+                    size: 7,      // 每页几行
                     total: 0     // 总行数
                 },
                 list: [
@@ -93,6 +93,30 @@
                     },
                     {
                         noticeId: '114',
+                        insTime: '2018-10-10',
+                        noticeTitle: '标题名',
+                        noticeStatus: 'unRead'
+                    },
+                    {
+                        noticeId: '115',
+                        insTime: '2018-10-10',
+                        noticeTitle: '标题名',
+                        noticeStatus: 'unRead'
+                    },
+                    {
+                        noticeId: '115',
+                        insTime: '2018-10-10',
+                        noticeTitle: '标题名',
+                        noticeStatus: 'unRead'
+                    },
+                    {
+                        noticeId: '115',
+                        insTime: '2018-10-10',
+                        noticeTitle: '标题名',
+                        noticeStatus: 'unRead'
+                    },
+                    {
+                        noticeId: '115',
                         insTime: '2018-10-10',
                         noticeTitle: '标题名',
                         noticeStatus: 'unRead'
