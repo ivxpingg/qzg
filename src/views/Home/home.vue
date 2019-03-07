@@ -31,7 +31,6 @@
                 </Card>
             </i-col>
 
-
             <i-col span="8">
                 <vNoticePanel></vNoticePanel>
             </i-col>

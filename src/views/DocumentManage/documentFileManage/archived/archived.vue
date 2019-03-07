@@ -117,6 +117,9 @@
         <vAuthorize ref="modal_authorize"
                     :archiveId="modal_authorize_props.archiveId"></vAuthorize>
 
+        <!--查看档案附件-->
+        <vRecordViewFiles ref="modal_recordViewFiles"
+                          :archiveId="modal_recordViewFiles_props.archiveId" ></vRecordViewFiles>
     </div>
 </template>
 
@@ -124,10 +127,11 @@
     import comMixin from '../../../../lib/mixin/comMixin';
     import authMixin from '../../../../lib/mixin/authMixin';
     import vAuthorize from './authorize/authorize';
+    import vRecordViewFiles from '../../../Common/recordViewFiles/recordViewFiles';
     export default {
         name: 'archived',
         mixins: [comMixin, authMixin],
-        components: {vAuthorize},
+        components: {vAuthorize, vRecordViewFiles},
         computed: {
             _tableColumns() {
                 let column = [{ title: '操作', minWidth: 180, align: 'center',
@@ -142,7 +146,8 @@
                             },
                             on: {
                                 click: () => {
-
+                                    this.modal_recordViewFiles_props.archiveId = params.row.archiveId;
+                                    this.$refs.modal_recordViewFiles.modalValue = true;
                                 }
                             }
                         }, '查看'));
@@ -232,6 +237,10 @@
                 },
                 //
                 modal_authorize_props: {
+                    archiveId: ''
+                },
+
+                modal_recordViewFiles_props: {
                     archiveId: ''
                 }
 

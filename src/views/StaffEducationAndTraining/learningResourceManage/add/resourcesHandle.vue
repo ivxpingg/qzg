@@ -122,7 +122,7 @@
                     startTime: '',     //
                     endTime: '',
                     description: '',   // 资源描述
-                    fileIds: ''
+                    fileIds: []
                 },
                 rules: {
                     resourceName: [{ required: true, message: '资源名称不能为空！', trigger: 'blur' }],
@@ -130,7 +130,7 @@
                     startTime: [{ required: true, message: '开始时间不能为空！', trigger: 'blur' }],
                     endTime: [{ required: true, message: '结束时间不能为空！', trigger: 'blur' }],
                     description: [{ required: true, message: '资源描述不能为空！', trigger: 'blur' }],
-                    fileIds: [{ required: true, message: '请上传资源！', trigger: 'blur' }],
+                    fileIds: [{ required: true, type: 'array', message: '请上传资源！', trigger: 'blur' }],
                 },
 
                 // 字典
@@ -171,38 +171,47 @@
             },
             // 文件上传成功
             onUploadSuccess(response, file, fileList) {
-                if (response.code === 'SUCCESS') {
-                    this.formData.fileIds = fileList.map(v => v.response.fileId);
-                }
+                this.formData.fileIds = fileList.map(v => v.response.fileId);
             },
             getData() {
                 this.$http({
                     method: 'get',
-                    url: '/',
+                    url: '/resource/query',
                     params: {
                         resourceId: this.resourceId
                     }
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
-                        this.tableData = res.data;
+                        Object.assign(this.formData, res.data, {
+                            startTime: this.timeFormat(res.data.startTime, 'YYYY-MM-DD'),
+                            endTime: this.timeFormat(res.data.endTime, 'YYYY-MM-DD'),
+                        });
                     }
                 })
             },
             save() {
+                if (this.type === 'add') {
+                    this.addSubmit();
+                }
+                else {
+                    this.updateSubmit();
+                }
+            },
+            addSubmit() {
                 this.saveBtnLoading = true;
                 this.$refs.form.validate((valid) => {
                     if (valid) {
                         this.$http({
                             method: 'post',
-                            url: '/',
+                            url: '/resource/add',
                             data: JSON.stringify(this.formData)
                         }).then(res => {
+                            this.saveBtnLoading = false;
                             if(res.code === 'SUCCESS') {
                                 this.$Message.success({
                                     content: '添加成功！'
                                 });
                                 this.$emit('modal-callback');
-                                this.saveBtnLoading = false;
                                 this.modalValue = false;
                                 // 表单初始化
                                 this.resetFormData();
@@ -215,7 +224,34 @@
                         this.saveBtnLoading = false;
                     }
                 })
-
+            },
+            updateSubmit() {
+                this.saveBtnLoading = true;
+                this.$refs.form.validate((valid) => {
+                    if (valid) {
+                        this.$http({
+                            method: 'post',
+                            url: '/resource/update',
+                            data: JSON.stringify(this.formData)
+                        }).then(res => {
+                            this.saveBtnLoading = false;
+                            if(res.code === 'SUCCESS') {
+                                this.$Message.success({
+                                    content: '修改成功！'
+                                });
+                                this.$emit('modal-callback');
+                                this.modalValue = false;
+                                // 表单初始化
+                                this.resetFormData();
+                            }
+                        }).catch(e => {
+                            this.saveBtnLoading = false;
+                        })
+                    }
+                    else{
+                        this.saveBtnLoading = false;
+                    }
+                })
             }
         }
     }

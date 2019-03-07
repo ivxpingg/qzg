@@ -148,7 +148,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'get',
-                    url: '/laborContract/list',
+                    url: '/',
                     params: {
                         laborContractId: this.laborContractId
                     }

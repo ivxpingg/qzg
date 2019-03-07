@@ -82,34 +82,17 @@
                     { title: '序号', width: 65, align: 'center', type: 'index', },
                     { title: '文件名称', minWidth: 120, align: 'center', key: 'archiveTitle' },
                     { title: '操作人', width: 100, align: 'center', key: 'operator' },
-                    { title: '操作时间', width: 150, align: 'center', key: 'insTime' },
+                    { title: '操作时间', width: 150, align: 'center', key: 'insTime',
+                        render: (h, params) => {
+                            return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
+                        }
+                    },
                     { title: '操作类型', width: 120, align: 'center', key: 'operateTypeLabel' },
                     { title: '操作内容', minWidth: 120, align: 'center', key: 'operateContent' },
-                    { title: '操作结果', width: 100, align: 'center', key: 'result' },
+                    { title: '操作结果', width: 100, align: 'center', key: 'operateResultLabel' },
                     { title: '备注', minWidth: 120, align: 'center', key: 'remark' },
                 ],
-                tableData: [
-                    {
-                        archiveTitle: '泉州港水运工程', operator: '小陈', insTime: '2018-09-21  08:50:08',
-                        operateTypeLabel: '授权', operateContent: '转发给“用户”',
-                        result: '成功', remark: '这是备注描述内容'
-                    },
-                    {
-                        archiveTitle: '泉州港水运工程', operator: '小陈', insTime: '2018-09-21  08:50:08',
-                        operateTypeLabel: '授权', operateContent: '转发给“用户”',
-                        result: '成功', remark: '这是备注描述内容'
-                    },
-                    {
-                        archiveTitle: '泉州港水运工程', operator: '小陈', insTime: '2018-09-21  08:50:08',
-                        operateTypeLabel: '授权', operateContent: '转发给“用户”',
-                        result: '成功', remark: '这是备注描述内容'
-                    },
-                    {
-                        archiveTitle: '泉州港水运工程', operator: '小陈', insTime: '2018-09-21  08:50:08',
-                        operateTypeLabel: '授权', operateContent: '转发给“用户”',
-                        result: '成功', remark: '这是备注描述内容'
-                    }
-                ],
+                tableData: [],
                 tableLoading: false,
 
                 // 字典
@@ -118,6 +101,7 @@
         },
         mounted() {
             this.getDicts(['operateType']);
+            this.getData();
         },
         methods: {
             onChage_daterange(value) {
@@ -137,7 +121,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/archiveLog/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;

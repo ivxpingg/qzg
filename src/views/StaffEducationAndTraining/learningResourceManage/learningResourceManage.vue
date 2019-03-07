@@ -99,14 +99,15 @@
                                             content: `确定要发布《${params.row.resourceName}》？`,
                                             onOk: () => {
                                                 this.$http({
-                                                    method: 'get',
-                                                    url: '/',
-                                                    params: {
-                                                        resourceId: params.row.resourceId
-                                                    }
+                                                    method: 'post',
+                                                    url: '/resource/update',
+                                                    data: JSON.stringify({
+                                                        resourceId: params.row.resourceId,
+                                                        publishStatus: 'published'
+                                                    })
                                                 }).then((res) => {
                                                     if (res.code === 'SUCCESS') {
-                                                        this.$Message.success('删除成功！');
+                                                        this.$Message.success('发布成功！');
                                                         this.getData();
                                                     }
                                                 }).catch(() => {})
@@ -131,10 +132,11 @@
                                             content: `确定要下架《${params.row.resourceName}》？`,
                                             onOk: () => {
                                                 this.$http({
-                                                    method: 'get',
-                                                    url: '/',
+                                                    method: 'post',
+                                                    url: '/resource/update',
                                                     params: {
-                                                        resourceId: params.row.resourceId
+                                                        resourceId: params.row.resourceId,
+                                                        publishStatus: 'unpublished'
                                                     }
                                                 }).then((res) => {
                                                     if (res.code === 'SUCCESS') {
@@ -180,7 +182,7 @@
                                             onOk: () => {
                                                 this.$http({
                                                     method: 'get',
-                                                    url: '//delete',
+                                                    url: '/resource/delete',
                                                     params: {
                                                         resourceId: params.row.resourceId
                                                     }
@@ -232,14 +234,14 @@
 
                 ],
                 tableData: [
-                    {
-                        resourceName: '资源名称1',
-                        resourceTypeLabel: '视频',
-                        publishTime: '2018-09-21',
-                        publishStatus: 'unpublished',
-                        publishStatusLabel: '未发布',
-                        pageView: 10
-                    }
+                    // {
+                    //     resourceName: '资源名称1',
+                    //     resourceTypeLabel: '视频',
+                    //     publishTime: '2018-09-21',
+                    //     publishStatus: 'unpublished',
+                    //     publishStatusLabel: '未发布',
+                    //     pageView: 10
+                    // }
                 ],
                 tableLoading: false,
 
@@ -258,6 +260,7 @@
         },
         mounted() {
             this.getDicts(['resourceType']);
+            this.getData();
         },
         methods: {
             addResources() {
@@ -273,7 +276,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/resource/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;

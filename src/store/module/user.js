@@ -97,7 +97,7 @@ export default {
                 }).then((res) => {
                     const data = res.data;
                     let img = data.headPortraitUrl ? Config[Config.env].filePath + data.headPortraitUrl : '/images/user-man.png';
-                    debugger
+
                     commit('setAvator', img);
                     commit('setUserName', data.name);
                     commit('setLoginName', data.loginName);

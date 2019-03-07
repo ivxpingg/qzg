@@ -15,7 +15,7 @@
 
 <script>
     export default {
-        name: 'courseOfStudy',
+        name: 'courseOfStudy',   // 在修课程列表
         data() {
             return {
                 list: [

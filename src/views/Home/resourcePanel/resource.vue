@@ -61,7 +61,7 @@
                     size: 10,          // 每页几行
                     total: 0,           // 总行数
                     condition: {
-                        resourceId: '',
+                        resourceType: '',
                         searchKey: '',
                         publishStatus: 'published'
                     }
@@ -80,15 +80,15 @@
 
                 ],
                 tableData: [
-                    {
-                        resourceName: '资源名称1',
-                        resourceTypeLabel: '视频',
-                        publishTime: '2018-09-21',
-                        publishStatus: 'unpublished',
-                        publishStatusLabel: '未发布',
-                        pageView: 10,
-                        description: '描述内容描述内容描述内容描述内容描述内容'
-                    }
+                    // {
+                    //     resourceName: '资源名称1',
+                    //     resourceTypeLabel: '视频',
+                    //     publishTime: '2018-09-21',
+                    //     publishStatus: 'unpublished',
+                    //     publishStatusLabel: '未发布',
+                    //     pageView: 10,
+                    //     description: '描述内容描述内容描述内容描述内容描述内容'
+                    // }
                 ],
                 tableLoading: false,
                 // 字典
@@ -114,7 +114,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/resource/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;

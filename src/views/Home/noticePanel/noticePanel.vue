@@ -298,6 +298,10 @@
 
 <style lang="scss" scoped>
     .noticePanel-container {
+        .card-content {
+            height: 308px;
+            overflow-y: auto;
+        }
     }
 </style>
 <style lang="scss" rel="stylesheet/scss" >

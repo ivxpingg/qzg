@@ -59,15 +59,20 @@
                   @on-change="onPageChange"></Page>
         </div>
 
+        <!--查看档案附件-->
+        <vRecordViewFiles ref="modal_recordViewFiles"
+                          :archiveId="modal_recordViewFiles_props.archiveId" ></vRecordViewFiles>
     </div>
 </template>
 
 <script>
     import comMixin from '../../../../lib/mixin/comMixin';
     import authMixin from '../../../../lib/mixin/authMixin';
+    import vRecordViewFiles from '../../../Common/recordViewFiles/recordViewFiles';
     export default {
         name: 'toArchive',
         mixins: [comMixin, authMixin],
+        components: {vRecordViewFiles},
         computed: {
             _tableColumns() {
                 let column = [{ title: '操作', minWidth: 180, align: 'center',
@@ -82,7 +87,8 @@
                             },
                             on: {
                                 click: () => {
-
+                                    this.modal_recordViewFiles_props.archiveId = params.row.archiveId;
+                                    this.$refs.modal_recordViewFiles.modalValue = true;
                                 }
                             }
                         }, '查看'));
@@ -162,7 +168,11 @@
                 // 字典
                 dict_archiveSource: [],
                 dict_archiveStatus: [],
-                dict_archiveType: []
+                dict_archiveType: [],
+
+                modal_recordViewFiles_props: {
+                    archiveId: ''
+                }
             };
         },
         mounted() {

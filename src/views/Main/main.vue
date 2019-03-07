@@ -213,6 +213,7 @@
             height: 100%;
             float: left;
             overflow-y: auto;
+            overflow-x: hidden;
         }
     }
 
