@@ -206,9 +206,9 @@ const StaffEducationAndTraining = [
                 }
             },
             {
-                path: 'statisticAnalysis ',
-                name: 'statisticAnalysis',
-                component: () => import('@/views/StaffEducationAndTraining/statisticAnalysis/statisticAnalysis.vue'),
+                path: 'analysis',
+                name: 'analysis',
+                component: () => import('@/views/StaffEducationAndTraining/analysis/analysis.vue'),
                 meta: {
                     icon: 'ios-image',
                     title: '统计分析',

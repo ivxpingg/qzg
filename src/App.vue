@@ -21,13 +21,15 @@ export default {
             that.onresize(e);
         }
         // this.getMenuList();
+        this.getUserInfo();
     },
     methods: {
         ...mapMutations([
             'onresize'
         ]),
         ...mapActions([
-            'getMenuList'
+            'getMenuList',
+            'getUserInfo'
         ])
     }
 }

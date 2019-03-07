@@ -27,7 +27,7 @@
                 <vHeaderBar :collapsed="collapsed"
                             @on-coll-change="handleCollapsedChange">
                     <vUser></vUser>
-                    <vFullscreen  v-model="isFullscreen" style="margin-right: 10px;"></vFullscreen>
+                    <!--<vFullscreen  v-model="isFullscreen" style="margin-right: 10px;"></vFullscreen>-->
                 </vHeaderBar>
                 <!--<Icon @on-coll-change="handleCollapsedChange"-->
                       <!--:style="{margin: '0 20px'}"-->

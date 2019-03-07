@@ -5,6 +5,8 @@ export default {
     state: {
         userName: '',
         userId: '',
+        loginName: '',
+        roleName: '',
         avatorImgPath: '',
         userType: '',
         sex: '',
@@ -19,6 +21,12 @@ export default {
         },
         setUserName (state, name) {
             state.userName = name
+        },
+        setLoginName (state, loginName) {
+            state.loginName = loginName
+        },
+        setRoleName (state, roleName) {
+            state.roleName = roleName
         },
         setUserSex(state, sex) {
             state.sex = sex;
@@ -88,9 +96,12 @@ export default {
                     url: '/user/query'
                 }).then((res) => {
                     const data = res.data;
-                    let img = data.headPortraitUrl ? Config[Config.env].filePath + data.headPortraitUrl : '';
+                    let img = data.headPortraitUrl ? Config[Config.env].filePath + data.headPortraitUrl : '/images/user-man.png';
+                    debugger
                     commit('setAvator', img);
                     commit('setUserName', data.name);
+                    commit('setLoginName', data.loginName);
+                    commit('setRoleName', data.roleName),
                     commit('setUserSex', data.sex);
                     commit('setUserId', data.userId);
                     commit('setUserType', data.userType);

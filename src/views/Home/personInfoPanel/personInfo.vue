@@ -5,9 +5,9 @@
                 <img src="/images/user-man.png" alt="">
             </div>
             <div class="right-panel">
-                <div class="attr name">沈晓明</div>
-                <div class="attr">部门：技术部</div>
-                <div class="attr">账号：chenxm</div>
+                <div class="attr name">{{$store.state.user.userName}}</div>
+                <div class="attr">部门：{{$store.state.user.roleName}}</div>
+                <div class="attr">账号：{{$store.state.user.loginName}}</div>
             </div>
         </div>
         <div class="other-info">

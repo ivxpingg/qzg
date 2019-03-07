@@ -4,8 +4,8 @@
             <Avatar :src="userAvator"/>
             <Icon :size="18" type="md-arrow-dropdown"></Icon>
             <DropdownMenu slot="list">
-                <DropdownItem name="password">修改密码</DropdownItem>
-                <DropdownItem name="logout">退出登录</DropdownItem>
+                <!--<DropdownItem name="password">修改密码</DropdownItem>-->
+                <DropdownItem name="logout">退出</DropdownItem>
             </DropdownMenu>
         </Dropdown>
 
@@ -32,7 +32,8 @@
 </template>
 
 <script>
-    import { mapActions } from 'vuex'
+    import { mapActions } from 'vuex';
+    import Config from '@/config';
     export default {
         name: 'user',
         computed: {
@@ -74,11 +75,12 @@
             handleClick (name) {
                 switch (name) {
                     case 'logout':
-                        this.handleLogOut().then(() => {
-                            this.$router.push({
-                                name: 'login'
-                            })
-                        });
+                        window.location.href = Config.loginUrl;
+                        // this.handleLogOut().then(() => {
+                        //     this.$router.push({
+                        //         name: 'login'
+                        //     })
+                        // });
                         break;
                     case 'password':
                         this.modal_password = true;
