@@ -63,8 +63,9 @@
                                             onOk: () => {
                                                 this.$http({
                                                     method: 'get',
-                                                    url: '//delete',
+                                                    url: '/contractRecord/delete',
                                                     params: {
+                                                        laborContractId: params.row.laborContractId,
                                                         contractRecordId: params.row.contractRecordId
                                                     }
                                                 }).then((res) => {
@@ -72,6 +73,7 @@
                                                         this.$Message.success('删除成功！');
                                                         if (this.tableData.length === 1) {
                                                             this.modalValue = false;
+                                                            this.$emit('modal-callback');
                                                         }
                                                         else {
                                                             this.getData();
@@ -148,7 +150,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'get',
-                    url: '/',
+                    url: '/contractRecord/list',
                     params: {
                         laborContractId: this.laborContractId
                     }

@@ -39,28 +39,28 @@
         <Row :gutter="10">
             <Col span="16" class="m-b-10">
                 <Card title="学习资源访问情况" :dis-hover="true">
-
+                    <vEcharts_1></vEcharts_1>
                 </Card>
             </Col>
             <Col span="8" class="m-b-10">
                 <Card title="培训排行榜" :dis-hover="true">
-
+                    <vPeiChart></vPeiChart>
                 </Card>
             </Col>
 
             <Col span="8" class="m-b-10">
                 <Card title="培训类型情况" :dis-hover="true">
-
+                    <vPeiChart></vPeiChart>
                 </Card>
             </Col>
             <Col span="8" class="m-b-10">
                 <Card title="培训报名情况" :dis-hover="true">
-
+                    <vPeiChart></vPeiChart>
                 </Card>
             </Col>
             <Col span="8" class="m-b-10">
                 <Card title="学习排行榜" :dis-hover="true">
-
+                    <vPeiChart></vPeiChart>
                 </Card>
             </Col>
         </Row>
@@ -70,11 +70,15 @@
 <script>
     import vInfoCard from '../../../components/info-card/index';
     import vCountTo from '../../../components/count-to/index';
+    import vEcharts_1 from './echats/echart_1';
+    import vPeiChart from './echats/peiChart';
     export default {
         name: 'analysis',
         components: {
             vInfoCard,
-            vCountTo
+            vCountTo,
+            vEcharts_1,
+            vPeiChart
         },
         data() {
             return {
