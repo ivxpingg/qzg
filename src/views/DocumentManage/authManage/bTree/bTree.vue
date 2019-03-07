@@ -29,7 +29,7 @@
             // 树展开的层级
             expandLevel: {
                 type: Number,
-                default: 1
+                default: 2
             },
             search: {
                 type: Boolean,
@@ -86,7 +86,7 @@
                     let item = {};
                     Object.assign(item, val);
                     item.title = item.name || item.userName;
-                    item.expand = false;// level <= this.expandLevel;
+                    item.expand = level <= this.expandLevel;
                     item.children = [];
                     // item.loading = false;
                     item.selected = false;

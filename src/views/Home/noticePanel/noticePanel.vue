@@ -188,7 +188,7 @@
             }
         },
         mounted() {
-            // this.getNoticeList();
+            this.getNoticeList();
             // this.getNoticeList('more');
 
         },
