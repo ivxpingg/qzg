@@ -133,7 +133,8 @@
                     loop: true,
                     pagination: '.my-pagination',
                     grabCursor: true,
-                    paginationClickable: true
+                    paginationClickable: true,
+                    autoplay : 3000,
                     //其他设置
                 });
             },

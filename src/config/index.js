@@ -10,7 +10,7 @@ export default {
      */
     cookieExpires: 1,
     password_key: '1wzgfYWEvc3JZibJ',  // 用于拼接在明文密码后面在进行MD5加密
-    loginUrl: 'http://110.86.21.246:8090/names.nsf?Login',  // 登陆地址
+    loginUrl: 'http://10.100.12.33',  // 登陆地址
     development: {
         origin: window.location.origin,
         ajaxUrl: PROJECT_NAME,
