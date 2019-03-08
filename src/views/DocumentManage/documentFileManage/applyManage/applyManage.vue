@@ -95,6 +95,17 @@
                 dict_applyStatus: []
             };
         },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler() {
+                    this.getData();
+                }
+            }
+        },
         mounted() {
             this.getData();
             this.getDicts(['applyStatus']);

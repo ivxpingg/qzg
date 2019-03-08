@@ -11,7 +11,7 @@
                     </Select>
                 </FormItem>
                 <FormItem label="文件关键字:" :label-width="85">
-                    <Input v-model="searchParams.condition.archiveTitle"
+                    <Input v-model="searchParams.condition.searchKey"
                            style="width: 120px;"
                            placeholder="文件关键字"/>
                 </FormItem>
@@ -50,6 +50,10 @@
         </div>
 
         <vViewFiles ref="viewFile" :data="fileList"></vViewFiles>
+
+        <!--查看档案附件-->
+        <vRecordViewFiles ref="modal_recordViewFiles"
+                          :archiveId="modal_recordViewFiles_props.archiveId" ></vRecordViewFiles>
     </div>
 </template>
 
@@ -57,9 +61,11 @@
     import comMixin from '../../../lib/mixin/comMixin';
     import authMixin from '../../../lib/mixin/authMixin';
     import viewFileMixin from '../../Common/viewFiles/mixin';
+    import vRecordViewFiles from '../../Common/recordViewFiles/recordViewFiles';
     export default {
         name: 'documentView',   // 公文查阅
         mixins: [comMixin, authMixin, viewFileMixin],
+        components: {vRecordViewFiles},
         data() {
             return {
                 searchParams: {
@@ -68,29 +74,27 @@
                     total: 0,           // 总行数
                     condition: {
                         archiveSource: '',
-                        archiveStatus: '',
-                        archiveTitle: '',
-                        operator: '',
+                        searchKey: '',
                         beginTime: '',
                         endTime: ''
                     }
                 },
                 tableColumns: [
                     { title: '序号', width: 65, align: 'center', type: 'index', },
-                    { title: '时间', width: 150, align: 'center', key: 'insTime',
+                    { title: '时间', width: 150, align: 'center', key: 'archiveTime',
                         render: (h, params) => {
-                            return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
+                            return h('div', this.timeFormat(params.row.archiveTime, 'YYYY-MM-DD HH:mm:ss'));
                         }
                     },
                     { title: '文件名称', minWdth: 120, align: 'center', key: 'archiveTitle' },
-                    { title: '来源', width: 120, align: 'center', key: 'sourceLabel' },
-                    { title: '等级', width: 120, align: 'center', key: 'archiveTypeLabel' },
-                    { title: '状态', width: 120, align: 'center', key: 'applyStatusLabel' },
+                    { title: '来源', width: 120, align: 'center', key: 'archiveSourceLabel' },
+                    { title: '权限类型', width: 120, align: 'center', key: 'permissionLabel' },
+                    { title: '申请状态', width: 120, align: 'center', key: 'applyStatusLabel' },
                     { title: '操作', width: 120, align: 'center',
                         render: (h, params) => {
                             let list = [];
 
-                            if (params.row.applyStatus === 'unapplie') {
+                            if (params.row.applyStatus !== 'unapplie') {
                                 list.push(h('Button', {
                                     props: {
                                         type: 'primary',
@@ -123,7 +127,7 @@
                                 }, '申请查阅'))
                             }
 
-                            if (params.row.applyStatus === 'check') {
+                            if (params.row.applyStatus !== 'check') {
                                 list.push(h('Button', {
                                     props: {
                                         type: 'info',
@@ -132,7 +136,8 @@
                                     },
                                     on: {
                                         click: () => {
-
+                                            this.modal_recordViewFiles_props.archiveId = params.row.archiveId;
+                                            this.$refs.modal_recordViewFiles.modalValue = true;
                                         }
                                     }
                                 }, '查看'))
@@ -147,23 +152,12 @@
                 ],
                 tableData: [
                     {
-                        insTime: '2018-09-21  08:50:08',
+                        archiveTime: '2018-09-21  08:50:08',
                         archiveTitle: '文件名称',
-                        sourceLabel: '办公室',
-                        archiveTypeLabel: '机密',
-                        applyStatusLabel: '可查看',
-                        employeeStatusLabel: '离职',
-                        applyStatus: 'check'
-                    },
-                    {
-                        insTime: '2018-09-21  08:50:08',
-                        archiveTitle: '文件名称',
-                        sourceLabel: '办公室',
-                        archiveTypeLabel: '机密',
-                        applyStatusLabel: '未申请',
-                        employeeStatusLabel: '离职',
-                        applyStatus: 'unapplie'
-                    },
+                        archiveSourceLabel: '办公室',
+                        permissionLabel: '机密',
+                        applyStatusLabel: '可申请'
+                    }
                 ],
                 tableLoading: false,
 
@@ -171,11 +165,27 @@
                 dict_archiveSource: [],
 
                 // 附件
-                fileList: []
+                fileList: [],
+
+                modal_recordViewFiles_props: {
+                    archiveId: ''
+                }
             };
+        },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler() {
+                    this.getData();
+                }
+            }
         },
         mounted() {
             this.getDicts(['archiveSource']);
+            this.getData();
         },
         methods: {
             onChage_daterange(value) {
@@ -186,7 +196,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/list',
+                    url: '/index/getArchiveList',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;

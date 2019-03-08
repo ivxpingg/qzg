@@ -12,6 +12,7 @@
                    :columns="_tableColumns"
                    :data="tableData"></Table>
         </div>
+        <vViewFiles ref="modal_viewFiles" :data="viewFileData"></vViewFiles>
     </Modal>
 </template>
 
@@ -19,9 +20,10 @@
     import modalMixin from '../../../../lib/mixin/modalMixin';
     import comMixin from '../../../../lib/mixin/comMixin';
     import authMixin from '../../../../lib/mixin/authMixin';
+    import viewFilesMixin from '../../../Common/viewFiles/mixin';
     export default {
         name: 'contractRecord',  // 合同记录
-        mixins: [modalMixin, comMixin, authMixin],
+        mixins: [modalMixin, comMixin, authMixin, viewFilesMixin],
         props: {
             laborContractId: {
                 type: String,
@@ -42,6 +44,8 @@
                             },
                             on: {
                                 click: () => {
+                                    this.getData_vViewFile(params.row.contractRecordId, 'contract', 'viewFileData');
+                                    this.$refs.modal_viewFiles.modalValue = true;
                                     // this.currentRow.laborContractId = params.row.laborContractId;
                                     // this.$refs.modal_jobHandle.modalValue = true;
                                 }
@@ -130,6 +134,9 @@
                     }
                 ],
                 tableLoading: false,
+
+                // 查看附件数据
+                viewFileData: []
             };
         },
         watch: {
