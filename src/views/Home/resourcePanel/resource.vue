@@ -1,22 +1,38 @@
 <template>
     <div class="resource-container">
-        <Carousel v-model="value" loop autoplay :height="200">
-            <CarouselItem>
-                <div class="demo-carousel" style="height: 200px; background-color: red;">
+        <!--<Carousel v-model="value" loop autoplay :height="200">-->
+            <!--<CarouselItem>-->
+                <!--<div class="demo-carousel" style="height: 200px; background-color: red;">-->
+                    <!--<img src="./images/slideshow1.png" style="width: 100%" alt="">-->
+                <!--</div>-->
+            <!--</CarouselItem>-->
+            <!--<CarouselItem>-->
+                <!--<div class="demo-carousel" style="height: 200px; background-color: blueviolet;">-->
+                    <!--<img src="./images/slideshow2.png" style="width: 100%" alt="">-->
+                <!--</div>-->
+            <!--</CarouselItem>-->
+            <!--<CarouselItem>-->
+                <!--<div class="demo-carousel" style="height: 200px; background-color: yellowgreen;">-->
+                    <!--<img src="./images/slideshow3.png" style="width: 100%" alt="">-->
+                <!--</div>-->
+            <!--</CarouselItem>-->
+        <!--</Carousel>-->
+
+        <div class="swiper-container" style="height: 200px;">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
                     <img src="./images/slideshow1.png" style="width: 100%" alt="">
                 </div>
-            </CarouselItem>
-            <CarouselItem>
-                <div class="demo-carousel" style="height: 200px; background-color: blueviolet;">
+                <div class="swiper-slide">
                     <img src="./images/slideshow2.png" style="width: 100%" alt="">
                 </div>
-            </CarouselItem>
-            <CarouselItem>
-                <div class="demo-carousel" style="height: 200px; background-color: yellowgreen;">
+                <div class="swiper-slide">
                     <img src="./images/slideshow3.png" style="width: 100%" alt="">
                 </div>
-            </CarouselItem>
-        </Carousel>
+            </div>
+            <div class="my-pagination"></div>
+        </div>
+
 
         <vIvxFilterBox dashed>
             <Form inline>
@@ -32,7 +48,7 @@
 
         <div class="ivx-table-box">
             <Table border
-                   height="470"
+                   height="460"
                    :loading="tableLoading"
                    :columns="tableColumns"
                    :data="tableData"></Table>
@@ -55,6 +71,7 @@
         mixins: [comMixin, authMixin],
         data() {
             return {
+                mySwiper: null,
                 value: 0,
                 searchParams: {
                     current: 1,        // 当前第几页
@@ -97,6 +114,7 @@
         },
         mounted() {
             this.getDicts(['resourceType']);
+            this.initSwiper();
         },
         watch: {
             'searchParams.current'() {
@@ -110,6 +128,15 @@
             }
         },
         methods: {
+            initSwiper() {
+                this.mySwiper = new Swiper('.swiper-container',{
+                    loop: true,
+                    pagination: '.my-pagination',
+                    grabCursor: true,
+                    paginationClickable: true
+                    //其他设置
+                });
+            },
             getData() {
                 this.tableLoading = true;
                 this.$http({
@@ -132,6 +159,27 @@
 
 <style lang="scss" scoped>
     .resource-container {
-
+        .my-pagination {
+            position: absolute;
+            left: 0;
+            text-align: center;
+            bottom:5px;
+            width: 100%;
+        }
+    }
+</style>
+<style lang="scss">
+    .swiper-pagination-switch {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 10px;
+        background: #999;
+        box-shadow: 0px 1px 2px #555 inset;
+        margin: 0 3px;
+        cursor: pointer;
+    }
+    .swiper-active-switch {
+        background: #fff;
     }
 </style>

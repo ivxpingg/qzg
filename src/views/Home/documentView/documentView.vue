@@ -36,7 +36,7 @@
 
         <div class="ivx-table-box">
             <Table border
-                   height="680"
+                   height="670"
                    :loading="tableLoading"
                    :columns="tableColumns"
                    :data="tableData"></Table>
