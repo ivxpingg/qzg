@@ -2,7 +2,7 @@
     <div class="personInfo-container">
         <div class="user-info">
             <div class="left-panel">
-                <img src="/images/user-man.png" alt="">
+                <img width="100" height="100" src="/images/user-man.png" alt="">
             </div>
             <div class="right-panel">
                 <div class="attr name">{{$store.state.user.userName}}</div>
@@ -52,6 +52,7 @@
                 img {
                     display: inline-block;
                     width: 100px;
+                    height: 100px;
                     border-radius: 50%;
                 }
             }
