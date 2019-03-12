@@ -19,7 +19,7 @@
             </Form>
         </vIvxFilterBox>
         <vIvxFilterBox>
-            <Button type="info" icon="ios-calendar">查看日历</Button>
+            <!--<Button type="info" icon="ios-calendar">查看日历</Button>-->
         </vIvxFilterBox>
 
         <div class="ivx-table-box">
@@ -36,15 +36,23 @@
                   :total="searchParams.total"
                   @on-change="onPageChange"></Page>
         </div>
+
+        <vAuditOrView ref="modal_applyPage"
+                    :type="modal_applyPage_props.type"
+                    :relationId="modal_applyPage_props.relationId"
+                    :leaveType="modal_applyPage_props.leaveType"
+                    @callback="callback"></vAuditOrView>
     </div>
 </template>
 
 <script>
     import comMixin from '../../../lib/mixin/comMixin';
     import authMixin from '../../../lib/mixin/authMixin';
+    import vAuditOrView from './add/auditOrView';
     export default {
         name: 'leaveManage', // 查看公出
         mixins: [comMixin, authMixin],
+        components: {vAuditOrView},
         computed: {
             _tableColumns() {
                 let column = [{ title: '操作', minWidth: 360, align: 'center',
@@ -59,9 +67,14 @@
                             },
                             on: {
                                 click: () => {
-                                    this.jobHandleType = 'view';
-                                    this.currentRow.jobId = params.row.jobId;
-                                    this.$refs.modal_jobHandle.modalValue = true;
+                                    this.modal_applyPage_props.relationId = params.row.leaveApplyId;
+                                    if (params.row.leaveStatus === 'wait_audit') {
+                                        this.modal_applyPage_props.type = 'audit';
+                                    }
+                                    else {
+                                        this.modal_applyPage_props.type = 'view';
+                                    }
+                                    this.$refs.modal_applyPage.modalValue = true;
                                 }
                             }
                         }, '查看'));
@@ -93,11 +106,11 @@
                             return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
                         }
                     },
-                    { title: '申请人', width: 120, align: 'center', key: 'dutyName' },
-                    { title: '部门', width: 120, align: 'center', key: 'unitName' },
-                    { title: '联系电话', width: 120, align: 'center', key: 'jobLevelLabel' },
-                    { title: '类型', width: 120, align: 'center', key: 'wageLevelLabel' },
-                    { title: '状态', width: 120, align: 'center', key: 'wageLevelLabel' }
+                    { title: '申请人', width: 120, align: 'center', key: 'applyer' },
+                    { title: '部门', width: 120, align: 'center', key: 'department' },
+                    { title: '联系电话', width: 120, align: 'center', key: 'phone' },
+                    { title: '类型', width: 120, align: 'center', key: 'leaveTypeLabel' },
+                    { title: '状态', width: 120, align: 'center', key: 'leaveStatusLabel' }
                 ],
                 tableData: [
                     {
@@ -109,6 +122,13 @@
                     }
                 ],
                 tableLoading: false,
+
+                //
+                modal_applyPage_props: {
+                    relationId: '',
+                    leaveType: 'leave',
+                    type: 'view'
+                }
             };
         },
         mounted() {
@@ -123,7 +143,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/leaveApply/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;
@@ -135,6 +155,10 @@
                     this.tableLoading = false;
                 })
             },
+
+            callback() {
+                this.getData();
+            }
         }
     }
 </script>

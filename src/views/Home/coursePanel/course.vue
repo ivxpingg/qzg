@@ -24,8 +24,8 @@
                         <div class="address">培训地点：{{item.address}}</div>
                         <div class="courseContent">培训内容：{{item.courseContent}}</div>
                     </div>
-                    <div class="right-right">
-                        <Button type="primary">我要报名</Button>
+                    <div class="right-right" v-if="item.courseStatus === 'sign_up'">
+                        <Button type="primary" @click="onClick_signUp(item.courseId)">我要报名</Button>
                     </div>
                     <div class="courseStatus">
                         {{item.courseStatusLabel}}
@@ -62,54 +62,54 @@
                     }
                 },
                 tableData: [
-                    {
-                        courseId: '001',
-                        courseName: 'java',
-                        departmentName: '办公室',
-                        startTime: '2018-09-21',
-                        endTime: '2018-09-21',
-                        address: '办公室',
-                        courseStatusLabel: '报名中',
-                        userNum: 20,
-                        courseTypeLabel: '技能培训',
-                        courseContent: '技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训'
-                    },
-                    {
-                        courseId: '001',
-                        courseName: 'java',
-                        departmentName: '办公室',
-                        startTime: '2018-09-21',
-                        endTime: '2018-09-21',
-                        address: '办公室',
-                        courseStatusLabel: '报名中',
-                        userNum: 20,
-                        courseTypeLabel: '技能培训',
-                        courseContent: '技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训'
-                    },
-                    {
-                        courseId: '001',
-                        courseName: 'java',
-                        departmentName: '办公室',
-                        startTime: '2018-09-21',
-                        endTime: '2018-09-21',
-                        address: '办公室',
-                        courseStatusLabel: '报名中',
-                        userNum: 20,
-                        courseTypeLabel: '技能培训',
-                        courseContent: '技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训'
-                    },
-                    {
-                        courseId: '001',
-                        courseName: 'java',
-                        departmentName: '办公室',
-                        startTime: '2018-09-21',
-                        endTime: '2018-09-21',
-                        address: '办公室',
-                        courseStatusLabel: '报名中',
-                        userNum: 20,
-                        courseTypeLabel: '技能培训',
-                        courseContent: '技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训'
-                    }
+                    // {
+                    //     courseId: '001',
+                    //     courseName: 'java',
+                    //     departmentName: '办公室',
+                    //     startTime: '2018-09-21',
+                    //     endTime: '2018-09-21',
+                    //     address: '办公室',
+                    //     courseStatusLabel: '报名中',
+                    //     userNum: 20,
+                    //     courseTypeLabel: '技能培训',
+                    //     courseContent: '技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训'
+                    // },
+                    // {
+                    //     courseId: '001',
+                    //     courseName: 'java',
+                    //     departmentName: '办公室',
+                    //     startTime: '2018-09-21',
+                    //     endTime: '2018-09-21',
+                    //     address: '办公室',
+                    //     courseStatusLabel: '报名中',
+                    //     userNum: 20,
+                    //     courseTypeLabel: '技能培训',
+                    //     courseContent: '技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训'
+                    // },
+                    // {
+                    //     courseId: '001',
+                    //     courseName: 'java',
+                    //     departmentName: '办公室',
+                    //     startTime: '2018-09-21',
+                    //     endTime: '2018-09-21',
+                    //     address: '办公室',
+                    //     courseStatusLabel: '报名中',
+                    //     userNum: 20,
+                    //     courseTypeLabel: '技能培训',
+                    //     courseContent: '技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训'
+                    // },
+                    // {
+                    //     courseId: '001',
+                    //     courseName: 'java',
+                    //     departmentName: '办公室',
+                    //     startTime: '2018-09-21',
+                    //     endTime: '2018-09-21',
+                    //     address: '办公室',
+                    //     courseStatusLabel: '报名中',
+                    //     userNum: 20,
+                    //     courseTypeLabel: '技能培训',
+                    //     courseContent: '技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训技能培训'
+                    // }
                 ],
                 tableLoading: false,
 
@@ -118,6 +118,7 @@
         },
         mounted() {
             this.getDicts(['courseType']);
+            this.getData();
         },
         methods: {
             getTime(item) {
@@ -127,7 +128,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/',
+                    url: '/course/list',
                     data: JSON.stringify(this.searchParams)
                 }).then((res) => {
                     this.tableLoading = false;
@@ -139,6 +140,23 @@
                     this.tableLoading = false;
                 })
             },
+            onClick_signUp(courseId) {
+                this.$http({
+                    method: 'get',
+                    url: '/signRecord/add',
+                    params: {
+                        courseId: courseId
+                    }
+                }).then((res) => {
+                    if (res.code === 'SUCCESS') {
+                        this.$Message.success('报名成功!');
+                        this.getData();
+                    }
+                    else {
+                        this.$Message.error('报名失败!');
+                    }
+                })
+            }
         }
     }
 </script>

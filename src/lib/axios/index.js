@@ -83,7 +83,6 @@ Ajax.interceptors.response.use(function (response) {
     // if (response.data.errCode === 'A0002'){ }
 
     // let router = new VueRouter();
-
     switch (response.data.code) {
         case 'SUCCESS':
             iview.LoadingBar.finish();

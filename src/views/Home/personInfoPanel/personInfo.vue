@@ -13,19 +13,19 @@
         <div class="other-info">
             <div class="item">
                 <div class="title">培训学时</div>
-                <div class="value">52h</div>
+                <div class="value">{{baseCount.trainPeriodNum || 0}}h</div>
             </div>
             <div class="item">
                 <div class="title">待结业课程</div>
-                <div class="value">3</div>
+                <div class="value">{{baseCount.noCompletedCourseNum}}</div>
             </div>
             <div class="item">
                 <div class="title">努力值</div>
-                <div class="value">2000</div>
+                <div class="value">{{baseCount.effortsValue}}</div>
             </div>
             <div class="item">
                 <div class="title">消息通知</div>
-                <div class="value">10</div>
+                <div class="value">{{baseCount.noticeNum}}</div>
             </div>
         </div>
     </div>
@@ -35,7 +35,29 @@
     export default {
         name: 'personInfo',
         data() {
-            return {};
+            return {
+                baseCount: {
+                    noticeNum: '0',
+                    trainPeriodNum: '0',
+                    noCompletedCourseNum: '0',
+                    effortsValue: '2000'
+                }
+            };
+        },
+        mounted() {
+            this.getData();
+        },
+        methods: {
+            getData() {
+                this.$http({
+                    method: 'get',
+                    url: '/index/baseCount'
+                }).then(res => {
+                    if (res.code === 'SUCCESS') {
+                        Object.assign(this.baseCount, res.data);
+                    }
+                })
+            }
         }
     }
 </script>

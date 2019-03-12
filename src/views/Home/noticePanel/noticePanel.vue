@@ -172,9 +172,7 @@
                     }
                 ],
                 //noticeStatus
-                tableData: [
-
-                ],
+                tableData: [],
 
                 fileList: []
             }
@@ -203,6 +201,7 @@
             // 查看更多
             onClick_more() {
                 this.modal_more = true;
+                this.getNoticeList('more');
             },
             // 表格双击查看
             onRowDbclick(row, row2) {

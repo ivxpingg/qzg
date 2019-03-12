@@ -7,7 +7,7 @@
         <div class="item" v-for="item in list" :key="item.courseName">
             <div class="left-panel">{{item.courseName}}</div>
             <div class="right-panel">
-                <Progress :percent="item.rate"  />
+                <Progress :percent="item.process"  />
             </div>
         </div>
     </div>
@@ -19,13 +19,32 @@
         data() {
             return {
                 list: [
-                    {courseName: '课程1', rate: 60},
-                    {courseName: '课程2', rate: 20},
-                    {courseName: '课程3', rate: 40},
-                    {courseName: '课程4', rate: 54},
+                    {courseName: '课程1', process: 60},
+                    {courseName: '课程2', process: 20},
+                    {courseName: '课程3', process: 40},
+                    {courseName: '课程4', process: 54},
                 ]
             };
+        },
+        mounted() {
+            this.getData();
+        },
+        methods: {
+            getData() {
+                this.$http({
+                    method: 'get',
+                    url: '/index/learningCourseList'
+                }).then(res => {
+                    if (res.code === 'SUCCESS') {
+                        this.list = res.data.map(v => {
+                            v.process = parseInt(v.process * 100);
+                            return v;
+                        })
+                    }
+                })
+            }
         }
+
     }
 </script>
 
