@@ -426,7 +426,6 @@
             modal_auditPersonSelect_callback(userId) {
 
                 if (!this.leaveApplyId) {
-                    // this.leaveApply.auditResult = 'pass';
                     this.leaveApply.auditor = userId;
                     this.$Modal.confirm({
                         title: '提交审核',

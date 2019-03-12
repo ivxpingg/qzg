@@ -54,6 +54,12 @@
         <!--查看档案附件-->
         <vRecordViewFiles ref="modal_recordViewFiles"
                           :archiveId="modal_recordViewFiles_props.archiveId" ></vRecordViewFiles>
+        <!--申请查阅-->
+        <vApplyDocument ref="modal_applyDocument"
+                        :archiveId="modal_applyDocument_props.archiveId"
+                        :archiveTitle="modal_applyDocument_props.archiveTitle"
+                        :archiveSourceLabel="modal_applyDocument_props.archiveSourceLabel"
+                        @modal-callback="modal_applyDocument_callback"></vApplyDocument>
     </div>
 </template>
 
@@ -62,10 +68,11 @@
     import authMixin from '../../../lib/mixin/authMixin';
     import viewFileMixin from '../../Common/viewFiles/mixin';
     import vRecordViewFiles from '../../Common/recordViewFiles/recordViewFiles';
+    import vApplyDocument from './applyDocument/applyDocument';
     export default {
         name: 'documentView',   // 公文查阅
         mixins: [comMixin, authMixin, viewFileMixin],
-        components: {vRecordViewFiles},
+        components: {vRecordViewFiles, vApplyDocument},
         data() {
             return {
                 searchParams: {
@@ -94,7 +101,7 @@
                         render: (h, params) => {
                             let list = [];
 
-                            if (params.row.applyStatus !== 'unapplie') {
+                            if (params.row.permission === 'apply' && !params.row.applyStatus) {
                                 list.push(h('Button', {
                                     props: {
                                         type: 'primary',
@@ -103,31 +110,36 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.$Modal.confirm({
-                                                title: '申请查阅',
-                                                content: `确定要申请查阅《${params.row.archiveTitle}》档案`,
-                                                onOk: () => {
-                                                    this.$http({
-                                                        method: 'get',
-                                                        url: '/',
-                                                        params: {
-                                                            archiveId: params.row.archiveId
-                                                        }
-                                                    }).then((res) => {
-                                                        if (res.code === 'SUCCESS') {
-                                                            this.$Message.success('申请成功,请等待审核!')
-                                                            this.getData();
-                                                        }
-                                                    })
-                                                }
-                                            })
+                                            this.modal_applyDocument_props.archiveId = params.row.archiveId;
+                                            this.modal_applyDocument_props.archiveTitle = params.row.archiveTitle;
+                                            this.modal_applyDocument_props.archiveSourceLabel = params.row.archiveSourceLabel;
+                                            this.$refs.modal_applyDocument.modalValue = true;
+
+                                            // this.$Modal.confirm({
+                                            //     title: '申请查阅',
+                                            //     content: `确定要申请查阅《${params.row.archiveTitle}》档案`,
+                                            //     onOk: () => {
+                                            //         this.$http({
+                                            //             method: 'get',
+                                            //             url: '/',
+                                            //             params: {
+                                            //                 archiveId: params.row.archiveId
+                                            //             }
+                                            //         }).then((res) => {
+                                            //             if (res.code === 'SUCCESS') {
+                                            //                 this.$Message.success('申请成功,请等待审核!')
+                                            //                 this.getData();
+                                            //             }
+                                            //         })
+                                            //     }
+                                            // })
 
                                         }
                                     }
                                 }, '申请查阅'))
                             }
 
-                            if (params.row.applyStatus !== 'check') {
+                            if (params.row.permission === 'view') {
                                 list.push(h('Button', {
                                     props: {
                                         type: 'info',
@@ -169,6 +181,13 @@
 
                 modal_recordViewFiles_props: {
                     archiveId: ''
+                },
+
+                // 申请查阅
+                modal_applyDocument_props: {
+                    archiveId: '',
+                    archiveTitle: '',
+                    archiveSourceLabel: ''
                 }
             };
         },
@@ -207,6 +226,14 @@
                 }).catch(() => {
                     this.tableLoading = false;
                 })
+            },
+
+            modal_applyDocument_callback() {
+                this.getData();
+                this.modal_applyDocument_props.archiveId = '';
+                this.modal_applyDocument_props.archiveTitle = '';
+                this.modal_applyDocument_props.archiveSourceLabel = '';
+
             }
         }
     }

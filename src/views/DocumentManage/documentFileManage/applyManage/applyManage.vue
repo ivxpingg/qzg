@@ -33,15 +33,22 @@
                   :total="searchParams.total"
                   @on-change="onPageChange"></Page>
         </div>
+
+        <!--公文申请查阅审核-->
+        <vAuditDocument ref="modal_auditDocument"
+                        :consultApplyId="modal_auditDocument_props.consultApplyId"
+                        @modal-callback="modal_auditDocument_callback"></vAuditDocument>
     </div>
 </template>
 
 <script>
     import comMixin from '../../../../lib/mixin/comMixin';
     import authMixin from '../../../../lib/mixin/authMixin';
+    import vAuditDocument from './auditDocument/auditDocument';
     export default {
         name: 'applyManage',
         mixins: [comMixin, authMixin],
+        components: {vAuditDocument},
         data() {
             return {
                 searchParams: {
@@ -61,38 +68,39 @@
                             return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
                         }
                     },
-                    { title: '文号', width: 120, align: 'center', key: 'operateTypeLabel' },
+                    { title: '文号', width: 160, align: 'center', key: 'archiveNo' },
                     { title: '文件名称', minWdth: 120, align: 'center', key: 'archiveTitle' },
-                    { title: '申请人', minWidth: 120, align: 'center', key: 'operateContent' },
-                    { title: '申请用途', width: 100, align: 'center', key: 'result' },
-                    { title: '状态', minWidth: 120, align: 'center', key: 'applyStatusLabel' },
-                ],
-                tableData: [
-                    {
-                        archiveTitle: '泉州港水运工程', operator: '小陈', insTime: '2018-09-21  08:50:08',
-                        operateTypeLabel: '授权', operateContent: '转发给“用户”',
-                        result: '成功', remark: '这是备注描述内容'
-                    },
-                    {
-                        archiveTitle: '泉州港水运工程', operator: '小陈', insTime: '2018-09-21  08:50:08',
-                        operateTypeLabel: '授权', operateContent: '转发给“用户”',
-                        result: '成功', remark: '这是备注描述内容'
-                    },
-                    {
-                        archiveTitle: '泉州港水运工程', operator: '小陈', insTime: '2018-09-21  08:50:08',
-                        operateTypeLabel: '授权', operateContent: '转发给“用户”',
-                        result: '成功', remark: '这是备注描述内容'
-                    },
-                    {
-                        archiveTitle: '泉州港水运工程', operator: '小陈', insTime: '2018-09-21  08:50:08',
-                        operateTypeLabel: '授权', operateContent: '转发给“用户”',
-                        result: '成功', remark: '这是备注描述内容'
+                    { title: '申请人', width: 130, align: 'center', key: 'applyPerson' },
+                    { title: '申请用途', minWidth: 100, align: 'center', key: 'useFor' },
+                    { title: '状态', width: 120, align: 'center', key: 'applyStatusLabel' },
+                    { title: '操作', width: 120, align: 'center',
+                        render: (h, params) => {
+                            return h('Button', {
+                                props: {
+                                    type: 'info',
+                                    size: 'small',
+                                    icon: 'ios-create'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.modal_auditDocument_props.consultApplyId = params.row.consultApplyId;
+                                        this.$refs.modal_auditDocument.modalValue = true;
+                                    }
+                                }
+                            }, '查看')
+                        }
                     }
                 ],
+                tableData: [],
                 tableLoading: false,
 
                 // 字典
-                dict_applyStatus: []
+                dict_applyStatus: [],
+
+                // 公文查阅审核参数
+                modal_auditDocument_props: {
+                    consultApplyId: ''
+                }
             };
         },
         watch: {
@@ -130,6 +138,11 @@
                 }).catch(() => {
                     this.tableLoading = false;
                 })
+            },
+
+            modal_auditDocument_callback() {
+                this.getData();
+                this.modal_auditDocument_props.consultApplyId = '';
             }
         }
     }
