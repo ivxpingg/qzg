@@ -5,36 +5,27 @@
                 <Col span="6"> <div class="title letter-spacing-20">请假人</div> </Col>
                 <Col span="4">
                     <div class="text-center-center" style="padding-top: 20px;">
-                        <span v-if="view">{{data.row_1_value_1}}</span>
+                        <span v-if="readonly">{{data.row_1_value_1}}</span>
                         <Input v-else v-model="data.row_1_value_1" size="small" style="width: 100px;"/>
                     </div>
                 </Col>
                 <Col span="4"> <div class="title">请假时间</div> </Col>
                 <Col span="10">
                     <div class="text-center-center" style="padding-top: 5px;">
-                        <span v-if="view">{{data.row_1_value_2}}</span>
-                        <Input v-else v-model="data.row_1_value_2" size="small" style="width: 45px;"/>
-                        年
-                        <span v-if="view">{{data.row_1_value_3}}</span>
-                        <Input v-else v-model="data.row_1_value_3" size="small" style="width: 35px;"/>
-                        月
-                        <span v-if="view">{{data.row_1_value_4}}</span>
-                        <Input v-else v-model="data.row_1_value_4" size="small" style="width: 35px;"/>
-                        日
-                        至
-                        <span v-if="view">{{data.row_1_value_5}}</span>
-                        <Input v-else v-model="data.row_1_value_5" size="small" style="width: 45px;"/>
-                        年
-                        <span v-if="view">{{data.row_1_value_6}}</span>
-                        <Input v-else v-model="data.row_1_value_6" size="small" style="width: 35px;"/>
-                        月
-                        <span v-if="view">{{data.row_1_value_7}}</span>
-                        <Input v-else v-model="data.row_1_value_7" size="small" style="width: 35px;"/>
+                        <span v-if="readonly">{{data.row_1_value_2}}至{{data.row_1_value_3}}</span>
+                        <DatePicker v-else
+                                    size="small"
+                                    type="datetimerange"
+                                    format="yyyy-MM-dd HH:mm"
+                                    placeholder="请选择时间"
+                                    @on-change="onChange_datetimerange"
+                                    style="width: 260px"></DatePicker>
+
                     </div>
                     <div class="text-center-center" style="margin-top: 5px;">
                         共
-                        <span v-if="view">{{data.row_1_value_8}}</span>
-                        <Input v-else v-model="data.row_1_value_8" size="small" style="width: 45px;"/> 天
+                        <span v-if="readonly">{{data.row_1_value_4}}</span>
+                        <Input v-else v-model="data.row_1_value_4" size="small" style="width: 45px;"/> 天
                     </div>
 
                 </Col>
@@ -43,7 +34,7 @@
                 <Col span="6"> <div class="title">请假类型</div> </Col>
                 <Col span="18">
                     <div style="margin-left: 20px; padding-top: 20px;">
-                        <span v-if="view">{{leaveType}}</span>
+                        <span v-if="readonly">{{leaveType}}</span>
                         <RadioGroup v-else v-model="data.row_2_value_1" >
                             <Radio label="0">年休假</Radio>
                             <Radio label="1">探亲假</Radio>
@@ -56,80 +47,27 @@
                     </div>
                 </Col>
             </Row>
-            <Row>
-                <Col span="6"> <div class="title">处室意见</div> </Col>
+
+            <template v-for="item in auditContentList">
+                <Row>
+                    <Col span="6"> <div class="title">{{item.processStepName}}</div> </Col>
+                    <Col span="18">
+                        <div>
+                            <Input v-model="item.auditContent" type="textarea" readonly :autosize="{minRows: 3, maxRows: 3}" />
+                        </div>
+                    </Col>
+                </Row>
+            </template>
+
+            <Row v-if="leaveDetail.leaveStatus === 'wait_audit'">
+                <Col span="6"> <div class="title">审核意见</div> </Col>
                 <Col span="18">
                     <div>
-                        <Input v-model="data.row_3_value_1" type="textarea" :readonly="view" :autosize="{minRows: 3, maxRows: 3}" />
+                        <Input v-model="auditRecord.auditContent" type="textarea" :readonly="type === 'add'" :autosize="{minRows: 3, maxRows: 3}" />
                     </div>
                 </Col>
             </Row>
-            <Row>
-                <Col span="6"> <div class="title">人事部门审核</div> </Col>
-                <Col span="18">
-                    <div>
-                        <Input v-model="data.row_4_value_1" type="textarea" :readonly="view" :autosize="{minRows: 3, maxRows: 3}" />
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col span="6"> <div class="title">局分管领导意见</div> </Col>
-                <Col span="18">
-                    <div>
-                        <Input v-model="data.row_5_value_1" type="textarea" :readonly="view" :autosize="{minRows: 3, maxRows: 3}" />
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col span="6"> <div class="title">局主要领导意见</div> </Col>
-                <Col span="18">
-                    <div>
-                        <Input v-model="data.row_6_value_1" type="textarea" :readonly="view" :autosize="{minRows: 3, maxRows: 3}" />
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col span="6"> <div class="title">销假时间</div> </Col>
-                <Col span="6">
-                    <div class="text-center-center" style="padding-top: 15px;">
-                        <span v-if="view">{{data.row_7_value_1}}</span>
-                        <Input v-else v-model="data.row_7_value_1" size="small" style="width: 45px;"/>
-                        年
-                        <span v-if="view">{{data.row_7_value_2}}</span>
-                        <Input v-else v-model="data.row_7_value_2" size="small" style="width: 35px;"/>
-                        月
-                        <span v-if="view">{{data.row_7_value_3}}</span>
-                        <Input v-else v-model="data.row_7_value_3" size="small" style="width: 35px;"/>
-                        日
-                    </div>
-                </Col>
-                <Col span="2">
-                    <div class="text-center-center" style="letter-spacing: 6px; padding-top: 5px;">
-                        销假<br/>
-                        人签<br/>
-                        名
-                    </div>
-                </Col>
-                <Col span="4">
-                    <div class="text-center-center" style="padding-top: 20px;">
-                        <span v-if="view">{{data.row_7_value_4}}</span>
-                        <Input v-else v-model="data.row_7_value_4" size="small" style="width: 100px;"/>
-                    </div>
-                </Col>
-                <Col span="2">
-                    <div class="text-center-center" style="letter-spacing: 6px; padding-top: 5px;">
-                        直接<br/>
-                        领导<br/>
-                        签名
-                    </div>
-                </Col>
-                <Col span="4">
-                    <div class="text-center-center" style="padding-top: 20px;">
-                        <span v-if="view">{{data.row_7_value_5}}</span>
-                        <Input v-else v-model="data.row_7_value_5" size="small" style="width: 100px;"/>
-                    </div>
-                </Col>
-            </Row>
+
             <div class="remark-content">
                 <div class="item">备注：1、工作人员请销假请严格按照请销假管理制度执行；</div>
                 <div class="item">2、请假类型一栏请在相应的类型后打√；</div>
@@ -173,10 +111,12 @@
 </template>
 
 <script>
+    import comMixin from '../../../../lib/mixin/comMixin';
     import Config from '../../../../config';
     import vAuditPersonSelect from '../../../Common/auditPersonSelect/auditPersonSelect';
     export default {
         name: 'addLeave',  // 请假申请
+        mixins: [comMixin],
         components: {vAuditPersonSelect},
         props: {
             type: {
@@ -191,8 +131,8 @@
             }
         },
         computed: {
-            view() {
-                return this.type === 'view';
+            readonly() {
+                return this.type !== 'add';
             },
             leaveType() {
                 switch (this.data.row_2_value_1) {
@@ -207,11 +147,13 @@
             },
             isAuditStatus() {
                 return this.currentUserId === this.leaveDetail.auditor && this.leaveDetail.leaveStatus === 'wait_audit';
+            },
+            currentUserId() {
+                return this.$store.state.user.userId;
             }
         },
         data() {
             return {
-                currentUserId: this.$store.state.user.userId,
                 // 提交审核对象
                 leaveApply: {
                     auditor: '',
@@ -222,24 +164,11 @@
                 },
                 // leaveContent
                 data: {
-                    row_1_value_1: '',
+                    row_1_value_1: this.$store.state.user.userName,
                     row_1_value_2: '',
                     row_1_value_3: '',
                     row_1_value_4: '',
-                    row_1_value_5: '',
-                    row_1_value_6: '',
-                    row_1_value_7: '',
-                    row_1_value_8: '',
-                    row_2_value_1: '',
-                    row_3_value_1: '',
-                    row_4_value_1: '',
-                    row_5_value_1: '',
-                    row_6_value_1: '',
-                    row_7_value_1: '',
-                    row_7_value_2: '',
-                    row_7_value_3: '',
-                    row_7_value_4: '',
-                    row_7_value_5: '',
+                    row_2_value_1: '0',   // 默认值
                     signature: [
                         // {
                         //     roleId: '',
@@ -260,14 +189,19 @@
                     leaveContent: '',
                     leaveStatus: '',
                     processStepId: '',
-                    userId: ''
+                    userId: '',
+                    lastStep: ''
                 },
+                // 已审核的内容
+                auditContentList: [],
+
                 // 提交通过审核对象
                 auditRecord: {
                     relationId: '',
                     auditor: '',
                     auditResult: '',
                     auditContent: '',
+                    leaveContent: '',
                     processType: 'leave'
                 },
 
@@ -286,6 +220,7 @@
                 this.auditRecord.relationId = val;
                 if (val) {
                     this.getLeaveDetail();
+                    this.getAuditContent();
                 }
                 else {
 
@@ -294,8 +229,8 @@
             data: {
                 deep: true,
                 handler(val) {
-                    this.leaveApply.beginTime = `${val.row_1_value_2}-${val.row_1_value_3}-${val.row_1_value_4}`;
-                    this.leaveApply.endTime = `${val.row_1_value_2}-${val.row_1_value_3}-${val.row_1_value_4}`
+                    this.leaveApply.beginTime = this.timeFormat(val.row_1_value_2, 'YYYY-MM-DD HH:mm:ss');
+                    this.leaveApply.endTime = this.timeFormat(val.row_1_value_3, 'YYYY-MM-DD HH:mm:ss');
                 }
             }
         },
@@ -315,24 +250,13 @@
                     this.$Message.info('请填写请假时间');
                     return false;
                 }
-                else if (this.data.row_1_value_4 === '') {
-                    this.$Message.info('请填写请假时间');
-                    return false;
-                }
-                else if (this.data.row_1_value_5 === '') {
-                    this.$Message.info('请填写请假时间');
-                    return false;
-                }
-                else if (this.data.row_1_value_6 === '') {
-                    this.$Message.info('请填写请假时间');
-                    return false;
-                }
-                else if (this.data.row_1_value_7 === '') {
-                    this.$Message.info('请填写请假时间');
-                    return false;
-                }
 
                 return true;
+            },
+
+            onChange_datetimerange(value) {
+                this.data.row_1_value_2 = value[0];
+                this.data.row_1_value_3 = value[1];
             },
             // 拼接图片地址
             joinUrl(url) {
@@ -395,23 +319,24 @@
                                 row_1_value_2: '',
                                 row_1_value_3: '',
                                 row_1_value_4: '',
-                                row_1_value_5: '',
-                                row_1_value_6: '',
-                                row_1_value_7: '',
-                                row_1_value_8: '',
-                                row_2_value_1: '',
-                                row_3_value_1: '',
-                                row_4_value_1: '',
-                                row_5_value_1: '',
-                                row_6_value_1: '',
-                                row_7_value_1: '',
-                                row_7_value_2: '',
-                                row_7_value_3: '',
-                                row_7_value_4: '',
-                                row_7_value_5: '',
+                                row_2_value_1: '0',
                                 signature: []
                             }, eval('[' + res.data.leaveContent + ']')[0]);
                         }
+                    }
+                })
+            },
+            // 获取审核内容
+            getAuditContent() {
+                this.$http({
+                    method: 'get',
+                    url: '/auditRecord/getAuditRecordList',
+                    params: {
+                        relationId: this.leaveApplyId
+                    }
+                }).then(res => {
+                    if (res.code === 'SUCCESS') {
+                        this.auditContentList = res.data || [];
                     }
                 })
             },
@@ -447,7 +372,7 @@
                 else {
                     this.auditRecord.auditor = userId;
                     this.auditRecord.auditResult = 'pass';
-                    this.auditRecord.auditContent = JSON.stringify(this.data);
+                    this.auditRecord.leaveContent = JSON.stringify(this.data);
                     this.$Modal.confirm({
                         title: '审核',
                         content: '确定审核通过?',
@@ -483,14 +408,26 @@
             },
             // 审核通过
             onClick_audit_pass() {
-                this.auditRecord.auditContent = JSON.stringify(this.data);
-                this.$refs.modal_auditPersonSelect.modalValue = true;
+                if (this.auditRecord.auditContent.trim() === '') {
+                    this.$Message.error('请填写审核意见');
+                    return;
+                }
+                if (this.leaveDetail.lastStep) {
+                    this.modal_auditPersonSelect_callback('');
+                }
+                else {
+                    this.$refs.modal_auditPersonSelect.modalValue = true;
+                }
             },
             // 审核不通过
             onClick_audit_noPass() {
+                if (this.auditRecord.auditContent.trim() === '') {
+                    this.$Message.error('请填写审核意见');
+                    return;
+                }
                 this.auditRecord.auditor = '';
                 this.auditRecord.auditResult = 'not_pass';
-                this.auditRecord.auditContent = JSON.stringify(this.data);
+                this.auditRecord.leaveContent = JSON.stringify(this.data);
                 this.$Modal.confirm({
                     title: '审核',
                     content: '确定审核不通过?',

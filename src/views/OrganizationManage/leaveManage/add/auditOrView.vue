@@ -4,8 +4,8 @@
            :width="900"
            footer-hide
            @on-visible-change="onVisibleChange">
-        <vAddViewLeave v-if="leaveType === 'leave'" :type="type" :leaveApplyId="relationId"  @callback="callback"></vAddViewLeave>
-        <vAddViewGoout v-if="leaveType === 'business'" :type="type" :leaveApplyId="relationId"  @callback="callback"></vAddViewGoout>
+        <vAddViewLeave v-if="leaveType === 'leave' && relationId" :type="type" :leaveApplyId="relationId"  @callback="callback"></vAddViewLeave>
+        <vAddViewGoout v-if="leaveType === 'business' && relationId" :type="type" :leaveApplyId="relationId"  @callback="callback"></vAddViewGoout>
     </Modal>
 </template>
 

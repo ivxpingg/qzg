@@ -143,6 +143,7 @@
                     }
                 })
             },
+            // 获取审核内容
             getAuditContent() {
                 this.$http({
                     method: 'get',
