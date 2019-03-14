@@ -62,7 +62,7 @@
         },
         data() {
             return {
-                name: 'documentView'
+                name: 'resource'
             }
         },
         mounted () {},
