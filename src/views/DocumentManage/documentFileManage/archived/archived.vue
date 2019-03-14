@@ -134,7 +134,7 @@
         components: {vAuthorize, vRecordViewFiles},
         computed: {
             _tableColumns() {
-                let column = [{ title: '操作', minWidth: 180, align: 'center',
+                let column = [{ title: '操作', width: 180, align: 'center',
                     render: (h, params) => {
                         let list = [];
 

@@ -2,14 +2,14 @@
     <div class="applyManage-container">
         <vIvxFilterBox dashed>
             <Form inline>
-                <FormItem label="筛选条件:" :label-width="65">
+                <FormItem label="筛选条件:" :label-width="75">
                     <RadioGroup v-model="searchParams.condition.applyStatus" type="button">
                         <Radio label="">全部</Radio>
                         <Radio v-for="item in dict_applyStatus"
                                :label="item.value" :key="item.id">{{item.label}}</Radio>
                     </RadioGroup>
                 </FormItem>
-                <FormItem label="操作时间:" :label-width="65">
+                <FormItem label="操作时间:" :label-width="75">
                     <DatePicker ref="datePicker"
                                 type="daterange"
                                 @on-change="onChage_daterange"

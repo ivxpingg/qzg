@@ -45,6 +45,8 @@
         <!--新建证书-->
         <vAddCredential ref="modal_addCredential" @modal-callback="getData"></vAddCredential>
 
+        <!--证书-->
+        <vDiploma ref="modal_diploma" :certificateId="modal_diploma_props.certificateId"></vDiploma>
     </div>
 </template>
 
@@ -52,10 +54,11 @@
     import comMixin from '../../../lib/mixin/comMixin';
     import authMixin from '../../../lib/mixin/authMixin';
     import vAddCredential from './add/addCredential';
+    import vDiploma from './diploma/diploma';
     export default {
         name: 'certificateManage',  // 证书管理
         mixins: [comMixin, authMixin],
-        components: {vAddCredential},
+        components: {vAddCredential, vDiploma},
         computed: {
             _tableColumns() {
                 let column = [{ title: '操作', minWidth: 260, align: 'center',
@@ -70,7 +73,8 @@
                             },
                             on: {
                                 click: () => {
-                                    this.propsRow.courseId = params.row.courseId;
+                                    this.modal_diploma_props.certificateId = params.row.certificateId;
+                                    this.$refs.modal_diploma.modalValue = true;
                                 }
                             }
                         }, '查看'));
@@ -164,7 +168,11 @@
                 },
 
                 // 课程列表
-                dict_courseList: []
+                dict_courseList: [],
+
+                modal_diploma_props: {
+                    certificateId: ''
+                }
             };
         },
         mounted() {

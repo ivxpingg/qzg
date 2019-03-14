@@ -216,14 +216,17 @@
             };
         },
         watch: {
-            leaveApplyId(val) {
-                this.auditRecord.relationId = val;
-                if (val) {
-                    this.getLeaveDetail();
-                    this.getAuditContent();
-                }
-                else {
+            leaveApplyId: {
+                immediate: true,
+                handler(val) {
+                    this.auditRecord.relationId = val;
+                    if (val) {
+                        this.getLeaveDetail();
+                        this.getAuditContent();
+                    }
+                    else {
 
+                    }
                 }
             },
             data: {

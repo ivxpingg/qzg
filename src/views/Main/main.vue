@@ -81,7 +81,7 @@
         },
         computed: {
             widthLayout() {
-                return this.collapsed ? document.documentElement.clientWidth - 64 : document.documentElement.clientWidth - 256;
+                return this.collapsed ? document.documentElement.clientWidth - 64 - 2 : document.documentElement.clientWidth - 256 - 2;
             },
             menuList () {
                 return  this.$store.state.app.menuList;

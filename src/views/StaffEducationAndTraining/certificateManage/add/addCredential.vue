@@ -33,7 +33,7 @@
                             :label="item.label"></Option>
                 </Select>
             </FormItem>
-            <FormItem label="结束时间:" prop="issueDate">
+            <FormItem label="发放时间:" prop="issueDate">
                 <DatePicker :value="formData.issueDate"
                             type="date"
                             @on-change="onChage_issueDate"

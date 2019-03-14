@@ -99,12 +99,11 @@
                                             content: `确定要发布《${params.row.resourceName}》？`,
                                             onOk: () => {
                                                 this.$http({
-                                                    method: 'post',
-                                                    url: '/resource/update',
-                                                    data: JSON.stringify({
+                                                    method: 'get',
+                                                    url: '/resource/publish',
+                                                    params: {
                                                         resourceId: params.row.resourceId,
-                                                        publishStatus: 'published'
-                                                    })
+                                                    }
                                                 }).then((res) => {
                                                     if (res.code === 'SUCCESS') {
                                                         this.$Message.success('发布成功！');
@@ -132,11 +131,10 @@
                                             content: `确定要下架《${params.row.resourceName}》？`,
                                             onOk: () => {
                                                 this.$http({
-                                                    method: 'post',
-                                                    url: '/resource/update',
+                                                    method: 'get',
+                                                    url: '/resource/takeOff',
                                                     params: {
                                                         resourceId: params.row.resourceId,
-                                                        publishStatus: 'unpublished'
                                                     }
                                                 }).then((res) => {
                                                     if (res.code === 'SUCCESS') {

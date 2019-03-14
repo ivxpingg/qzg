@@ -10,12 +10,11 @@ export default {
      */
     cookieExpires: 1,
     password_key: '1wzgfYWEvc3JZibJ',  // 用于拼接在明文密码后面在进行MD5加密
-    // loginUrl: 'http://110.86.21.246:8090/names.nsf?Login',
-    loginUrl: 'http://10.100.12.33',  // 登陆地址
+    loginUrl: 'http://110.86.21.246:8090/names.nsf?Login',
+    // loginUrl: 'http://10.100.12.33',  // 登陆地址
     development: {
         origin: window.location.origin,
         ajaxUrl: PROJECT_NAME,
-        staticUrl: 'http://110.86.21.246:8090/names.nsf?Login',
         cookiePath: '/',
         actionUrl: window.location.origin + PROJECT_NAME + '/file/upload',  // 文件上传路径
         filePath: window.location.origin + PROJECT_NAME + '/'               // 文件路径前缀

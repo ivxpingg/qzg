@@ -65,18 +65,18 @@
                         title: '操作', minWidth: 200, align: 'center',
                         render: (h, params) => {
                             let list = [];
-                            list.push(h('Button', {
-                                props: {
-                                    type: 'primary',
-                                    size: 'small',
-                                    icon: 'ios-notifications'
-                                },
-                                on: {
-                                    click: () => {
-                                       this.$Message.info('通知什么todo');
-                                    }
-                                }
-                            }, '通知'));
+                            // list.push(h('Button', {
+                            //     props: {
+                            //         type: 'primary',
+                            //         size: 'small',
+                            //         icon: 'ios-notifications'
+                            //     },
+                            //     on: {
+                            //         click: () => {
+                            //            this.$Message.info('通知什么todo');
+                            //         }
+                            //     }
+                            // }, '通知'));
 
                             list.push(h('Button', {
                                 props: {

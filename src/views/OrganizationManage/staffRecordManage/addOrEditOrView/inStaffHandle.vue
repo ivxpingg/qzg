@@ -241,7 +241,7 @@
                 headPortraitUrl: '',
                 formData: {
                     employeeId: '',
-                    employeeType: 'in-staff', // 员工类型-在编员工
+                    employeeType: 'in_staff', // 员工类型-在编员工
                     headPortrait: '',
                     employeeName: '',  // 员工名称
                     sex: '',

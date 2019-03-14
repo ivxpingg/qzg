@@ -36,7 +36,7 @@
 
         <vIvxFilterBox dashed>
             <Form inline>
-                <FormItem label="筛选条件:" :label-width="65">
+                <FormItem label="筛选条件:" :label-width="80">
                     <RadioGroup v-model="searchParams.condition.resourceType" type="button">
                         <Radio label="">全部</Radio>
                         <Radio v-for="item in dict_resourceType"
@@ -60,15 +60,19 @@
                   :total="searchParams.total"
                   @on-change="onPageChange"></Page>
         </div>
+
+        <!--查看附件-->
+        <vViewFiles ref="modal_viewFiles" :data="resourcesFiles"></vViewFiles>
     </div>
 </template>
 
 <script>
     import comMixin from '../../../lib/mixin/comMixin';
     import authMixin from '../../../lib/mixin/authMixin';
+    import viewFilesMixin from '../../Common/viewFiles/mixin';
     export default {
         name: 'resource',
-        mixins: [comMixin, authMixin],
+        mixins: [comMixin, authMixin, viewFilesMixin],
         data() {
             return {
                 mySwiper: null,
@@ -93,7 +97,27 @@
                             return h('div', str);
                         }
                     },
-                    { title: '描述', minWidth: 120, align: 'center', key: 'description' }
+                    { title: '描述', minWidth: 120, align: 'center', key: 'description' },
+                    { title: '操作', width: 120, align: 'center',
+                        render: (h, params) => {
+                            return h('Button', {
+                                props: {
+                                    type: 'info',
+                                    size: 'small',
+                                    icon: 'ios-eye'
+                                },
+                                on: {
+                                    click: () => {
+                                        // this.propsRow.resourceId = params.row.resourceId;
+                                        this.resourcesFiles = [];
+                                        this.getData_vViewFile(params.row.resourceId, 'learning_resource', 'resourcesFiles');
+                                        this.$refs.modal_viewFiles.modalValue = true;
+
+                                    }
+                                }
+                            }, '查看资源')
+                        }
+                    }
 
                 ],
                 tableData: [
@@ -109,12 +133,15 @@
                 ],
                 tableLoading: false,
                 // 字典
-                dict_resourceType: []
+                dict_resourceType: [],
+
+                resourcesFiles: []
             };
         },
         mounted() {
             this.getDicts(['resourceType']);
             this.initSwiper();
+            this.getData();
         },
         watch: {
             'searchParams.current'() {

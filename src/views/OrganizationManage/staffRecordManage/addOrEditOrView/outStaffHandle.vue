@@ -165,7 +165,7 @@
                 headPortraitUrl: '',
                 formData: {
                     employeeId: '',
-                    employeeType: 'out-staff', // 员工类型-在编员工
+                    employeeType: 'out_staff', // 员工类型-在编员工
                     headPortrait: '',
                     employeeName: '',  // 员工名称
                     sex: '',

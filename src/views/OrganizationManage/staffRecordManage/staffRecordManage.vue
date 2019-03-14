@@ -23,11 +23,7 @@
                            style="width: 120px;"
                            placeholder="姓名"/>
                 </FormItem>
-                <FormItem label="创建人:" :label-width="55">
-                    <Input v-model="searchParams.condition.operator"
-                           style="width: 100px;"
-                           placeholder="创建人"/>
-                </FormItem>
+
                 <FormItem label="时间:" :label-width="45">
                     <DatePicker ref="datePicker"
                                 type="daterange"
@@ -47,7 +43,7 @@
             <Button type="primary" icon="md-add" @click="addInStaff">新增在编人员</Button>
             <Button type="primary" icon="md-add" @click="addOutStaff">新增编外人员</Button>
             <Button type="info" icon="md-clipboard" @click="openRecordView">人事变动记录</Button>
-            <!--<Button type="info" icon="md-download" @click="addInStaff">导出花名册</Button>-->
+            <Button type="info" icon="md-download" @click="onClick_exportExcel">导出花名册</Button>
 
             <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">
                 <Option v-for="item in dict_employeeType"
@@ -92,6 +88,9 @@
                       :employeeName="staffAdjust_employeeName"></vStaffAdjust>
         <!--人事变动记录-->
         <vRecordView ref="modal_recordView"></vRecordView>
+
+        <!--导出-->
+        <vExportExcel ref="modal_exportExcel"></vExportExcel>
     </div>
 </template>
 
@@ -103,10 +102,11 @@
     import vWorkRecord from './workRecord/workRecord';
     import vStaffAdjust from './staffAdjust/staffAdjust';
     import vRecordView from './recordView/recordView';
+    import vExportExcel from './exportExcel/exportExcel';
     export default {
         name: 'staffRecordManage',  // 员工档案管理
         mixins: [comMixin, authMixin],
-        components: {vInStaffHandle, vOutStaffHandle, vWorkRecord, vStaffAdjust, vRecordView},
+        components: {vInStaffHandle, vOutStaffHandle, vWorkRecord, vStaffAdjust, vRecordView, vExportExcel},
         computed: {
             _tableColumns() {
                 let column = [{ title: '操作', minWidth: 360, align: 'center',
@@ -121,12 +121,12 @@
                                 },
                                 on: {
                                     click: () => {
-                                        if (params.row.employeeType === 'in-staff') {
+                                        if (params.row.employeeType === 'in_staff') {
                                             this.inStaffType = 'edit';
                                             this.inStaff_employeeId = params.row.employeeId;
                                             this.$refs.modal_inStaffHandle.modalValue = true;
                                         }
-                                        else if (params.row.employeeType === 'out-staff') {
+                                        else if (params.row.employeeType === 'out_staff') {
                                             this.outStaffType = 'edit';
                                             this.outStaff_employeeId = params.row.employeeId;
                                             this.$refs.modal_outStaffHandle.modalValue = true;
@@ -144,12 +144,12 @@
                             },
                             on: {
                                 click: () => {
-                                    if (params.row.employeeType === 'in-staff') {
+                                    if (params.row.employeeType === 'in_staff') {
                                         this.inStaffType = 'view';
                                         this.inStaff_employeeId = params.row.employeeId;
                                         this.$refs.modal_inStaffHandle.modalValue = true;
                                     }
-                                    else if (params.row.employeeType === 'out-staff') {
+                                    else if (params.row.employeeType === 'out_staff') {
                                         this.outStaffType = 'view';
                                         this.outStaff_employeeId = params.row.employeeId;
                                         this.$refs.modal_outStaffHandle.modalValue = true;
@@ -208,8 +208,7 @@
                         departmentId: '',
                         employeeStatus: '',
                         employeeName: '',
-                        employeeType: 'in-staff',
-                        operator: '',
+                        employeeType: 'in_staff',
                         beginTime: '',
                         endTime: ''
                     }
@@ -316,6 +315,9 @@
             },
             openRecordView() {
                 this.$refs.modal_recordView.modalValue = true;
+            },
+            onClick_exportExcel() {
+                this.$refs.modal_exportExcel.modalValue = true;
             }
         }
     }

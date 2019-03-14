@@ -2,7 +2,7 @@
     <div class="documentView-container">
         <vIvxFilterBox>
             <Form inline>
-                <FormItem label="文件来源:" :label-width="65">
+                <FormItem label="文件来源:" :label-width="80">
                     <Select v-model="searchParams.condition.archiveSource">
                         <Option v-for="item in dict_archiveSource"
                                 :key="item.id"
@@ -10,12 +10,12 @@
                                 :label="item.label"></Option>
                     </Select>
                 </FormItem>
-                <FormItem label="文件关键字:" :label-width="85">
+                <FormItem label="文件关键字:" :label-width="90">
                     <Input v-model="searchParams.condition.searchKey"
                            style="width: 120px;"
                            placeholder="文件关键字"/>
                 </FormItem>
-                <FormItem label="时间:" :label-width="45">
+                <FormItem label="时间:" :label-width="50">
                     <DatePicker ref="datePicker"
                                 type="daterange"
                                 @on-change="onChage_daterange"
@@ -95,8 +95,8 @@
                     },
                     { title: '文件名称', minWdth: 120, align: 'center', key: 'archiveTitle' },
                     { title: '来源', width: 120, align: 'center', key: 'archiveSourceLabel' },
-                    { title: '权限类型', width: 120, align: 'center', key: 'permissionLabel' },
-                    { title: '申请状态', width: 120, align: 'center', key: 'applyStatusLabel' },
+                    { title: '权限类型', width: 100, align: 'center', key: 'permissionLabel' },
+                    { title: '申请状态', width: 100, align: 'center', key: 'applyStatusLabel' },
                     { title: '操作', width: 120, align: 'center',
                         render: (h, params) => {
                             let list = [];

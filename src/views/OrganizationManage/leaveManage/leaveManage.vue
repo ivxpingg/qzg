@@ -2,10 +2,10 @@
     <div class="leaveManage-container">
         <vIvxFilterBox>
             <Form inline>
-                <FormItem label="归属部门:" :label-width="65">
+                <!--<FormItem label="归属部门:" :label-width="65">-->
 
-                </FormItem>
-                <FormItem label="关键字:" :label-width="65">
+                <!--</FormItem>-->
+                <FormItem label="关键字:" :label-width="70">
                     <Input v-model="searchParams.condition.searchKey"
                            style="width: 120px;"
                            placeholder="请输入关键字"/>

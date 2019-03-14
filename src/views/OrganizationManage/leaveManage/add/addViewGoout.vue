@@ -12,7 +12,7 @@
                             style="width: 120px"></DatePicker>
             </div>
 
-            <Row>
+            <Row class="border-left border-right border-bottom">
                 <Col span="4"> <div class="title">姓名</div> </Col>
                 <Col span="4">
                     <div class="text-center-center" style="padding-top: 20px;">
@@ -36,64 +36,64 @@
                 </Col>
             </Row>
 
-            <Row>
+            <Row class="border-left border-right border-bottom">
                 <Col span="4"> <div class="title">同行人员</div> </Col>
                 <Col span="14"></Col>
                 <Col span="3"> <div class="title">出行交通工具</div> </Col>
                 <Col span="3"></Col>
             </Row>
 
-            <Row>
+            <Row class="border-left border-right border-bottom">
                 <Col span="4"> <div class="title">出差事由</div> </Col>
                 <Col span="20"></Col>
             </Row>
 
-            <Row>
+            <Row class="border-left border-right border-bottom">
                 <Col span="4"> <div class="title">出差起止时间</div> </Col>
                 <Col span="8"></Col>
                 <Col span="4"> <div class="title">天数</div> </Col>
                 <Col span="8"></Col>
             </Row>
 
-            <Row>
+            <Row class="border-left border-right border-bottom">
                 <Col span="4"> <div class="title">经办人</div> </Col>
                 <Col span="8"></Col>
                 <Col span="4"> <div class="title">审批人</div> </Col>
                 <Col span="8"></Col>
             </Row>
 
-            <Row>
+            <Row class="border-left border-right border-bottom">
                 <Col span="24"> <div class="title">以下内容由出差人员如实申报</div> </Col>
             </Row>
 
-            <Row>
+            <Row class="border-left border-right border-bottom">
                 <Col span="4">
                     <Row>
-                        <Col span="24"><div class="title">用餐情况</div></Col>
-                        <Col span="24"><div class="title">用车情况</div></Col>
+                        <Col class="border-bottom" span="24"><div class="title">用餐情况</div></Col>
+                        <Col span="24" style="height: 90px; border-left-width: 0;"><div class="title">用车情况</div></Col>
                     </Row>
                 </Col>
 
                 <Col span="16">
-                    <Row>
+                    <Row class="border-bottom">
                         <Col span="5"><div class="title">自行用餐</div></Col>
                         <Col span="19"></Col>
                     </Row>
-                    <Row>
-                        <Col span="5"><div class="title">接待单位协助安排就餐</div></Col>
-                        <Col span="7"></Col>
-                        <Col span="5"><div class="title">交款金额</div></Col>
-                        <Col span="7"></Col>
+                    <Row class="border-bottom">
+                        <Col span="5" style="height: 70px;"><div class="title">接待单位协助安排就餐</div></Col>
+                        <Col span="7" style="height: 70px;"></Col>
+                        <Col span="5" style="height: 70px;"><div class="title">交款金额</div></Col>
+                        <Col span="7" style="height: 70px;"></Col>
                     </Row>
-                    <Row>
-                        <Col span="5"><div class="title">接待单位提供交通工具</div></Col>
-                        <Col span="7"></Col>
-                        <Col span="5"><div class="title">交款金额</div></Col>
-                        <Col span="7"></Col>
+                    <Row class="border-bottom">
+                        <Col span="5" style="height: 70px;"><div class="title">接待单位提供交通工具</div></Col>
+                        <Col span="7" style="height: 70px;"></Col>
+                        <Col span="5" style="height: 70px;"><div class="title">交款金额</div></Col>
+                        <Col span="7" style="height: 70px;"></Col>
                     </Row>
-                    <Row>
-                        <Col span="5"><div class="title">本单位或其他省直单位提供交通工具</div></Col>
-                        <Col span="19"></Col>
+                    <Row class="border-bottom">
+                        <Col span="5" style="height: 90px;"><div class="title">本单位或其他省直单位提供交通工具</div></Col>
+                        <Col span="19" style="height: 90px;"></Col>
                     </Row>
                     <Row>
                         <Col span="5"><div class="title">自行用车</div></Col>
@@ -103,17 +103,17 @@
 
                 <Col span="4">
                     <Row>
-                        <Col span="24"><div class="title">说明</div></Col>
+                        <Col span="24" style="height: 290px;"><div class="title">说明</div></Col>
                         <Col span="24"></Col>
                     </Row>
                 </Col>
 
             </Row>
 
-            <Row>
+            <Row class="border-left border-right border-bottom">
                 <Col span="4"> <div class="title">备注</div> </Col>
                 <Col span="20">
-                    <div>1.凡由接待单位协助安排就餐的，接待单位应该按标准安排，出差人员应当在差旅费管理办法规定的标准内向接待单位交纳相应的伙食费，原则上快餐每人每餐15元，桌餐每人每餐50元。
+                    <div style="padding: 10px;">1.凡由接待单位协助安排就餐的，接待单位应该按标准安排，出差人员应当在差旅费管理办法规定的标准内向接待单位交纳相应的伙食费，原则上快餐每人每餐15元，桌餐每人每餐50元。
                         <br/>
                         2.凡由接待单位提供交通工具的，出差人员应当在差旅费管理办法规定的标准内向接待单位交纳市内交通费。
                         <br/>
@@ -122,7 +122,8 @@
                         4.一天内由两家不同接待单位按照规定各安排一次工作餐的，出差人员当天不在领取伙食补助费。</div>
                 </Col>
             </Row>
-            <Row>
+
+            <Row class="border-left border-right border-bottom">
                 <Col span="4"></Col>
                 <Col span="16"> <div class="title">经办人签名</div> </Col>
                 <Col span="4"></Col>
@@ -223,8 +224,9 @@
             position: relative;
 
             .title {
+                padding: 15px 3px 0;
                 font-size: 14px;
-                min-height: 60px;
+                min-height: 55px;
                 text-align: center;
                 letter-spacing: 2px;
 
@@ -239,23 +241,29 @@
         }
 
         .ivu-row {
-            .ivu-col {
-                min-height: 65px;
-                height: 100%;
-                border-width: 0 0 1px 1px;
-                border-style: solid;
-                border-color: #dcdee2;
-
-                &:last-child {
-                    border-right-width: 1px;
-                }
+            >.ivu-col {
+                min-height: 55px;
+                border-left: 1px solid #dcdee2;
             }
 
-            &:first-child {
-                .ivu-col {
-                    border-top-width: 1px;
-                }
+            >.ivu-col:first-child {
+                border-left-width: 0;
             }
         }
+
+        .border-left {
+            border-left: 1px solid #dcdee2;
+        }
+        .border-top {
+            border-top: 1px solid #dcdee2;
+        }
+        .border-right {
+            border-right: 1px solid #dcdee2;
+        }
+        .border-bottom {
+            border-bottom: 1px solid #dcdee2;
+        }
+
+
     }
 </style>

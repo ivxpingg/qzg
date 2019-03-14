@@ -75,7 +75,7 @@
         components: {vRecordViewFiles},
         computed: {
             _tableColumns() {
-                let column = [{ title: '操作', minWidth: 180, align: 'center',
+                let column = [{ title: '操作', width: 180, align: 'center',
                     render: (h, params) => {
                         let list = [];
 
@@ -150,7 +150,7 @@
                             return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
                         }
                     },
-                    { title: '文号', width: 150, align: 'center', key: 'archiveNo' },
+                    { title: '文号', width: 180, align: 'center', key: 'archiveNo' },
                     { title: '标题', minWidth: 160, align: 'center', key: 'archiveTitle' },
                     { title: '来源', width: 120, align: 'center', key: 'archiveSourceLabel' },
                     { title: '状态', width: 120, align: 'center', key: 'archiveStatusLabel' }
