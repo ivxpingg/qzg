@@ -142,23 +142,23 @@
                     </FormItem>
 
                     <template v-for="(item, idx) in formData.employeeSchoolList">
-                        <FormItem label="毕业院校:" :key="getRandom()">
+                        <FormItem label="毕业院校:" :key="idx + '0'">
                             <Input v-model="item.school" placeholder="请输入毕业院校"  style="width: 130px;" />
                         </FormItem>
-                        <FormItem label="类型:" :key="getRandom()" :label-width="60">
+                        <FormItem label="类型:" :key="idx + '1'" :label-width="60">
                             <Input v-model="item.schoolType" placeholder="请输入类型" style="width: 130px;"  />
                         </FormItem>
-                        <FormItem label="专业:" :key="getRandom()" :label-width="60">
+                        <FormItem label="专业:" :key="idx + '2'" :label-width="60">
                             <Input v-model="item.major" placeholder="请输入专业" style="width: 130px;"  />
                         </FormItem>
-                        <FormItem label="学历:" :key="getRandom()" :label-width="60">
+                        <FormItem label="学历:" :key="idx + '3'" :label-width="60">
                             <Input v-model="item.eduction" placeholder="请输入学历" style="width: 130px;"  />
                         </FormItem>
-                        <FormItem v-if="idx === 0 && !isView" :key="getRandom()" :label-width="0">
+                        <FormItem v-if="idx === 0 && !isView" :label-width="0">
                             <Button type="error" size="small" @click="removeEmployeeSchool(item, idx)" style="margin-right: 5px;">删除</Button>
                             <Button type="primary" size="small" @click="addEmployeeSchool">添加</Button>
                         </FormItem>
-                        <FormItem v-else-if="!isView" :key="getRandom()" :label-width="0">
+                        <FormItem v-else-if="!isView" :label-width="0">
                             <Button type="error" size="small" @click="removeEmployeeSchool(item, idx)">删除</Button>
                         </FormItem>
                     </template>

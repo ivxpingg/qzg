@@ -47,9 +47,10 @@
                                     'on-change': (value) => {
                                         this.$http({
                                             method: 'get',
-                                            url: '/',
+                                            url: '/period/update',
                                             params: {
-                                                period: value
+                                                period: value,
+                                                courseId: params.row.courseId
                                             }
                                         }).then((res) => {
                                             if (res.code === 'SUCCESS') {
@@ -134,10 +135,10 @@
             return {
                 tableColumns: [
                     { title: '序号', width: 65, align: 'center', type: 'index', },
-                    { title: '员工名称', width: 120, align: 'center', key: 'employeeName' },
+                    { title: '员工名称', width: 120, align: 'center', key: 'userName' },
                     { title: '报名时间', width: 180, align: 'center',
                         render: (h, params) => {
-                            let str = this.timeFormat(params.row.signTime, 'YYYY-MM-DD HH:mm:ss');
+                            let str = this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss');
                             return h('div', str);
                         }
                     },
@@ -162,11 +163,10 @@
                 immediate: true,
                 handler(val) {
                     if (val) {
-                        this.formData.courseId = val;
                         this.getData();
                     }
                     else {
-                        // this.tableData = [];
+                        this.tableData = [];
                     }
                 }
             }
@@ -175,7 +175,7 @@
             getData() {
                 this.$http({
                     method: 'get',
-                    url: '/',
+                    url: '/period/query',
                     params: {
                         courseId: this.courseId
                     }

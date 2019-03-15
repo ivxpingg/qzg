@@ -71,9 +71,17 @@
                     { title: '发起部门', width: 120, align: 'center', key: 'departmentName' },
                     { title: '状态', width: 120, align: 'center', key: 'courseStatusLabel' },
                     { title: '学员人数', width: 120, align: 'center', key: 'userNum' },
-                    { title: '课程进度', width: 120, align: 'center', key: 'progress' },
-                    { title: '学时完成率', width: 120, align: 'center', key: 'completionRates' },
-                    { title: '符合毕业人数', width: 120, align: 'center', key: 'passUserNum' },
+                    { title: '课程进度', width: 120, align: 'center', key: 'courseProgress',
+                         render(h, params) {
+                            return h('div', parseInt(params.row.courseProgress * 100) + '%');
+                         }
+                    },
+                    { title: '学时完成率', width: 120, align: 'center', key: 'periodFinished',
+                        render(h, params) {
+                            return h('div', parseInt(params.row.periodFinished * 100) + '%');
+                        }
+                    },
+                    { title: '符合毕业人数', width: 120, align: 'center', key: 'graduateNum' },
                     { title: '操作', minWidth: 120, align: 'center',
                         render: (h, params) => {
                             let list = [];

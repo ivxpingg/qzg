@@ -1,16 +1,14 @@
 <template>
     <Modal v-model="modalValue"
            title="人事变动记录"
-           :width="850"
+           :width="1200"
            footer-hide
            @on-visible-change="onVisibleChange">
         <vIvxFilterBox>
             <Form inline>
 
                 <FormItem label="员工状态:" :label-width="65">
-                    <Select v-model="searchParams.condition.employeeStatus">
-                        <Option value=""
-                                label="全部"></Option>
+                    <Select v-model="searchParams.condition.employeeStatus" clearable>
                         <Option v-for="item in dict_employeeStatus"
                                 :key="item.id"
                                 :value="item.value"
@@ -19,9 +17,7 @@
                 </FormItem>
 
                 <FormItem label="员工类型:" :label-width="65">
-                    <Select v-model="searchParams.condition.employeeType">
-                        <Option value=""
-                                label="全部"></Option>
+                    <Select v-model="searchParams.condition.employeeType" clearable>
                         <Option v-for="item in dict_employeeType"
                                 :key="item.id"
                                 :value="item.value"
@@ -68,8 +64,8 @@
         mixins: [modalMixin, comMixin],
         computed: {
             exportUrl() {
-                return Config[Config.env].origin + Config[Config.env].ajaxUrl +
-                    `?employeeStatus=${this.searchParams.condition.employeeStatus}&employeeType=${this.searchParams.condition.employeeType}&beginTime=${this.searchParams.condition.beginTime}&endTime=${this.searchParams.condition.endTime}&fields=${this.searchParams.condition.fields.join(',')}`
+                return Config[Config.env].origin + Config[Config.env].ajaxUrl + '/employee/export' +
+                    `?employeeStatus=${this.searchParams.condition.employeeStatus || ''}&employeeType=${this.searchParams.condition.employeeType || ''}&beginTime=${this.searchParams.condition.beginTime}&endTime=${this.searchParams.condition.endTime}&fields=${this.searchParams.condition.fields.join(',')}`
             }
         },
         data() {
@@ -83,7 +79,25 @@
                         employeeType: 'in_staff',
                         beginTime: '',
                         endTime: '',
-                        fields: ['insTime', 'employeeName', 'departmentName', 'phone', 'dutyName', 'employeeStatusLabel']
+                        fields: ['insTime',
+                            'employeeName',
+                            'departmentName',
+                            'phone',
+                            'dutyName',
+                            'employeeStatusLabel',
+                            'sexLabel',
+                            'birthday',
+                            'nativePlace',
+                            'idNumber',
+                            'joinArmyDate',
+                            'joinPartyDate',
+                            'departmentName',
+                            'dutyName',
+                            'jobLevelLabel',
+                            'wageLevelLabel',
+                            'onJobTime',
+                            'nowJobTime'
+                        ]
                     }
                 },
                 tableColumns: [
@@ -105,8 +119,7 @@
                                             }
                                         }
                                     }
-                                }),
-                                h('span', '时间')
+                                }, '时间')
                             ])
                         },
                         render: (h, params) => {
@@ -130,8 +143,7 @@
                                             }
                                         }
                                     }
-                                }),
-                                h('span', '员工名称')
+                                }, '员工名称')
                             ])
                         },
                     },
@@ -152,8 +164,7 @@
                                             }
                                         }
                                     }
-                                }),
-                                h('span', '部门')
+                                }, '部门')
                             ])
                         },
                     },
@@ -174,8 +185,7 @@
                                             }
                                         }
                                     }
-                                }),
-                                h('span', '联系电话')
+                                }, '联系电话')
                             ])
                         },
                     },
@@ -196,8 +206,7 @@
                                             }
                                         }
                                     }
-                                }),
-                                h('span', '职务')
+                                }, '职务')
                             ])
                         },
                     },
@@ -218,10 +227,270 @@
                                             }
                                         }
                                     }
-                                }),
-                                h('span', '状态')
+                                }, '状态')
                             ])
                         },
+                    },
+                    { title: '性别', width: 100, align: 'center', key: 'sexLabel',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('sexLabel') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('sexLabel');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('sexLabel'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '性别')
+                            ])
+                        },
+                    },
+                    { title: '出生日期', width: 120, align: 'center', key: 'birthday',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('birthday') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('birthday');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('birthday'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '出生日期')
+                            ])
+                        },
+                        render: (h, params) => {
+                            return h('div', this.timeFormat(params.row.birthday, 'YYYY-MM-DD'));
+                        }
+                    },
+                    { title: '籍贯', width: 100, align: 'center', key: 'nativePlace',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('nativePlace') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('nativePlace');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('nativePlace'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '籍贯')
+                            ])
+                        },
+                    },
+                    { title: '身份证号码', width: 140, align: 'center', key: 'idNumber',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('idNumber') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('idNumber');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('idNumber'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '身份证号码')
+                            ])
+                        },
+                    },
+                    { title: '所属单位', width: 120, align: 'center', key: 'departmentName',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('departmentName') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('departmentName');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('departmentName'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '所属单位')
+                            ])
+                        },
+                    },
+                    { title: '职务', width: 100, align: 'center', key: 'dutyName',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('dutyName') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('dutyName');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('dutyName'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '职务')
+                            ])
+                        },
+                    },
+                    { title: '职级', width: 100, align: 'center', key: 'jobLevelLabel',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('jobLevelLabel') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('jobLevelLabel');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('jobLevelLabel'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '职级')
+                            ])
+                        },
+                    },
+                    { title: '工资职级', width: 120, align: 'center', key: 'wageLevelLabel',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('wageLevelLabel') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('wageLevelLabel');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('wageLevelLabel'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '工资职级')
+                            ])
+                        },
+                    },
+                    { title: '任职时间', width: 120, align: 'center', key: 'onJobTime',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('onJobTime') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('onJobTime');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('onJobTime'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '任职时间')
+                            ])
+                        },
+                        render: (h, params) => {
+                            return h('div', this.timeFormat(params.row.onJobTime, 'YYYY-MM-DD'));
+                        }
+                    },
+                    { title: '现任职时间', width: 130, align: 'center', key: 'nowJobTime',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('nowJobTime') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('nowJobTime');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('nowJobTime'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '现任职时间')
+                            ])
+                        },
+                        render: (h, params) => {
+                            return h('div', this.timeFormat(params.row.nowJobTime, 'YYYY-MM-DD'));
+                        }
+                    },
+                    { title: '入伍日期', width: 120, align: 'center', key: 'joinArmyDate',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('joinArmyDate') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('joinArmyDate');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('joinArmyDate'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '入伍日期')
+                            ])
+                        }
+                    },
+                    { title: '入党日期', width: 120, align: 'center', key: 'joinPartyDate',
+                        renderHeader: (h, params) => {
+                            return h('div', [
+                                h('Checkbox', {
+                                    props: {
+                                        value:  this.searchParams.condition.fields.indexOf('joinPartyDate') > -1
+                                    },
+                                    on: {
+                                        'on-change': (value) => {
+                                            if (value) {
+                                                this.searchParams.condition.fields.push('joinPartyDate');
+                                            }
+                                            else {
+                                                this.searchParams.condition.fields.splice(this.searchParams.condition.fields.indexOf('joinPartyDate'), 1);
+                                            }
+                                        }
+                                    }
+                                }, '入党日期')
+                            ])
+                        }
                     }
                 ],
                 tableData: [

@@ -25,8 +25,9 @@
                         <div class="address">培训地点：{{item.address}}</div>
                         <div class="courseContent">培训内容：{{item.courseContent}}</div>
                     </div>
-                    <div class="right-right" v-if="item.courseStatus === 'sign_up' && item.signStatus === 0">
-                        <Button type="primary" @click="onClick_signUp(item.courseId, item.courseName)">我要报名</Button>
+                    <div class="right-right">
+                        <Button v-if="item.courseStatus === 'sign_up' && item.signStatus === 0" type="primary" @click="onClick_signUp(item.courseId, item.courseName)">我要报名</Button>
+                        <span v-else style="color: #19be6b;">已报名</span>
                     </div>
                     <div class="courseStatus">
                         {{item.courseStatusLabel}}

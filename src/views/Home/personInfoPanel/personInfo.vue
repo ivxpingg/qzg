@@ -20,8 +20,8 @@
                 <div class="value">{{baseCount.noCompletedCourseNum}}</div>
             </div>
             <div class="item">
-                <div class="title">努力值</div>
-                <div class="value">{{baseCount.effortsValue}}</div>
+                <div class="title">待办事项</div>
+                <div class="value">{{baseCount.waitHandleNum}}</div>
             </div>
             <div class="item">
                 <div class="title">消息通知</div>
@@ -40,7 +40,7 @@
                     noticeNum: '0',
                     trainPeriodNum: '0',
                     noCompletedCourseNum: '0',
-                    effortsValue: '2000'
+                    waitHandleNum: '10'
                 }
             };
         },
