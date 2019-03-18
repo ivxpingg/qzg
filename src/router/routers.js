@@ -46,7 +46,7 @@ const DocumentManage = [
         name: 'DocumentManage',
         component: Main,
         meta: {
-            icon: 'ios-paper',
+            icon: 'md-filing',
             title: '公文档案管理',
             requireAuth: true
         },
@@ -94,7 +94,7 @@ const OrganizationManage = [
         name: 'OrganizationManage',
         component: Main,
         meta: {
-            icon: 'ios-paper',
+            icon: 'md-git-network',
             title: '组织人事管理',
             requireAuth: true
         },
@@ -160,7 +160,7 @@ const StaffEducationAndTraining = [
         name: 'StaffEducationAndTraining',
         component: Main,
         meta: {
-            icon: 'ios-paper',
+            icon: 'ios-easel',
             title: '职工教育培训',
             requireAuth: true
         },
@@ -190,7 +190,7 @@ const StaffEducationAndTraining = [
                 name: 'certificateManage',
                 component: () => import('@/views/StaffEducationAndTraining/certificateManage/certificateManage.vue'),
                 meta: {
-                    icon: 'ios-image',
+                    icon: 'ios-bookmarks',
                     title: '培训证书管理',
                     requireAuth: true
                 }

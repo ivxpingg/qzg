@@ -78,37 +78,37 @@
                             //         }
                             //     }
                             // }, '通知'));
-
-                            list.push(h('Button', {
-                                props: {
-                                    type: 'primary',
-                                    size: 'small',
-                                    icon: 'md-send'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.$Modal.confirm({
-                                            title: '提示',
-                                            content: '确定要下发证书?',
-                                            onOk: () => {
-                                                this.$http({
-                                                    method: 'get',
-                                                    url: '/',
-                                                    params: {
-                                                        periodId: params.row.periodId,
-                                                        courseId: params.row.courseId,
-                                                        userId: params.row.userId
-                                                    }
-                                                }).then((res) => {
-                                                    if (res.code === 'SUCCESS') {
-                                                        this.$Message.success('修改成功！');
-                                                    }
-                                                }).catch(() => {})
-                                            }
-                                        })
-                                    }
-                                }
-                            }, '下发证书'))
+                            //
+                            // list.push(h('Button', {
+                            //     props: {
+                            //         type: 'primary',
+                            //         size: 'small',
+                            //         icon: 'md-send'
+                            //     },
+                            //     on: {
+                            //         click: () => {
+                            //             this.$Modal.confirm({
+                            //                 title: '提示',
+                            //                 content: '确定要下发证书?',
+                            //                 onOk: () => {
+                            //                     this.$http({
+                            //                         method: 'get',
+                            //                         url: '/',
+                            //                         params: {
+                            //                             periodId: params.row.periodId,
+                            //                             courseId: params.row.courseId,
+                            //                             userId: params.row.userId
+                            //                         }
+                            //                     }).then((res) => {
+                            //                         if (res.code === 'SUCCESS') {
+                            //                             this.$Message.success('修改成功！');
+                            //                         }
+                            //                     }).catch(() => {})
+                            //                 }
+                            //             })
+                            //         }
+                            //     }
+                            // }, '下发证书'))
 
                             return h('div',{
                                 style: { },
