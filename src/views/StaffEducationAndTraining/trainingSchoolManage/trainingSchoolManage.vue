@@ -158,6 +158,4 @@
 </script>
 
 <style lang="scss" scoped>
-    .trainingSchoolManage-container {
-    }
 </style>

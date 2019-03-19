@@ -79,36 +79,42 @@
                             //     }
                             // }, '通知'));
                             //
-                            // list.push(h('Button', {
-                            //     props: {
-                            //         type: 'primary',
-                            //         size: 'small',
-                            //         icon: 'md-send'
-                            //     },
-                            //     on: {
-                            //         click: () => {
-                            //             this.$Modal.confirm({
-                            //                 title: '提示',
-                            //                 content: '确定要下发证书?',
-                            //                 onOk: () => {
-                            //                     this.$http({
-                            //                         method: 'get',
-                            //                         url: '/',
-                            //                         params: {
-                            //                             periodId: params.row.periodId,
-                            //                             courseId: params.row.courseId,
-                            //                             userId: params.row.userId
-                            //                         }
-                            //                     }).then((res) => {
-                            //                         if (res.code === 'SUCCESS') {
-                            //                             this.$Message.success('修改成功！');
-                            //                         }
-                            //                     }).catch(() => {})
-                            //                 }
-                            //             })
-                            //         }
-                            //     }
-                            // }, '下发证书'))
+                            if (params.row.certificateStatus === '0') {
+                                list.push(h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small',
+                                        icon: 'md-send'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$Modal.confirm({
+                                                title: '提示',
+                                                content: '确定要下发证书?',
+                                                onOk: () => {
+                                                    this.$http({
+                                                        method: 'get',
+                                                        url: '/period/grant',
+                                                        params: {
+                                                            courseId: params.row.courseId,
+                                                            userId: params.row.userId
+                                                        }
+                                                    }).then((res) => {
+                                                        if (res.code === 'SUCCESS') {
+                                                            this.$Message.success('下发成功！');
+                                                            this.getData();
+                                                        }
+                                                    }).catch(() => {
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    }
+                                }, '下发证书'))
+                            }
+                            else {
+                                list.push(h('span', '已下发证书'));
+                            }
 
                             return h('div',{
                                 style: { },
@@ -142,9 +148,13 @@
                             return h('div', str);
                         }
                     },
-                    { title: '电话', width: 120, align: 'center', key: 'phone' },
-                    { title: '部门', minWidth: 120, align: 'center', key: 'departmentName' },
-                    { title: '状态', minWidth: 120, align: 'center', key: 'courseStatusLabel' }
+                    // { title: '电话', width: 120, align: 'center', key: 'phone' },
+                    // { title: '部门', minWidth: 120, align: 'center', key: 'departmentName' },
+                    { title: '状态', minWidth: 120, align: 'center', key: 'status',
+                        render: (h, params) => {
+                            return h('span', params.row.status === '1' ? '已完成' : '学习中')
+                        }
+                    }
                 ],
                 tableData: [
                     {
@@ -190,6 +200,5 @@
 </script>
 
 <style lang="scss" scoped>
-    .periodManage-container {
-    }
+   
 </style>
