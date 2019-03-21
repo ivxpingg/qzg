@@ -4,7 +4,7 @@
         <div class="bussiness-layout">
             <h4 style="text-align: center; font-weight: 700;">出差审批单</h4>
             <div style="text-align: right; border-bottom: 1px solid #dcdee2; padding: 10px 30px;">
-                <span v-if="readonly">{{data.row_1_value_1}}</span>
+                <span v-if="readonly">{{timeFormat(data.row_1_value_1, 'YYYY 年 MM 月 DD 日')}}</span>
                 <DatePicker v-else
                             type="date"
                             placeholder="请选择时间"
@@ -39,7 +39,7 @@
             <Row class="border-left border-right border-bottom">
                 <Col span="4"> <div class="title">同行人员</div> </Col>
                 <Col span="14">
-                    <div class="text-center-center" style="padding-top: 5px;">
+                    <div class="" style="padding-top: 5px; padding-left: 5px; padding-right: 5px;">
                         <span v-if="readonly">{{data.row_3_value_1}}</span>
                         <Input v-else
                                v-model="data.row_3_value_1"
@@ -60,7 +60,7 @@
             <Row class="border-left border-right border-bottom">
                 <Col span="4"> <div class="title">出差事由</div> </Col>
                 <Col span="20">
-                    <div class="text-center-center" style="padding-top: 5px;">
+                    <div class="" style="padding-top: 5px; padding-left: 5px; padding-right: 5px;">
                         <span v-if="readonly">{{data.row_4_value_1}}</span>
                         <Input v-else
                                v-model="data.row_4_value_1"
@@ -75,8 +75,9 @@
                 <Col span="4"> <div class="title">出差起止时间</div> </Col>
                 <Col span="8">
                     <div class="text-center-center" style="padding-top: 16px;">
-                        <span v-if="readonly">{{data.row_5_value_1 + '~' + data.row_5_value_2}}</span>
-                        <DatePicker type="daterange"
+                        <span v-if="readonly">{{timeFormat(data.row_5_value_1, 'YYYY年 MM月 DD日') + ' 至 ' + timeFormat(data.row_5_value_2, 'YYYY年 MM月 DD日')}}</span>
+                        <DatePicker v-else
+                                    type="daterange"
                                     placeholder="选择起始时间"
                                     size="small"
                                     @on-change="onChange_daterange"
@@ -103,8 +104,8 @@
                 <Col span="4"> <div class="title">审批人</div> </Col>
                 <Col span="8">
                     <div class="text-center-center" style="padding-top: 16px;">
-                        <span v-if="readonly">{{data.row_6_value_2}}</span>
-                        <Input v-else v-model="data.row_6_value_2" size="small" style="width: 260px;"/>
+                        <!--<span v-if="readonly">{{data.row_6_value_2}}</span>-->
+                        <!--<Input v-else v-model="data.row_6_value_2" size="small" style="width: 260px;"/>-->
                     </div>
                 </Col>
             </Row>
@@ -150,7 +151,7 @@
                         <Col span="5" style="height: 70px;"><div class="title">交款金额</div></Col>
                         <Col span="7" style="height: 70px;">
                             <div class="text-center-center" style="padding-left: 10px; padding-top: 20px;">
-                                <span v-if="readonly">{{data.row_8_value_2}}</span>
+                                <span v-if="readonly">{{data.row_8_value_2}} 元</span>
                                 <Input v-else v-model="data.row_8_value_2" size="small" style="width: 150px;">
                                     <span slot="append">元</span>
                                 </Input>
@@ -172,7 +173,7 @@
                         <Col span="5" style="height: 70px;"><div class="title">交款金额</div></Col>
                         <Col span="7" style="height: 70px;">
                             <div class="text-center-center" style="padding-left: 10px; padding-top: 20px;">
-                                <span v-if="readonly">{{data.row_9_value_2}}</span>
+                                <span v-if="readonly">{{data.row_9_value_2}} 元</span>
                                 <Input v-else v-model="data.row_9_value_2" size="small" style="width: 150px;">
                                     <span slot="append">元</span>
                                 </Input>
@@ -210,7 +211,7 @@
                 <Col span="4">
                     <Row>
                         <Col span="24" style="height: 350px;">
-                            <div class="title">说明</div>
+                            <div class="title border-bottom" >说明</div>
                             <div class="text-center-center" style="padding-top: 5px;">
                                 <span v-if="readonly">{{data.row_7_value_2}}</span>
                                 <Input v-else
@@ -241,12 +242,16 @@
             <Row class="border-left border-right border-bottom">
                 <Col span="4"><div class="title">经办人签名</div></Col>
                 <Col span="16">
-
+                    <div style="padding-top: 16px; padding-left: 10px;">
+                        <!--<span v-if="readonly">{{data.row_12_value_1}}</span>-->
+                        <!--<Input v-else v-model="data.row_12_value_1" size="small" style="width: 260px;"/>-->
+                    </div>
                 </Col>
                 <Col span="4">
                     <div class="text-center-center" style="padding-top: 16px;">
-                        <span v-if="readonly">{{data.row_12_value_2}}</span>
-                        <DatePicker type="date"
+                        <span v-if="readonly">{{timeFormat(data.row_12_value_2, 'YYYY年 MM月 DD日')}}</span>
+                        <DatePicker v-else
+                                    type="date"
                                     placeholder="选择时间"
                                     size="small"
                                     @on-change="onChange_date_row12"
@@ -277,7 +282,7 @@
         <div class="ivu-modal-footer" style="padding-bottom: 0;">
             <div>
                 <Button v-if="leaveApplyId === ''" type="primary" @click="onClick_submit_audit">提交审核</Button>
-                <Button v-if="isAuditStatus" type="info" @click="onClick_signature">电子签名</Button>
+                <Button v-if="isAuditStatus || leaveApplyId === ''" type="info" @click="onClick_signature">电子签名</Button>
                 <Button v-if="isAuditStatus" type="primary" @click="onClick_audit_pass">审核通过</Button>
                 <Button v-if="isAuditStatus" type="error" @click="onClick_audit_noPass">审核不通过</Button>
             </div>
@@ -285,7 +290,7 @@
 
         <!--选择审核人员-->
         <vAuditPersonSelect ref="modal_auditPersonSelect"
-                            :relationId="leaveApplyId"
+                            :required="selectUserRequired"
                             processType="leave" @modal-callback="modal_auditPersonSelect_callback"></vAuditPersonSelect>
     </div>
 </template>
@@ -372,6 +377,39 @@
                     leaveContent : ''
                 },
                 data: {
+                    // row_1_value_1: '',
+                    //
+                    // row_2_value_1: this.$store.state.user.userName,
+                    // row_2_value_2: '厦门',
+                    // row_2_value_3: '1',
+                    //
+                    // row_3_value_1: '0',
+                    // row_3_value_2: '出租车',
+                    //
+                    // row_4_value_1: '驻点培训',
+                    //
+                    // row_5_value_1: '',
+                    // row_5_value_2: '',
+                    // row_5_value_3: '2',
+                    //
+                    // row_6_value_1: '苏峰',
+                    // row_6_value_2: '',
+                    //
+                    // row_7_value_1: '2',  // 默认值
+                    // row_7_value_2: '说明',
+                    //
+                    // row_8_value_1: '2',  // 默认值
+                    // row_8_value_2: '111',
+                    //
+                    // row_9_value_1: '2',  // 默认值
+                    // row_9_value_2: '222',
+                    //
+                    // row_10_value_1: '2',  // 默认值
+                    //
+                    // row_11_value_1: '2',  // 默认值
+                    //
+                    // row_12_value_1: '苏峰',
+                    // row_12_value_2: '',
                     row_1_value_1: '',
 
                     row_2_value_1: this.$store.state.user.userName,
@@ -440,6 +478,9 @@
                 offsetX: 0,
                 offsetY: 0,
                 eSignatureUrl: '',
+
+                // 下步审核人员是否必选
+                selectUserRequired: false
             };
         },
         watch: {
@@ -596,6 +637,7 @@
             },
             // 提交审核
             onClick_submit_audit() {
+                this.selectUserRequired = true;
                 if (this.validate()) {
                     this.leaveApply.leaveContent = JSON.stringify(this.data);
                     this.$refs.modal_auditPersonSelect.modalValue = true;
@@ -603,13 +645,25 @@
 
             },
             // 选择神人员回调
-            modal_auditPersonSelect_callback(userId) {
+            modal_auditPersonSelect_callback(item) {
+                let userId, name, content;
+
+                if (item) {
+                    userId = item.userId;
+                    name = item.name;
+                    content = `确定审核通过,并提交给《${name}》审核?`;
+                }
+                else {
+                    userId = '';
+                    name = '';
+                    content = '确定审核通过?';
+                }
 
                 if (!this.leaveApplyId) {
                     this.leaveApply.auditor = userId;
                     this.$Modal.confirm({
                         title: '提交审核',
-                        content: '确定要提交请假?',
+                        content: `确定提交公出申请,并提交给《${name}》审核?`,
                         onOk: () => {
                             this.$http({
                                 method: 'post',
@@ -630,7 +684,7 @@
                     this.auditRecord.leaveContent = JSON.stringify(this.data);
                     this.$Modal.confirm({
                         title: '审核',
-                        content: '确定审核通过?',
+                        content: content,
                         onOk: () => {
                             this.$http({
                                 method: 'post',
@@ -664,23 +718,25 @@
             },
             // 审核通过
             onClick_audit_pass() {
-                if (this.auditRecord.auditContent.trim() === '') {
-                    this.$Message.error('请填写审核意见');
-                    return;
-                }
-                if (this.leaveDetail.lastStep) {
-                    this.modal_auditPersonSelect_callback('');
-                }
-                else {
-                    this.$refs.modal_auditPersonSelect.modalValue = true;
-                }
+                // if (this.auditRecord.auditContent.trim() === '') {
+                //     this.$Message.error('请填写审核意见');
+                //     return;
+                // }
+                // if (this.leaveDetail.lastStep) {
+                //     this.modal_auditPersonSelect_callback('');
+                // }
+                // else {
+                //     this.$refs.modal_auditPersonSelect.modalValue = true;
+                // }
+
+                this.$refs.modal_auditPersonSelect.modalValue = true;
             },
             // 审核不通过
             onClick_audit_noPass() {
-                if (this.auditRecord.auditContent.trim() === '') {
-                    this.$Message.error('请填写审核意见');
-                    return;
-                }
+                // if (this.auditRecord.auditContent.trim() === '') {
+                //     this.$Message.error('请填写审核意见');
+                //     return;
+                // }
                 this.auditRecord.auditor = '';
                 this.auditRecord.auditResult = 'not_pass';
                 this.auditRecord.leaveContent = JSON.stringify(this.data);
@@ -695,7 +751,7 @@
                         }).then(res => {
                             if(res.code === 'SUCCESS') {
                                 this.$Message.success('提交成功!');
-                                this.$emit('callback', 'leave', 'success');
+                                this.$emit('callback', 'bussion', 'success');
                             }
                         })
                     }
@@ -724,6 +780,49 @@
 
             .text-center-center {
                 text-align: center;
+            }
+
+            .signature-box {
+                position: absolute;
+                z-index: 10;
+                top: 0;
+                left: 0;
+                width: 100px;
+                height: 100px;
+                img {
+                    width: 100px;
+                    height: 100px;
+                    border-image: none;
+                    border: none;
+                }
+            }
+            .stamp-layer{
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 100;
+                background-color: rgba(33,33,33,0.2);
+                overflow: hidden;
+                .signature-img {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100px;
+                    height: 100px;
+                    box-shadow:3px 3px 5px #7d7d7d;
+                    transition: all 0.05s;
+                }
+            }
+            .stamp-layer-mouse {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 101;
+                cursor: url("./images/cursor-stamp.png"), pointer;
             }
         }
 

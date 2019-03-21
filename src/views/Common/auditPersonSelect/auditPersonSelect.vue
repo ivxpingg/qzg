@@ -5,10 +5,10 @@
            @on-visible-change="onVisibleChange">
         <Form ref="form"
               :model="formData"
-              :rules="rules"
+              :rules="required ? rules : {}"
               :label-width="80">
             <FormItem label="选择人员:" prop="selectedList">
-                <Select v-model="formData.selectedList">
+                <Select v-model="formData.selectedList" clearable filterable>
                     <Option v-for="item in userList"
                             :value="item.userId"
                             :key="item.userId">{{ item.name }}</Option>
@@ -30,19 +30,18 @@
         name: 'auditPersonSelect',  // 选择审核人员
         mixins: [modalMixin],
         props: {
+            required: {
+                type: Boolean,
+                default: false
+            }
+        },
+        computed: {
             /**
-             *  关联ID【传consultApplyId,leaveApplyId】
+             * 选择的用户
+             * @returns {[Object, undefined]}
              */
-            relationId: {
-                type: String,
-                default: ''
-            },
-            /**
-             * 流程类型【档案查阅申请:archive，请假/公出申请：leave】
-             */
-            processType: {
-                type: String,
-                required: true
+            selectItem() {
+               return this.userList.find(v => v.userId === this.formData.selectedList);
             }
         },
         data() {
@@ -52,38 +51,18 @@
                     selectedList: ''
                 },
                 rules: {
-                    selectedList: [{ required: true,  message: '请选择用户！', trigger: 'blur' }],
+                    selectedList: [{ required: true, message: '请选择用户！', trigger: 'blur' }],
                 }
-
             };
         },
-        watch: {
-            relationId: {
-                immediate: true,
-                handler(val) {
-                    if (val) {
-                        this.getData();
-                    }
-                }
-            },
-            processType: {
-                immediate: true,
-                handler() {
-                    if (this.relationId === '') {
-                        this.getData();
-                    }
-                }
-            }
+        mounted() {
+            this.getData();
         },
         methods: {
             getData() {
                 this.$http({
                     method: 'get',
-                    url: '/auditRecord/auditorList',
-                    params: {
-                        relationId: this.relationId,
-                        processType: this.processType
-                    }
+                    url: '/auditRecord/auditorList'
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
                         this.userList = res.data || [];
@@ -95,7 +74,7 @@
                 this.$refs.form.validate((valid) => {
                     if (valid) {
                         this.modalValue = false;
-                        this.$emit('modal-callback', this.formData.selectedList);
+                        this.$emit('modal-callback', this.selectItem);
                     }
                 });
             }

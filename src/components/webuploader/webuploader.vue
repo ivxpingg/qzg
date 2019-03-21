@@ -4,7 +4,7 @@
             <div ref="btn"><slot></slot></div>
         </div>
         <!--用来存放文件信息-->
-        <vUploadList v-if="!hiddenList" ref="vUploadList" :files="files" @removeFile="removeFile"></vUploadList>
+        <vUploadList v-if="!hiddenList" ref="vUploadList" :files="vUploadList_files" @removeFile="removeFile"></vUploadList>
     </div>
 </template>
 
@@ -15,6 +15,15 @@
         name: 'vue-webuploader',
         components: {vUploadList},
         props: {
+            /**
+             * 默认值
+             */
+            defaultFiles: {
+                type: Array,
+                default() {
+                    return []
+                }
+            },
             multiple: {
                 type: Boolean,
                 default: true
@@ -28,7 +37,9 @@
              */
             accept: {
                 type: Array,
-                default: null
+                default() {
+                    return null;
+                }
             },
             formData: {
                 type: Object,
@@ -58,6 +69,9 @@
         computed: {
             _serverUrl() {
                 return this.server || this.action + this.fileType;
+            },
+            vUploadList_files() {
+                return this.files.concat(this.defaultFileList);
             }
         },
         data() {
@@ -69,9 +83,22 @@
                 // 文件列表队列
                 files: [],
                 fileList: [],
+
+                defaultFileList: []
             };
         },
-        watch: {},
+        watch: {
+            defaultFiles: {
+                immediate: true,
+                handler(val) {
+                    this.defaultFileList = val.map(item => {
+                        item.percentage = 100;
+                        item.name = item.fileName + '.' + item.fileFormat;
+                        return item;
+                    });
+                }
+            }
+        },
         mounted() {
             this.initWebuploader();
             this.initEvent();
@@ -152,11 +179,11 @@
 
                // this.$set(this.files,this.files.length, file);
                 if (this.multiple) {
-                    this.$set(this.files,this.files.length, file);
+                    this.$set(this.files, this.files.length, file);
                 }
                 else {
                     this.reset();
-                    this.$set(this.files,this.files.length, file);
+                    this.$set(this.files, this.files.length, file);
                 }
             },
             filesQueued(files) {
@@ -169,7 +196,7 @@
                 if (this.files.indexOf(file) > -1) {
                     this.files.splice(this.files.indexOf(file), 1);
                     this.fileList.splice(this.fileList.indexOf(file), 1);
-                    this.$emit('on-removeFile', file, this.fileList);
+                    this.$emit('on-removeFile', file, this.fileList.concat(this.defaultFileList));
                 }
             },
             reset(files) {
@@ -208,7 +235,7 @@
                 if (response.code === 'SUCCESS') {
                     file.response = response.data;
                     this.fileList.push(file);
-                    this.$emit('on-uploadSuccess', response, file, this.fileList);
+                    this.$emit('on-uploadSuccess', response, file, this.fileList.concat(this.defaultFileList));
                 }
                 else {
 
@@ -221,7 +248,12 @@
 
             // 移除文件
             removeFile(file) {
-                this.uploader.removeFile(file.id, true);
+                if(file.id) {
+                    this.uploader.removeFile(file.id, true);
+                }
+                else {
+                    this.defaultFileList = this.defaultFileList.filter(item => item.fileId !== file.fileId);
+                }
             }
         }
     }

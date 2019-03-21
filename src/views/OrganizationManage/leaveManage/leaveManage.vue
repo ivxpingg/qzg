@@ -68,6 +68,7 @@
                             on: {
                                 click: () => {
                                     this.modal_applyPage_props.relationId = params.row.leaveApplyId;
+                                    this.modal_applyPage_props.leaveType = params.row.leaveType;
                                     if (params.row.leaveStatus === 'wait_audit') {
                                         this.modal_applyPage_props.type = 'audit';
                                     }
@@ -158,6 +159,7 @@
 
             callback() {
                 this.getData();
+                this.modal_applyPage_props.relationId = '';
             }
         }
     }

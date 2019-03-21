@@ -48,9 +48,9 @@
                 </Col>
             </Row>
 
-            <template v-for="item in auditContentList">
+            <template v-for="(item, idx) in auditContentList">
                 <Row>
-                    <Col span="6"> <div class="title">{{item.processStepName}}</div> </Col>
+                    <Col span="6"> <div class="title">{{auditStepName[idx] || item.roleName}}</div> </Col>
                     <Col span="18">
                         <div>
                             <Input v-model="item.auditContent" type="textarea" readonly :autosize="{minRows: 3, maxRows: 3}" />
@@ -105,8 +105,8 @@
 
         <!--选择审核人员-->
         <vAuditPersonSelect ref="modal_auditPersonSelect"
-                            :relationId="leaveApplyId"
-                            processType="leave" @modal-callback="modal_auditPersonSelect_callback"></vAuditPersonSelect>
+                            :required="selectUserRequired"
+                            @modal-callback="modal_auditPersonSelect_callback"></vAuditPersonSelect>
     </div>
 </template>
 
@@ -154,6 +154,9 @@
         },
         data() {
             return {
+                // 审核步骤名称
+                auditStepName: ['处 室 意 见', '人事部门审核', '局分管领导意见', '局主要领导意见'],
+
                 // 提交审核对象
                 leaveApply: {
                     auditor: '',
@@ -211,7 +214,8 @@
                 offsetY: 0,
                 eSignatureUrl: '',
 
-                // 选择用户人员
+                // 下步审核人员是否必选
+                selectUserRequired: false
 
             };
         },
@@ -345,19 +349,32 @@
             },
             // 提交审核
             onClick_submit_audit() {
+                this.selectUserRequired = true;
                 if (this.validate()) {
                     this.leaveApply.leaveContent = JSON.stringify(this.data);
                     this.$refs.modal_auditPersonSelect.modalValue = true;
                 }
 
             },
-            modal_auditPersonSelect_callback(userId) {
+            modal_auditPersonSelect_callback(item) {
+                let userId, name, content;
+
+                if (item) {
+                    userId = item.userId;
+                    name = item.name;
+                    content = `确定审核通过,并提交给《${name}》审核?`;
+                }
+                else {
+                    userId = '';
+                    name = '';
+                    content = '确定审核通过?';
+                }
 
                 if (!this.leaveApplyId) {
                     this.leaveApply.auditor = userId;
                     this.$Modal.confirm({
                         title: '提交审核',
-                        content: '确定要提交请假?',
+                        content: `确定提交请假申请,并提交给《${name}》审核?`,
                         onOk: () => {
                             this.$http({
                                 method: 'post',
@@ -378,7 +395,7 @@
                     this.auditRecord.leaveContent = JSON.stringify(this.data);
                     this.$Modal.confirm({
                         title: '审核',
-                        content: '确定审核通过?',
+                        content: content,
                         onOk: () => {
                             this.$http({
                                 method: 'post',
@@ -411,6 +428,7 @@
             },
             // 审核通过
             onClick_audit_pass() {
+                this.selectUserRequired = false;
                 if (this.auditRecord.auditContent.trim() === '') {
                     this.$Message.error('请填写审核意见');
                     return;

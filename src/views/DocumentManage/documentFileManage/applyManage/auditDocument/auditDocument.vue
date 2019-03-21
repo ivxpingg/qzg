@@ -22,14 +22,14 @@
                 <Input v-model="formData.useFor" readonly type="textarea" :rows="3"  style="width: 610px;"/>
             </FormItem>
         </Form>
-        <Divider></Divider>
+        <Divider v-if="auditContentList.length > 0"></Divider>
         <Form ref="form"
               :model="submitForm"
               inline
               :rules="rules"
               :label-width="120">
             <template v-for="item in auditContentList">
-                <FormItem :label="item.processStepName">
+                <FormItem :label="item.roleName">
                     <Input :value="item.auditContent" readonly type="textarea" :rows="3"  style="width: 570px;"/>
                 </FormItem>
                 <FormItem label="审核人:" :label-width="350">
@@ -53,8 +53,8 @@
 
         <!--选择审核人员-->
         <vAuditPersonSelect ref="modal_auditPersonSelect"
-                            :relationId="consultApplyId"
-                            processType="archive" @modal-callback="modal_auditPersonSelect_callback"></vAuditPersonSelect>
+                            :required="required"
+                            @modal-callback="modal_auditPersonSelect_callback"></vAuditPersonSelect>
     </Modal>
 </template>
 
@@ -89,7 +89,7 @@
                     name: '',
                     insTime: '',
                     useFor: '',
-                    lastStep: '',
+                    // lastStep: '',
                     applyStatus: ''
                 },
 
@@ -106,7 +106,9 @@
                 },
                 rules: {
                     auditContent: [{ required: true, message: '审核意见不能为空！', trigger: 'blur' }]
-                }
+                },
+                // 审核人员是否必选
+                required: false
             };
         },
         watch: {
@@ -135,7 +137,7 @@
                             name: '',
                             insTime: '',
                             useFor: '',
-                            lastStep: '',
+                            // lastStep: '',
                             applyStatus: ''
                         },res.data, {
                             insTime: this.timeFormat(res.data.insTime, 'YYYY-MM-DD HH:mm:ss')
@@ -160,12 +162,14 @@
             onClick_auditPass() {
                 this.$refs.form.validate((valid) => {
                     if (valid) {
-                        if (this.formData.lastStep) {
-                            this.modal_auditPersonSelect_callback('');
-                        }
-                        else {
-                            this.$refs.modal_auditPersonSelect.modalValue = true;
-                        }
+                        // if (this.formData.lastStep) {
+                        //     this.modal_auditPersonSelect_callback('');
+                        // }
+                        // else {
+                        //     this.$refs.modal_auditPersonSelect.modalValue = true;
+                        // }
+
+                        this.$refs.modal_auditPersonSelect.modalValue = true;
 
                     }
                 })
@@ -193,12 +197,27 @@
                 })
             },
 
-            modal_auditPersonSelect_callback(userId) {
+            modal_auditPersonSelect_callback(item) {
+                let userId,
+                    name,
+                    content;
+
+                if (item) {
+                    userId = item.userId;
+                    name = item.name;
+                    content = `确定审核通过,并提交给《${name}》审核?`;
+                }
+                else {
+                    userId = '';
+                    name = '';
+                    content = '确定审核通过?';
+                }
                 this.submitForm.auditor = userId;
+
                 this.submitForm.auditResult = 'pass';
                 this.$Modal.confirm({
                     title: '审核',
-                    content: '确定审核通过?',
+                    content: content,
                     onOk: () => {
                         this.$http({
                             method: 'post',

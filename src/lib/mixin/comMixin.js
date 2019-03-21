@@ -109,6 +109,33 @@ export default {
             return value ? this.$moment(value).format(format) : '';
         },
 
+        /**
+         * 获取附件列表
+         * @param relationId 关联ID
+         * @param fileType 文件类别
+         * @return []
+         */
+        getFilesList(relationId, fileType) {
+            return new Promise((resolve, reject) => {
+                this.$http({
+                    method: 'get',
+                    url: '/file/attachList',
+                    params: {
+                        relationId: relationId,
+                        fileType: fileType
+                    }
+                }).then(res => {
+                    if(res.code === 'SUCCESS') {
+                        resolve(res.data || []);
+                    }
+                    else {
+                        reject(res);
+                    }
+                });
+            });
+
+        },
+
         assign(target, source) {
             if (!source) {
                 return;

@@ -48,9 +48,10 @@
                             v-if="modalValue"
                             ref="webUploader"
                             multiple
+                            :defaultFiles="formData.defaultFiles"
                             @on-removeFile="onRemoveFile"
                             @on-uploadSuccess="onUploadSuccess"
-                            fileType="learning_resource">
+                            :fileType="fileType">
                         <Button type="primary" icon="ios-cloud-upload-outline">上传学习资源</Button>
                     </vWebUploader>
                 </div>
@@ -108,6 +109,7 @@
         },
         data() {
             return {
+                fileType: 'learning_resource',  // 附件文件类型
                 formInputStyle: {
                     width: '300px'
                 },
@@ -122,7 +124,8 @@
                     startTime: '',     //
                     endTime: '',
                     description: '',   // 资源描述
-                    fileIds: []
+                    fileIds: [],
+                    defaultFiles: []
                 },
                 rules: {
                     resourceName: [{ required: true, message: '资源名称不能为空！', trigger: 'blur' }],
@@ -171,7 +174,14 @@
             },
             // 文件上传成功
             onUploadSuccess(response, file, fileList) {
-                this.formData.fileIds = fileList.map(v => v.response.fileId);
+                this.formData.fileIds = fileList.map(v => {
+                    if (v.fileId) {
+                        return v.fileId;
+                    }
+                    else {
+                        return v.response.fileId;
+                    }
+                });
             },
             getData() {
                 this.$http({
@@ -187,7 +197,12 @@
                             endTime: this.timeFormat(res.data.endTime, 'YYYY-MM-DD'),
                         });
                     }
+                });
+
+                this.getFilesList(this.resourceId, this.fileType).then(data => {
+                    this.formData.defaultFiles = data;
                 })
+
             },
             save() {
                 if (this.type === 'add') {

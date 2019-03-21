@@ -5,6 +5,7 @@
 |action|上传的地址，必填|String|-|
 |multiple|是否支持多选文件|Boolean|true|
 |accept|接受上传的文件类型|String|-|
+|defaultFiles|默认上传过的列表|Array|[]|
 |formData|上传时附带的额外参数|Object|{}|
 |on-uploadSuccess|文件上传成功时的钩子, 返回字段为 response, file, fileList|Function|-|
 |on-uploadError|文件上传失败时的钩子，返回字段为 error, file, fileList|Function|-|

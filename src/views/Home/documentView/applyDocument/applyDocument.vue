@@ -29,8 +29,8 @@
 
         <!--选择审核人员-->
         <vAuditPersonSelect ref="modal_auditPersonSelect"
-                            relationId=""
-                            processType="archive" @modal-callback="modal_auditPersonSelect_callback"></vAuditPersonSelect>
+                            :required="required"
+                            @modal-callback="modal_auditPersonSelect_callback"></vAuditPersonSelect>
     </Modal>
 </template>
 
@@ -77,6 +77,7 @@
                 rules: {
                     useFor: [{ required: true, message: '说明不能为空！', trigger: 'blur' }],
                 },
+                required: true
             };
         },
         watch: {
@@ -93,12 +94,12 @@
                 });
 
             },
-            modal_auditPersonSelect_callback(userId) {
-                this.formData.auditor = userId;
+            modal_auditPersonSelect_callback(item) {
+                this.formData.auditor = item.userId;
 
                 this.$Modal.confirm({
                     title: '提交审核',
-                    content: '确定要提交申请?',
+                    content: `确定要提交给<${item.name}>审核?`,
                     onOk: () => {
                         this.$http({
                             method: 'post',

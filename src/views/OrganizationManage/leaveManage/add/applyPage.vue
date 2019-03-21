@@ -17,7 +17,9 @@
     export default {
         name: 'applyPage',  // 请假和公出申请页面
         components: {vAddViewLeave, vAddViewGoout},
-        props: {},
+        props: {
+
+        },
         data() {
             return {
                 name: 'leave'

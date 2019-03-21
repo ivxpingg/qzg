@@ -46,7 +46,7 @@
     import authMixin from '../../../../lib/mixin/authMixin';
     import vAuditDocument from './auditDocument/auditDocument';
     export default {
-        name: 'applyManage',
+        name: 'applyManage',   // 查阅申请管理
         mixins: [comMixin, authMixin],
         components: {vAuditDocument},
         data() {
