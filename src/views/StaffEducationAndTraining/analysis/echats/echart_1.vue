@@ -18,6 +18,7 @@
         },
         mounted() {
             this.initChart();
+            // this.getData();
         },
         methods: {
             initChart() {
@@ -51,11 +52,12 @@
             },
             getData() {
                 this.$http({
-                    method: 'get',
-                    url: '/projectShow/supervisorWorkCount',
-                    params: {
-                        year: this.year
-                    }
+                    method: 'post',
+                    url: '/statisticAnalysis/resourceVisitInfo',
+                    data: JSON.stringify({
+                        startTime: this.$moment().subtract(7, 'days').format('YYYY-MM-DD'),
+                        endTime: this.$moment().format('YYYY-MM-DD')
+                    })
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
                         this.resetOption(res.data);
@@ -82,7 +84,7 @@
 
 
                 for(let key in data.list) {
-                    let month = MOMENT(key).month();
+                    let month = this.$moment(key).month();
 
                     data.list[key].forEach(val => {
                         let series_idx = data.checkTypeList.indexOf(val.checkType);

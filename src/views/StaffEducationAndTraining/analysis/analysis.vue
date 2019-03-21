@@ -15,7 +15,7 @@
             </div>
             <div class="item">
                 <vInfoCard shadow :color="countData[2].color" :icon="countData[2].icon" :icon-size="36">
-                    <vCountTo :end="countData[2].count" class="six-count-style" count-class="count-style">
+                    <vCountTo :end="coursePassRate" class="six-count-style" count-class="count-style">
                         <span slot="right" class="count-style">%</span>
                     </vCountTo>
                     <p>{{ countData[2].title }}%</p>
@@ -44,23 +44,23 @@
             </Col>
             <Col span="8" class="m-b-10">
                 <Card title="培训排行榜" :dis-hover="true">
-                    <vPeiChart></vPeiChart>
+                    <vRankList></vRankList>
                 </Card>
             </Col>
 
             <Col span="8" class="m-b-10">
                 <Card title="培训类型情况" :dis-hover="true">
-                    <vPeiChart></vPeiChart>
+                    <vEcharts_2></vEcharts_2>
                 </Card>
             </Col>
             <Col span="8" class="m-b-10">
                 <Card title="培训报名情况" :dis-hover="true">
-                    <vPeiChart></vPeiChart>
+                    <vEcharts_3></vEcharts_3>
                 </Card>
             </Col>
             <Col span="8" class="m-b-10">
                 <Card title="学习排行榜" :dis-hover="true">
-                    <vPeiChart></vPeiChart>
+                    <vEcharts_4></vEcharts_4>
                 </Card>
             </Col>
         </Row>
@@ -71,25 +71,55 @@
     import vInfoCard from '../../../components/info-card/index';
     import vCountTo from '../../../components/count-to/index';
     import vEcharts_1 from './echats/echart_1';
-    import vPeiChart from './echats/peiChart';
+    import vEcharts_2 from './echats/echart_2';
+    import vEcharts_3 from './echats/echart_3';
+    import vEcharts_4 from './echats/echart_4';
+    import vRankList from './echats/rankList';
     export default {
         name: 'analysis',
         components: {
             vInfoCard,
             vCountTo,
             vEcharts_1,
-            vPeiChart
+            vEcharts_2,
+            vEcharts_3,
+            vEcharts_4,
+            vRankList
+        },
+        computed: {
+            coursePassRate() {
+                return Math.round(this.countData[2].count * 100);
+            }
         },
         data() {
             return {
                 countData: [
-                    { title: '课程数量', icon: 'md-person', count: 10, color: '#2d8cf0' },
-                    { title: '培训人次', icon: 'md-person', count:120, color: '#19be6b' },
-                    { title: '课程合格率', icon: 'md-person', count: 90, color: '#ff9900' },
-                    { title: '学习资源数量', icon: 'md-person', count: 200, color: '#ed3f14' },
-                    { title: '学员学时', icon: 'md-person', count: 20, color: '#E46CBB' }
+                    { title: '课程数量', icon: 'md-person', count: 0, color: '#2d8cf0' },
+                    { title: '培训人次', icon: 'md-person', count:0, color: '#19be6b' },
+                    { title: '课程合格率', icon: 'md-person', count: 0, color: '#ff9900' },
+                    { title: '学习资源数量', icon: 'md-person', count: 0, color: '#ed3f14' },
+                    { title: '学员学时', icon: 'md-person', count: 0, color: '#E46CBB' }
                 ]
             };
+        },
+        mounted() {
+            this.getData();
+        },
+        methods: {
+            getData() {
+                this.$http({
+                    method: 'get',
+                    url: '/statisticAnalysis/baseCount'
+                }).then((res) => {
+                    if (res.code === 'SUCCESS') {
+                        this.countData[0].count = res.data.courseNum || 0;
+                        this.countData[1].count = res.data.trainingPeople || 0;
+                        this.countData[2].count = res.data.coursePassRate || 0;
+                        this.countData[3].count = res.data.resourceNum || 0;
+                        this.countData[4].count = res.data.peoplePeriod || 0;
+                    }
+                })
+            }
         }
     }
 </script>

@@ -36,7 +36,12 @@
                 <FormItem>
                     <Button type="success" :to="exportUrl" target="_blank">导出</Button>
                 </FormItem>
+
+                <FormItem :label-width="420">
+                    <Button type="success" @click="exportHistory">选择导出历史纪录</Button>
+                </FormItem>
             </Form>
+
         </vIvxFilterBox>
         <div class="ivx-table-box">
             <Table border
@@ -52,6 +57,27 @@
                   :total="searchParams.total"
                   @on-change="onPageChange"></Page>
         </div>
+
+        <Modal v-model="modalValue_export"
+               title="人事变动记录"
+               :width="400">
+            <Form inline>
+
+                <FormItem label="选择导出月份:" :label-width="100">
+                    <DatePicker ref="monthPicker"
+                                :value="monthDate"
+                                type="month"
+                                @on-change="onChage_month"
+                                placeholder="选择时间"
+                                style="width: 180px;"></DatePicker>
+                </FormItem>
+            </Form>
+
+            <div slot="footer">
+                <Button type="primary" size="large" target="_blank" :to="exportHistoryUrl" @click="onClick_exportHistory">导出</Button>
+            </div>
+        </Modal>
+
     </Modal>
 </template>
 
@@ -66,6 +92,10 @@
             exportUrl() {
                 return Config[Config.env].origin + Config[Config.env].ajaxUrl + '/employee/export' +
                     `?employeeStatus=${this.searchParams.condition.employeeStatus || ''}&employeeType=${this.searchParams.condition.employeeType || ''}&beginTime=${this.searchParams.condition.beginTime}&endTime=${this.searchParams.condition.endTime}&fields=${this.searchParams.condition.fields.join(',')}`
+            },
+            exportHistoryUrl() {
+                return Config[Config.env].origin + Config[Config.env].ajaxUrl + '/employeeHis/export' +
+                        `?insTime=${this.monthDate}`;
             }
         },
         data() {
@@ -509,7 +539,10 @@
                 dict_employeeStatus: [],
                 dict_employeeType: [],
 
-                // 导出字段
+
+                // 导出历史纪录
+                modalValue_export: false,
+                monthDate: this.$moment().format('YYYY-MM')
             };
         },
         watch: {
@@ -529,6 +562,9 @@
             this.getData();
         },
         methods: {
+            onChage_month(value) {
+                this.monthDate = value;
+            },
             onChage_daterange(value) {
                 this.searchParams.condition.beginTime = value[0];
                 this.searchParams.condition.endTime = value[1];
@@ -559,6 +595,13 @@
 
                     }
                 })
+            },
+
+            exportHistory() {
+                this.modalValue_export = true;
+            },
+            onClick_exportHistory() {
+                this.modalValue_export = false;
             }
         }
     }

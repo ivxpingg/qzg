@@ -8,6 +8,7 @@
                 <div class="attr name">{{$store.state.user.userName}}</div>
                 <div class="attr">部门：{{$store.state.user.roleName}}</div>
                 <div class="attr">账号：{{$store.state.user.loginName}}</div>
+                <div class="attr">证书数量：<Button type="text" @click="lookCertificate">{{certificateCount}} 个</Button></div>
             </div>
         </div>
         <div class="other-info">
@@ -28,12 +29,16 @@
                 <div class="value">{{baseCount.noticeNum}}</div>
             </div>
         </div>
+
+        <vCertificateList ref="modal_certificateList"></vCertificateList>
     </div>
 </template>
 
 <script>
+    import vCertificateList from '../certificateList/certificateList';
     export default {
         name: 'personInfo',
+        components: {vCertificateList},
         data() {
             return {
                 baseCount: {
@@ -41,11 +46,14 @@
                     trainPeriodNum: '0',
                     noCompletedCourseNum: '0',
                     waitHandleNum: '10'
-                }
+                },
+
+                certificateCount: 0
             };
         },
         mounted() {
             this.getData();
+            this.getCertificateCount();
         },
         methods: {
             getData() {
@@ -57,6 +65,23 @@
                         Object.assign(this.baseCount, res.data);
                     }
                 })
+            },
+            getCertificateCount() {
+                this.tableLoading = true;
+                this.$http({
+                    method: 'get',
+                    url: '/index/queryCertificate'
+                }).then((res) => {
+                    this.tableLoading = false;
+                    if (res.code === 'SUCCESS') {
+                        this.certificateCount = res.data.length;
+                    }
+                }).catch(() => {
+                    this.tableLoading = false;
+                })
+            },
+            lookCertificate() {
+                this.$refs.modal_certificateList.modalValue = true;
             }
         }
     }
