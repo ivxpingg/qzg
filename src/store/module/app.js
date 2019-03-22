@@ -94,12 +94,14 @@ export default {
                 // 临时测试添加的清除
                 // setMenuListInLocalstorage(null);
                 let menuList = getMenuListInLocalstorage();
+
                 if (!menuList) {
                     axios({
                         method: 'get',
                         url: '/menu/userMenus'
                     }).then(res => {
                         if (res.code === 'SUCCESS') {
+                            setMenuListInLocalstorage(res.data);
                             commit('setMenuList', res.data);
                         }
                         resolve(res.data);

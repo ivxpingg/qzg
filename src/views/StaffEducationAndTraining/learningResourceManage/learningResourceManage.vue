@@ -165,7 +165,7 @@
                             }, '编辑'));
                         }
 
-                        if (this.auth_del) {
+                        if (this.auth_del && params.row.publishStatus !== 'published') {
                             list.push(h('Button', {
                                 props: {
                                     type: 'error',

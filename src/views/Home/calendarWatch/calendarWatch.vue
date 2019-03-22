@@ -10,7 +10,7 @@
             <div class="right-panel">
                 <div style="padding-left: 10px;">
                     <Table border
-                           height="300"
+                           height="320"
                            :loading="tableLoading"
                            :columns="tableColumns"
                            :data="tableData"></Table>
@@ -19,16 +19,23 @@
         </div>
 
         <vApplyLeaveOrGoout ref="modal_applyLeaveOrGoout" @modal-callback="modal_callback"></vApplyLeaveOrGoout>
+
+        <vAuditOrView ref="modal_applyPage"
+                      :type="modal_applyPage_props.type"
+                      :relationId="modal_applyPage_props.relationId"
+                      :leaveType="modal_applyPage_props.leaveType"
+                      @callback="callback"></vAuditOrView>
     </Card>
 </template>
 
 <script>
     import comMixin from '../../../lib/mixin/comMixin';
     import vApplyLeaveOrGoout from './apply/applyLeaveOrGoout';
+    import vAuditOrView from '../../OrganizationManage/leaveManage/add/auditOrView';
     export default {
         name: 'calendarWatch',
         mixins: [comMixin],
-        components: {vApplyLeaveOrGoout},
+        components: {vApplyLeaveOrGoout, vAuditOrView},
         data() {
             return {
                 tableColumns: [
@@ -39,7 +46,32 @@
                         }
                     },
                     { title: '类型', width: 90, align: 'center', key: 'leaveTypeLabel' },
-                    { title: '状态', width: 90, align: 'center', key: 'leaveStatusLabel' }
+                    { title: '状态', width: 90, align: 'center', key: 'leaveStatusLabel' },
+                    {
+                        title: '操作', width: 90, align: 'center',
+                        render: (h, params) => {
+                            return h('Button', {
+                                props: {
+                                    type: 'info',
+                                    size: 'small',
+                                    icon: 'ios-eye'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.modal_applyPage_props.relationId = params.row.leaveApplyId;
+                                        this.modal_applyPage_props.leaveType = params.row.leaveType;
+                                        if (params.row.leaveStatus === 'wait_audit') {
+                                            this.modal_applyPage_props.type = 'audit';
+                                        }
+                                        else {
+                                            this.modal_applyPage_props.type = 'view';
+                                        }
+                                        this.$refs.modal_applyPage.modalValue = true;
+                                    }
+                                }
+                            }, '查看')
+                        }
+                    }
                 ],
                 tableData: [
                     {
@@ -48,7 +80,13 @@
                         employeeStatusLabel: '审核通过'
                     }
                 ],
-                tableLoading: false
+                tableLoading: false,
+
+                modal_applyPage_props: {
+                    relationId: '',
+                    leaveType: 'leave',
+                    type: 'view'
+                }
             };
         },
         mounted() {
@@ -103,15 +141,15 @@
 
             .left-panel {
                 float: left;
-                width: 400px;
+                width: 300px;
             }
             .right-panel {
                 float: left;
-                width: calc(100% - 400px);
+                width: calc(100% - 300px);
             }
         }
         .calendar {
-            width: 400px;
+            width: 300px;
         }
     }
 </style>

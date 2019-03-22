@@ -1,8 +1,8 @@
 <template>
     <div class="rankList-container">
         <div class="item item-top">
-            <div class="left-panel">培训名称</div>
-            <div class="right-panel">毕业人数占比</div>
+            <div class="left-panel title">培训名称</div>
+            <div class="right-panel title">毕业人数占比</div>
         </div>
         <div class="item" v-for="item in list" :key="item.courseName">
             <div class="left-panel">{{item.courseName}}</div>
@@ -58,11 +58,19 @@
                 margin-top: 10px;
                 float: left;
                 width: 30%;
+                &.title {
+                    font-size: 15px;
+                    font-weight: 700;
+                }
             }
             .right-panel{
                 margin-top: 10px;
                 float: left;
                 width: 69.99%;
+                &.title {
+                    font-size: 15px;
+                    font-weight: 700;
+                }
             }
         }
     }

@@ -3,7 +3,7 @@
         <vIvxFilterBox>
             <Form inline>
                 <FormItem label="课程状态:" :label-width="65">
-                    <Select v-model="searchParams.condition.departmentId" style="width: 120px;">
+                    <Select v-model="searchParams.condition.courseStatus" style="width: 120px;">
                         <Option v-for="item in dict_courseStatus"
                                 :key="item.id"
                                 :value="item.value"
@@ -131,6 +131,17 @@
         mounted() {
             this.getDicts(['courseStatus']);
             this.getData();
+        },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler() {
+                    this.getData();
+                }
+            }
         },
         methods: {
             resetSearchParams() {

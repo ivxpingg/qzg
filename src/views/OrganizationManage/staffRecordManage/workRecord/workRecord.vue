@@ -32,10 +32,14 @@
                 tableLoading: false,
                 tableColumns: [
                     { title: '员工名称', width: 120, align: 'center', key: 'employeeName' },
-                    { title: '变动类型', width: 120, align: 'center', key: 'changeTypeLabel' },
-                    { title: '变动时间', width: 150, align: 'center', key: 'changeTime' },
+                    { title: '变动类型', width: 100, align: 'center', key: 'changeTypeLabel' },
+                    { title: '变动时间', width: 150, align: 'center', key: 'changeTime',
+                        render: (h, params) => {
+                            return h('div', this.timeFormat(params.row.changeTime, 'YYYY-MM-DD HH:mm:ss'));
+                        }
+                    },
                     { title: '变动结果', minWidth: 120, align: 'center', key: 'changeResult' },
-                    { title: '操作人', width: 120, align: 'center', key: 'createName' },
+                    { title: '操作人', width: 130, align: 'center', key: 'createName' },
                     { title: '操作时间', width: 150, align: 'center', key: 'insTime',
                         render: (h, params) => {
                             return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));

@@ -220,6 +220,7 @@ export const setMenuAuth = (menuList, authList) => {
 
 // 本地存储菜单权限数据
 export const setMenuListInLocalstorage = list => {
+
     if (list == null) {
         localStorage.menuList_ao = null;
     }
@@ -229,6 +230,7 @@ export const setMenuListInLocalstorage = list => {
 };
 // 获取本地存储菜单权限数据
 export const getMenuListInLocalstorage = () => {
+
     const list = localStorage.menuList_ao;
     return list ? JSON.parse(list) : null
 };

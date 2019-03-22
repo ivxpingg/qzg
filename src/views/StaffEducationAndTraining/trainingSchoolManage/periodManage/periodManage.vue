@@ -50,7 +50,7 @@
                                             url: '/period/update',
                                             params: {
                                                 period: value,
-                                                courseId: params.row.courseId
+                                                periodId: params.row.periodId
                                             }
                                         }).then((res) => {
                                             if (res.code === 'SUCCESS') {

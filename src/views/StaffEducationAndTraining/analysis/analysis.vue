@@ -30,7 +30,10 @@
             <div class="item">
                 <vInfoCard shadow :color="countData[4].color" :icon="countData[4].icon" :icon-size="36">
                     <vCountTo :end="countData[4].count" class="six-count-style" count-class="count-style">
-                        <span slot="right" class="count-style">h/人</span>
+                        <span slot="right">
+                            <span class="count-style">h/</span>
+                            <span style="font-size: 28px;">人</span>
+                        </span>
                     </vCountTo>
                     <p>{{ countData[4].title }}</p>
                 </vInfoCard>
@@ -49,17 +52,17 @@
             </Col>
 
             <Col span="8" class="m-b-10">
-                <Card title="培训类型情况" :dis-hover="true">
+                <Card title="培训类型情况(个)" :dis-hover="true">
                     <vEcharts_2></vEcharts_2>
                 </Card>
             </Col>
             <Col span="8" class="m-b-10">
-                <Card title="培训报名情况" :dis-hover="true">
+                <Card title="培训报名情况(个)" :dis-hover="true">
                     <vEcharts_3></vEcharts_3>
                 </Card>
             </Col>
             <Col span="8" class="m-b-10">
-                <Card title="学习排行榜" :dis-hover="true">
+                <Card title="学习排行榜 Top10" :dis-hover="true">
                     <vEcharts_4></vEcharts_4>
                 </Card>
             </Col>

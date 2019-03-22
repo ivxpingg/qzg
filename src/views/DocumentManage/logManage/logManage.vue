@@ -103,6 +103,17 @@
             this.getDicts(['operateType']);
             this.getData();
         },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler() {
+                    this.getData();
+                }
+            }
+        },
         methods: {
             onChage_daterange(value) {
                 this.searchParams.condition.beginTime = value[0];
