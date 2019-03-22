@@ -4,27 +4,26 @@
            title="证书"
            :width="1064"
            @on-visible-change="onVisibleChange">
-        <div class="diploma-box" ref="diploma">
-            <div class="content" style="padding-top: 250px;">
-                {{certificateInfo.userName}} 于 {{certificateInfo.issueDate}}, 参加由“{{certificateInfo.departmentName}}”举办的《{{certificateInfo.courseName}}》，
-                考核合格，准予结业。
+        <div style="position: relative;">
+            <div class="diploma-box" ref="diploma">
+                <div class="content" style="padding-top: 250px;">
+                    {{certificateInfo.userName}} 于 {{certificateInfo.issueDate}}, 参加由“{{certificateInfo.departmentName}}”举办的《{{certificateInfo.courseName}}》，
+                    考核合格，准予结业。
+                </div>
+                <div class="content" style="position: absolute; left: 0; bottom: 180px;">
+                    特发此证！
+                </div>
+                <div class="num" style="left: 160px; bottom: 100px;">
+                    证书编号：{{certificateInfo.certificateNo}}
+                </div>
+                <div class="date" style="right: 140px; bottom: 100px;">
+                    填发日期： {{certificateInfo.issueDate}}
+                </div>
+
             </div>
-            <div class="content" style="position: absolute; left: 0; bottom: 180px;">
-                特发此证！
-            </div>
-            <div class="num" style="left: 160px; bottom: 100px;">
-                证书编号：{{certificateInfo.certificateNo}}
-            </div>
-            <div class="date" style="right: 140px; bottom: 100px;">
-                填发日期： {{certificateInfo.issueDate}}
-            </div>
+            <img :src="imgSrc" alt="证书" style="width: 1024px; position: absolute; top: 0; left: 0;">
         </div>
 
-        <div slot="footer">
-            <Button type="primary"
-                    size="large"
-                    @click="exportPDF">导出</Button>
-        </div>
     </Modal>
 </template>
 
@@ -32,7 +31,6 @@
     import modalMixin from '../../../../lib/mixin/modalMixin';
     import comMixin from '../../../../lib/mixin/comMixin';
     import html2canvas from 'html2canvas';
-    import jspdf from 'jspdf/dist/jspdf.debug';
     export default {
         name: 'diploma',
         mixins: [modalMixin, comMixin],
@@ -54,8 +52,11 @@
                     certificateTypeLabel: '',
                     issuer: '',
                     certificateType: ''
-                }
+                },
+                imgSrc: ''
             };
+        },
+        mounted() {
         },
         watch: {
             certificateId(val) {
@@ -77,7 +78,9 @@
                     if (res.code === 'SUCCESS') {
                         Object.assign(this.certificateInfo, res.data, {
                             issueDate: this.timeFormat(res.data.issueDate, 'YYYY年MM月DD日')
-                        })
+                        });
+
+                        this.exportPDF();
                     }
                 })
             },
@@ -85,29 +88,18 @@
             // 导出PDF
             exportPDF() {
                 this.$Spin.show();
-                console.dir(html2canvas);
                 try {
 
                     html2canvas(this.$refs.diploma, {
                         scale: 2, // 添加的scale 参数
                     }).then((canvas) => {
                         let pageData = canvas.toDataURL('image/jpeg', 1.0);
-                        let pdf = new jspdf("", "pt", 'a4');
 
-                        let contentWidth = canvas.width;
-                        let contentHeight = canvas.height;
+                        this.imgSrc = pageData;
+                        // this.downloadFile( pageData, '证书');
 
-                        //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
-                        let imgWidth = 595.28;
-                        let imgHeight = (595.28/contentWidth * contentHeight);
-
-                        //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
-                        //当内容未超过pdf一页显示的范围，无需分页
-
-                        pdf.addImage(pageData, 'JPEG', 0, 10, imgWidth, imgHeight );
 
                         this.$Spin.hide();
-                        pdf.save('证书.pdf');
                     });
                 }
                 catch (e) {
@@ -115,6 +107,31 @@
                     this.$Notice.warning('生成PDF失败！');
                 }
             },
+            downloadFile(content, fileName) { //下载base64图片
+
+                var base64ToBlob = function(code) {
+                    let parts = code.split(';base64,');
+                    let contentType = parts[0].split(':')[1];
+                    let raw = window.atob(parts[1]);
+                    let rawLength = raw.length;
+                    let uInt8Array = new Uint8Array(rawLength);
+                    for(let i = 0; i < rawLength; ++i) {
+                        uInt8Array[i] = raw.charCodeAt(i);
+                    }
+                    return new Blob([uInt8Array], {
+                        type: contentType
+                    });
+                };
+                let aLink = document.createElement('a');
+                let blob = base64ToBlob(content); //new Blob([content]);
+                let evt = document.createEvent("HTMLEvents");
+                evt.initEvent("click", true, true); //initEvent 不加后两个参数在FF下会报错  事件类型，是否冒泡，是否阻止浏览器的默认行为
+                aLink.download = fileName;
+                aLink.href = URL.createObjectURL(blob);
+
+
+                aLink.click();
+            }
         }
     }
 </script>
