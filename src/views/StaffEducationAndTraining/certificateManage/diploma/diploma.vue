@@ -4,7 +4,7 @@
            title="证书"
            :width="1064"
            @on-visible-change="onVisibleChange">
-        <div class="diploma-box">
+        <div class="diploma-box" ref="diploma">
             <div class="content" style="padding-top: 250px;">
                 {{certificateInfo.userName}} 于 {{certificateInfo.issueDate}}, 参加由“{{certificateInfo.departmentName}}”举办的《{{certificateInfo.courseName}}》，
                 考核合格，准予结业。
@@ -19,12 +19,20 @@
                 填发日期： {{certificateInfo.issueDate}}
             </div>
         </div>
+
+        <div slot="footer">
+            <Button type="primary"
+                    size="large"
+                    @click="exportPDF">导出</Button>
+        </div>
     </Modal>
 </template>
 
 <script>
     import modalMixin from '../../../../lib/mixin/modalMixin';
     import comMixin from '../../../../lib/mixin/comMixin';
+    import html2canvas from 'html2canvas';
+    import jspdf from 'jspdf/dist/jspdf.debug';
     export default {
         name: 'diploma',
         mixins: [modalMixin, comMixin],
@@ -72,7 +80,41 @@
                         })
                     }
                 })
-            }
+            },
+
+            // 导出PDF
+            exportPDF() {
+                this.$Spin.show();
+                console.dir(html2canvas);
+                try {
+
+                    html2canvas(this.$refs.diploma, {
+                        scale: 2, // 添加的scale 参数
+                    }).then((canvas) => {
+                        let pageData = canvas.toDataURL('image/jpeg', 1.0);
+                        let pdf = new jspdf("", "pt", 'a4');
+
+                        let contentWidth = canvas.width;
+                        let contentHeight = canvas.height;
+
+                        //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+                        let imgWidth = 595.28;
+                        let imgHeight = (595.28/contentWidth * contentHeight);
+
+                        //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
+                        //当内容未超过pdf一页显示的范围，无需分页
+
+                        pdf.addImage(pageData, 'JPEG', 0, 10, imgWidth, imgHeight );
+
+                        this.$Spin.hide();
+                        pdf.save('证书.pdf');
+                    });
+                }
+                catch (e) {
+                    this.$Spin.hide();
+                    this.$Notice.warning('生成PDF失败！');
+                }
+            },
         }
     }
 </script>
