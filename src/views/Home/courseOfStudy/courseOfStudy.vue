@@ -1,8 +1,8 @@
 <template>
     <div class="courseOfStudy-container">
         <div class="item item-top">
-            <div class="left-panel">课程名称</div>
-            <div class="right-panel">学习进度</div>
+            <div class="left-panel title">课程名称</div>
+            <div class="right-panel title">学习进度</div>
         </div>
         <div class="item" v-for="item in list" :key="item.courseName">
             <div class="left-panel">{{item.courseName}}</div>
@@ -53,16 +53,24 @@
         height: 410px;
         overflow-y: auto;
         .item {
+            padding: 7px 0;
+            border-bottom: 1px dotted #dcdee2;
             overflow: hidden;
             .left-panel {
-                margin-top: 10px;
                 float: left;
                 width: 30%;
+                &.title {
+                    font-size: 15px;
+                    font-weight: 700;
+                }
             }
             .right-panel{
-                margin-top: 10px;
                 float: left;
                 width: 69.99%;
+                &.title {
+                    font-size: 15px;
+                    font-weight: 700;
+                }
             }
         }
     }

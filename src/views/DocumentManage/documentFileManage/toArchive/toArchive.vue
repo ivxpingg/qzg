@@ -75,23 +75,23 @@
         components: {vRecordViewFiles},
         computed: {
             _tableColumns() {
-                let column = [{ title: '操作', width: 180, align: 'center',
+                let column = [{ title: '操作', width: 120, align: 'center',
                     render: (h, params) => {
                         let list = [];
 
-                        list.push(h('Button', {
-                            props: {
-                                type: 'info',
-                                size: 'small',
-                                icon: 'ios-eye'
-                            },
-                            on: {
-                                click: () => {
-                                    this.modal_recordViewFiles_props.archiveId = params.row.archiveId;
-                                    this.$refs.modal_recordViewFiles.modalValue = true;
-                                }
-                            }
-                        }, '查看'));
+                        // list.push(h('Button', {
+                        //     props: {
+                        //         type: 'info',
+                        //         size: 'small',
+                        //         icon: 'ios-eye'
+                        //     },
+                        //     on: {
+                        //         click: () => {
+                        //             this.modal_recordViewFiles_props.archiveId = params.row.archiveId;
+                        //             this.$refs.modal_recordViewFiles.modalValue = true;
+                        //         }
+                        //     }
+                        // }, '查看'));
 
                         list.push(h('Dropdown', {
                             props: {

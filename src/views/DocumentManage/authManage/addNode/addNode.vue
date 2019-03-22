@@ -20,7 +20,7 @@
 
             <FormItem label="用户:" prop="userId" v-if="nodeType === 'user'">
                 <!--<Input v-model="formData.name"/>-->
-                <Select v-model="formData.userId">
+                <Select v-model="formData.userId" filterable>
                     <Option v-for="item in userList"
                             :key="item.userId"
                             :value="item.userId"
