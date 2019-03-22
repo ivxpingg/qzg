@@ -90,7 +90,36 @@
                     { title: '操作类型', width: 120, align: 'center', key: 'operateTypeLabel' },
                     { title: '操作内容', minWidth: 120, align: 'center', key: 'operateContent' },
                     { title: '操作结果', width: 100, align: 'center', key: 'operateResultLabel' },
-                    { title: '备注', minWidth: 120, align: 'center', key: 'remark' },
+                    { title: '备注', minWidth: 120, align: 'center', key: 'remark',
+                        render:(h, params) => {
+                            return h('Input', {
+                                props: {
+                                    type: 'textarea',
+                                    value: params.row.remark,
+                                    rows: 2
+                                },
+                                on: {
+                                    'on-change': (event) => {
+                                        params.row.remark = event.target.value.trim();
+                                    },
+                                    'on-blur': () => {
+                                        this.$http({
+                                            method: 'post',
+                                            url: '/archiveLog/updateRemark',
+                                            data: JSON.stringify({
+                                                archiveLogId: params.row.archiveLogId,
+                                                remark: params.row.remark
+                                            })
+                                        }).then((res) => {
+                                            if (res.code === 'SUCCESS') {
+                                                // this.$Message.success('修改备注成功');
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    },
                 ],
                 tableData: [],
                 tableLoading: false,
