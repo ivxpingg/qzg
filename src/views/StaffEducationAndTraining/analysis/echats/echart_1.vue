@@ -1,5 +1,14 @@
 <template>
-    <div class="echart_1-container" ref="chart">
+    <div class="echart_1-container">
+        <div class="echart" ref="chart"></div>
+        <Form class="form" inline>
+            <FormItem label="">
+                <Select v-model="selectValue">
+                    <Option value="day" label="近30天"></Option>
+                    <Option value="month" label="近6月份"></Option>
+                </Select>
+            </FormItem>
+        </Form>
 
     </div>
 </template>
@@ -12,13 +21,19 @@
         name: 'echart_1',
         data() {
             return {
+                selectValue: 'month',
                 chart: null
             };
 
         },
         mounted() {
             this.initChart();
-            // this.getData();
+            this.getData();
+        },
+        watch: {
+            selectValue() {
+                this.getData();
+            }
         },
         methods: {
             initChart() {
@@ -34,13 +49,15 @@
                         show: true,
                         type: 'category',
                         boundaryGap: false,
-                        data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+                        data: []
+                        // data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
                     },
                     yAxis: {
                         type: 'value'
                     },
                     series: [{
-                        data: [820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320],
+                        // data: [820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320],
+                        data: [],
                         type: 'line',
                         smooth: true,
                         areaStyle: {}
@@ -52,12 +69,11 @@
             },
             getData() {
                 this.$http({
-                    method: 'post',
+                    method: 'get',
                     url: '/statisticAnalysis/resourceVisitInfo',
-                    data: JSON.stringify({
-                        startTime: this.$moment().subtract(7, 'days').format('YYYY-MM-DD'),
-                        endTime: this.$moment().format('YYYY-MM-DD')
-                    })
+                    params: {
+                        type: this.selectValue
+                    }
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
                         this.resetOption(res.data);
@@ -66,43 +82,16 @@
             },
             resetOption(data) {
                 let myOPtion = this.chart.getOption();
+                myOPtion.xAxis[0].data = [];
+                myOPtion.series[0].data = [];
 
-                myOPtion.series = [];
+                let format = this.selectValue === 'month' ? 'M月' : 'D日';
 
-                for(let name in data.checkTypeList) {
-
-                }
-                data.checkTypeList.forEach(name => {
-                    myOPtion.series.push({
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                        name: name,
-                        type:'line',
-                        areaStyle: {},
-                        smooth: true
-                    });
+                data.forEach(val => {
+                    myOPtion.xAxis[0].data.push(this.$moment(val.insTime).format(format));
+                    myOPtion.series[0].data.push(val.visitNum);
                 });
 
-
-                for(let key in data.list) {
-                    let month = this.$moment(key).month();
-
-                    data.list[key].forEach(val => {
-                        let series_idx = data.checkTypeList.indexOf(val.checkType);
-
-                        myOPtion.series[series_idx].data[month -1] = val.num;
-                    })
-                }
-                //
-                // data.list.forEach(val => {
-                //     let month = MOMENT(val).month();
-                //
-                //
-                //
-                //     myOPtion.series[0].data.push({
-                //         value: val.num,
-                //         name: val.checkWay
-                //     });
-                // });
                 this.chart.setOption(myOPtion);
             }
         }
@@ -111,6 +100,15 @@
 
 <style lang="scss" scoped>
     .echart_1-container {
-        height: 350px;
+        position: relative;
+        .echart {
+            height: 350px;
+        }
+
+        .form {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
     }
 </style>
