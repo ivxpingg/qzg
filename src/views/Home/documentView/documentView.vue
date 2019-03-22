@@ -3,7 +3,7 @@
         <vIvxFilterBox>
             <Form inline>
                 <FormItem label="文件来源:" :label-width="80">
-                    <Select v-model="searchParams.condition.archiveSource">
+                    <Select v-model="searchParams.condition.archiveSource" clearable>
                         <Option v-for="item in dict_archiveSource"
                                 :key="item.id"
                                 :value="item.value"

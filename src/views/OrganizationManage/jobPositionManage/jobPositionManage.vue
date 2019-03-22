@@ -182,6 +182,17 @@
             this.getData();
             this.getDeparmentList('', 'departmentList');
         },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler() {
+                    this.getData();
+                }
+            }
+        },
         methods:{
             addJob() {
                 this.jobHandleType = 'add';

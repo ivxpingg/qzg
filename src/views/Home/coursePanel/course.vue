@@ -85,6 +85,17 @@
             this.getDicts(['courseType']);
             this.getData();
         },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler() {
+                    this.getData();
+                }
+            }
+        },
         methods: {
             getTime(item) {
                 return `${this.timeFormat(item.startTime, 'YYYY-MM-DD')} ~ ${this.timeFormat(item.endTime, 'YYYY-MM-DD')}`

@@ -275,7 +275,7 @@
                     url: '/file/attachList',
                     params: {
                         relationId: noticeId,
-                        fileType: 'notice_file'
+                        fileType: 'notification_file'
                     }
                 }).then(res => {
                     if (res.code === 'SUCCESS') {

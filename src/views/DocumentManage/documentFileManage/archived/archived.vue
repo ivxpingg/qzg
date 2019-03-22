@@ -250,6 +250,17 @@
             this.getData();
             this.getDicts(['archiveSource', 'archiveStatus', 'archiveType']);
         },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler() {
+                    this.getData();
+                }
+            }
+        },
         methods: {
             getColor(value) {
                 return value === this.searchParams.condition.archiveType ? '#2d8cf0' : '#5cadff';

@@ -90,7 +90,6 @@
                 handler(val) {
                     if (val) {
                         this.formData.courseId = val;
-                        this.getData();
                     }
                     else {
                         this.resetFormData();

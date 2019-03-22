@@ -135,6 +135,17 @@
         mounted() {
             this.getData();
         },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler() {
+                    this.getData();
+                }
+            }
+        },
         methods:{
             resetSearchParams() {
                 this.searchParams.condition.departmentId = '';

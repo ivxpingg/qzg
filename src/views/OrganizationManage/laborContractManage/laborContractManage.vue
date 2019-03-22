@@ -3,8 +3,8 @@
         <vIvxFilterBox>
             <Form inline>
                 <FormItem label="归属部门:" :label-width="65">
-                    <Select v-model="searchParams.condition.departmentId" style="width: 100px;">
-                        <Option v-for="item in dict_departmentList"
+                    <Select v-model="searchParams.condition.departmentId" style="width: 200px;">
+                        <Option v-for="item in departmentList"
                                 :key="item.departmentId"
                                 :value="item.departmentId"
                                 :label="item.unitName + '-' + item.departmentName"></Option>
@@ -44,8 +44,8 @@
 
         <!--新建合同/续签-->
         <vLaborContractHandle ref="modal_laborContractHandle"
-                              :employeeName="currentRow.employeeId"
-                              :employeeId="currentRow.employeeName"
+                              :employeeId="currentRow.employeeId"
+                              :employeeName="currentRow.employeeName"
                               @modal-callback="getData"></vLaborContractHandle>
 
         <!--签订记录-->
@@ -163,11 +163,23 @@
                 },
 
                 // 字典
-                dict_departmentList: []
+                departmentList: []
             };
         },
         mounted() {
             this.getData();
+            this.getDeparmentList('', 'departmentList');
+        },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler() {
+                    this.getData();
+                }
+            }
         },
         methods:{
             addLaborContract() {
