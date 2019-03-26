@@ -31,7 +31,7 @@
                 </Select>
             </FormItem>
             <FormItem label="工资职级:" prop="wageLevel">
-                <Select v-model="formData.wageLevel" :style="formInputStyle">
+                <Select v-model="formData.wageLevels" multiple :style="formInputStyle">
                     <Option v-for="item in dict_wageLevel"
                             :key="item.id"
                             :value="item.value"
@@ -109,7 +109,8 @@
                     dutyName: '',
                     departmentId: '',
                     jobLevel: '',
-                    wageLevel: '',
+                    wageLevel: '',   // 传给后台用的
+                    wageLevels: [],  // 展示用的
                     intro: ''
                 },
                 rules: {
@@ -156,12 +157,15 @@
                     }
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
-                        Object.assign(this.formData, res.data);
+                        Object.assign(this.formData, res.data, {
+                            wageLevels: res.data.wageLevel.split(',')
+                        });
                     }
                 })
             },
             save() {
                 this.saveBtnLoading = true;
+                this.formData.wageLevel = this.formData.wageLevels.join(',');
                 this.$refs.form.validate((valid) => {
                     if (valid) {
                         if (this.type === 'add') {
@@ -178,6 +182,7 @@
 
             },
             addSubmit() {
+
                 this.$http({
                     method: 'post',
                     url: '/job/add',

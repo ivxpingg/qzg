@@ -99,22 +99,23 @@
                         </Select>
                     </FormItem>
                     <FormItem label="职级:">
-                        <Select :value="formData.jobLevel" readonly disabled :style="formInputStyle">
-                            <Option v-for="item in dict_jobLevel"
-                                    :key="item.id"
-                                    :value="item.value"
-                                    :label="item.label"></Option>
-                        </Select>
-                        <!--<Input :value="formData.jobLevel"  placeholder="自动载入" readonly :style="formInputStyle" />-->
+                        <!--<Select :value="formData.jobLevel" readonly disabled :style="formInputStyle">-->
+                            <!--<Option v-for="item in dict_jobLevel"-->
+                                    <!--:key="item.id"-->
+                                    <!--:value="item.value"-->
+                                    <!--:label="item.label"></Option>-->
+                        <!--</Select>-->
+                        <Input :value="formData.jobLevelLabel" placeholder="自动载入" readonly :style="formInputStyle" />
                     </FormItem>
                     <FormItem label="工资职级:">
-                        <Select :value="formData.wageLevel" readonly disabled :style="formInputStyle">
-                            <Option v-for="item in dict_wageLevel"
-                                    :key="item.id"
-                                    :value="item.value"
-                                    :label="item.label"></Option>
-                        </Select>
-                        <!--<Input :value="formData.wageLevel" placeholder="自动载入" readonly :style="formInputStyle" />-->
+                        <!--<Input v-model="formData.wageLevelLabel" placeholder="请输入民族" :style="formInputStyle" />-->
+                        <!--<Select :value="formData.wageLevel" readonly disabled :style="formInputStyle">-->
+                            <!--<Option v-for="item in dict_wageLevel"-->
+                                    <!--:key="item.id"-->
+                                    <!--:value="item.value"-->
+                                    <!--:label="item.label"></Option>-->
+                        <!--</Select>-->
+                        <Input :value="formData.wageLevelLabel" placeholder="自动载入" readonly :style="formInputStyle" />
                     </FormItem>
                     <FormItem label="任职时间:">
                         <DatePicker :value="formData.onJobTime"
@@ -267,7 +268,9 @@
                     departmentId: '',    // 部门Id
                     jobId: '',       // 职务ID
                     jobLevel: '',    // 职级
+                    jobLevelLabel: '',
                     wageLevel: '',   // 工资职级
+                    wageLevelLabel: '',
                     onJobTime: '',   // 任职时间
                     nowJobTime: '',  // 现任职时间
                     employeeStatus: '',
@@ -320,8 +323,8 @@
             'formData.jobId'(val) {
                 for (let i = 0; i < this.jobList.length; i++) {
                     if (this.jobList[i].jobId === val) {
-                        this.formData.jobLevel = this.jobList[i].jobLevel;
-                        this.formData.wageLevel = this.jobList[i].wageLevel;
+                        this.formData.jobLevelLabel = this.jobList[i].jobLevelLabel;
+                        this.formData.wageLevelLabel = this.jobList[i].wageLevelLabel;
                     }
                 }
             }
@@ -373,7 +376,9 @@
                         Object.assign(this.formData, res.data, {
                             birthday: this.timeFormat(res.data.birthday, 'YYYY-MM-DD'),
                             onJobTime: this.timeFormat(res.data.onJobTime, 'YYYY-MM-DD'),
-                            nowJobTime: this.timeFormat(res.data.nowJobTime, 'YYYY-MM-DD')
+                            nowJobTime: this.timeFormat(res.data.nowJobTime, 'YYYY-MM-DD'),
+                            jobLevelLabel: res.data.jobLevelLabel || '',
+                            wageLevelLabel:  res.data.wageLevelLabel || '',
                         });
                     }
                 })

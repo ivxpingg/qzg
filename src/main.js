@@ -13,7 +13,7 @@ import Cookies from 'js-cookie';
 
 if (process.env.NODE_ENV === 'development') {
     // admin
-    Cookies.set('DomAuthSessId', '290485DE850071611B8131A97F34DED9', {expires: 1});
+    Cookies.set('DomAuthSessId', '8736626262355DCE4D02EC54A8C05C1B', {expires: 1});
     // Cookies.set('DomAuthSessId', 'F15EEC893155B8959B5C78EDA533AA14', {expires: 1});
 
 }

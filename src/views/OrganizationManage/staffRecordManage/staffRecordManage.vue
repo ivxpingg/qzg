@@ -37,6 +37,7 @@
                 <FormItem>
                     <Button type="primary" icon="md-refresh" @click="resetSearchParams">重置</Button>
                 </FormItem>
+
             </Form>
         </vIvxFilterBox>
         <vIvxFilterBox>
@@ -44,7 +45,9 @@
             <Button type="primary" icon="md-add" @click="addOutStaff">新增编外人员</Button>
             <Button type="info" icon="md-clipboard" @click="openRecordView">人事变动记录</Button>
             <Button type="info" icon="md-download" @click="onClick_exportExcel">导出花名册</Button>
-
+            <Upload :action="action" :show-upload-list="false">
+                <Button type="primary" icon="ios-cloud-upload-outline" >导入员工信息</Button>
+            </Upload>
             <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">
                 <Option v-for="item in dict_employeeType"
                         :key="item.id"
@@ -103,6 +106,7 @@
     import vStaffAdjust from './staffAdjust/staffAdjust';
     import vRecordView from './recordView/recordView';
     import vExportExcel from './exportExcel/exportExcel';
+    import Config from '../../../config';
     export default {
         name: 'staffRecordManage',  // 员工档案管理
         mixins: [comMixin, authMixin],
@@ -196,6 +200,9 @@
                     }
                 }];
                 return this.auth_update || this.auth_del ? this.tableColumns.concat(column) : this.tableColumns.concat(column);
+            },
+            action() {
+                return Config[Config.env].origin + Config[Config.env].ajaxUrl + '/employee/exportEmployee';
             }
         },
         data() {
