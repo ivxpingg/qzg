@@ -123,7 +123,7 @@
                     url: '/user/list',
                     data: JSON.stringify({
                         current: 1,
-                        size: 100,
+                        size: 1000,
                         total: 0,
                     })
                 }).then(res => {

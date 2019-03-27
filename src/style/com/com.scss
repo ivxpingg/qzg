@@ -63,6 +63,11 @@ textarea.ivu-input {
   font-size: 12px;
 }
 
+// 修改bootstrap 覆盖的样式
+a:focus, a:hover {
+  text-decoration: none;
+}
+
 // 针对IE9做的样式兼容
 .ivu-tree ul li {
     margin: 0\9;

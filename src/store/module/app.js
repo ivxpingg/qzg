@@ -5,7 +5,10 @@ import {
     getHomeRoute,
     transformMenu,
     setMenuAuth,
-    getMenuListInLocalstorage, setMenuListInLocalstorage} from '../../lib/util';
+    getMenuListInLocalstorage,
+    setMenuListInLocalstorage,
+    setToken,
+    getToken} from '../../lib/util';
 import routers from '@/router/routers'
 import axios from '@/lib/axios';
 
@@ -92,6 +95,12 @@ export default {
         getMenuList({commit}) {
             return new Promise(((resolve, reject) => {
                 // 临时测试添加的清除
+
+                if (getToken('DomAuthSessId') !== getToken()) {
+                    setToken(getToken('DomAuthSessId'));
+                    setMenuListInLocalstorage(null);
+                }
+
                 // setMenuListInLocalstorage(null);
                 let menuList = getMenuListInLocalstorage();
 

@@ -45,9 +45,10 @@
             <Button type="primary" icon="md-add" @click="addOutStaff">新增编外人员</Button>
             <Button type="info" icon="md-clipboard" @click="openRecordView">人事变动记录</Button>
             <Button type="info" icon="md-download" @click="onClick_exportExcel">导出花名册</Button>
-            <Upload :action="action" :show-upload-list="false">
+            <Upload ref="upload" :action="action" :show-upload-list="true" :on-success="onSuccess_upload" :on-error="onSuccess_error">
                 <Button type="primary" icon="ios-cloud-upload-outline" >导入员工信息</Button>
             </Upload>
+            <Button type="info" icon="md-download" to="/员工信息导入模板.xlsm" target="_blank" download="员工信息导入模板.xlsm">下载模板</Button>
             <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">
                 <Option v-for="item in dict_employeeType"
                         :key="item.id"
@@ -325,7 +326,26 @@
             },
             onClick_exportExcel() {
                 this.$refs.modal_exportExcel.modalValue = true;
+            },
+            onSuccess_upload(response) {
+                if (response.code === 'SUCCESS') {
+                    this.$Message.success('上传成功');
+                    this.getData();
+                    this.$refs.upload.clearFiles();
+                }
+                else {
+                    this.$Message.error({
+                        content: response.msg,
+                        duration: 5
+                    });
+                    this.$refs.upload.clearFiles();
+                }
+            },
+            onSuccess_error() {
+                this.$Message.error('上传失败');
+                this.$refs.upload.clearFiles();
             }
+
         }
     }
 </script>

@@ -112,7 +112,7 @@
                                     }
                                 }, '下发证书'))
                             }
-                            else {
+                            else if (params.row.certificateStatus === '1') {
                                 list.push(h('span', '已下发证书'));
                             }
 

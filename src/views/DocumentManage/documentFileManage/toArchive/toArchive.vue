@@ -41,11 +41,28 @@
                 <FormItem>
                     <Button type="primary" icon="md-refresh" @click="resetSearchParams">重置</Button>
                 </FormItem>
+                <FormItem>
+
+                </FormItem>
             </Form>
+        </vIvxFilterBox>
+        <vIvxFilterBox>
+            <Dropdown @on-click="toArchiveList">
+                <Button type="primary">
+                    归档
+                    <Icon type="ios-arrow-down"></Icon>
+                </Button>
+                <DropdownMenu slot="list">
+                    <DropdownItem v-for="item in dict_archiveType"
+                                  :key="item.id"
+                                  :name="item.value">{{item.label}}</DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
         </vIvxFilterBox>
 
         <div class="ivx-table-box">
             <Table border
+                   ref="table"
                    height="540"
                    :loading="tableLoading"
                    :columns="_tableColumns"
@@ -144,7 +161,49 @@
                     }
                 },
                 tableColumns: [
-                    { title: '序号', width: 65, align: 'center', type: 'index', },
+                    { title: '', width: 65, align: 'center', type: 'selection',
+                        // renderHeader:(h, params) => {
+                        //     return h('Checkbox', {
+                        //         props: {
+                        //             value: false
+                        //         },
+                        //         on: {
+                        //             'on-change': (value) => {
+                        //                 this.tableData.forEach(val => {
+                        //                     if(value) {
+                        //                         if (this.selectedList.indexOf(val.archiveId) === -1) {
+                        //                             this.selectedList.push(val.archiveId);
+                        //                         }
+                        //                     }
+                        //                     else {
+                        //                         if (this.selectedList.indexOf(val.archiveId) !== -1) {
+                        //                             this.selectedList.splice(this.selectedList.indexOf(val.archiveId), 1);
+                        //                         }
+                        //                     }
+                        //                 });
+                        //
+                        //             }
+                        //         }
+                        //     })
+                        // },
+                        // render: (h, params) => {
+                        //     return h('Checkbox', {
+                        //         props: {
+                        //             value: this.isSelectedValue(params.row.archiveId)
+                        //         },
+                        //         on: {
+                        //             'on-change': (value) => {
+                        //                 if(value) {
+                        //                     this.selectedList.push(params.row.archiveId);
+                        //                 }
+                        //                 else {
+                        //                     this.selectedList.splice(this.selectedList.indexOf(params.row.archiveId), 1);
+                        //                 }
+                        //             }
+                        //         }
+                        //     })
+                        // }
+                    },
                     { title: '时间', width: 150, align: 'center', key: 'insTime',
                         render: (h, params) => {
                             return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
@@ -179,6 +238,17 @@
             this.getData();
             this.getDicts(['archiveSource', 'archiveStatus', 'archiveType']);
         },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler() {
+                    this.getData();
+                }
+            }
+        },
         methods: {
             onChage_daterange(value) {
                 this.searchParams.condition.beginTime = value[0];
@@ -199,6 +269,33 @@
                     url: '/archive/handleArchive',
                     params: {
                         archiveId: row.archiveId,
+                        archiveType: archiveType
+                    }
+                }).then((res) => {
+                    if (res.code === 'SUCCESS') {
+                        this.$Message.success('归档成功!');
+                        this.getData();
+                    }
+                })
+            },
+            // isSelectedValue(value) {
+            //     return this.selectedList.indexOf(value) !== -1;
+            // },
+            // 批量归档
+            toArchiveList(archiveType) {
+
+                let ids = this.$refs.table.getSelection().map(v => v.archiveId).join(',');
+
+                if (ids === '') {
+                    this.$Message.info('请选择要归档的文档');
+                    return
+                };
+
+                this.$http({
+                    method: 'get',
+                    url: '/archive/handleArchive',
+                    params: {
+                        archiveId: ids,
                         archiveType: archiveType
                     }
                 }).then((res) => {

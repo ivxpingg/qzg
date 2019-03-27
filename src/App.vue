@@ -6,7 +6,6 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
-
 export default {
     name: 'qzgApp',
     data() {

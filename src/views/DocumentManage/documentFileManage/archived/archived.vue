@@ -47,9 +47,13 @@
         <div class="box-panel">
             <div class="left-panel">
                 <vIvxFilterBox style="padding-top: 10px;">
-                    <Form :label-width="35">
-                        <FormItem><Button type="primary" @click="onClick_newArchiveType">新建档案</Button></FormItem>
+                    <Form inline>
+                        <FormItem :label-width="10"><Button type="primary" size="small" @click="onClick_newArchiveType">新建档案</Button></FormItem>
+                        <FormItem :label-width="10">
+                            <Button v-if="searchParams.condition.archiveType" type="primary" size="small" @click="onClick_updateArchiveType">修改档案</Button>
+                        </FormItem>
                     </Form>
+
                 </vIvxFilterBox>
 
                 <div class="dict-list">
@@ -80,7 +84,7 @@
         </div>
 
         <Modal v-model="modal_addDict"
-               title="添加字典"
+               :title="modal_dict_title"
                draggable
                ok-text="保存"
                :width="400">
@@ -120,6 +124,10 @@
         <!--查看档案附件-->
         <vRecordViewFiles ref="modal_recordViewFiles"
                           :archiveId="modal_recordViewFiles_props.archiveId" ></vRecordViewFiles>
+
+        <!--查阅日志-->
+        <vCheckLog ref="modal_checkLog"
+                   :archiveId="modal_checkLog_props.archiveId"></vCheckLog>
     </div>
 </template>
 
@@ -127,14 +135,15 @@
     import comMixin from '../../../../lib/mixin/comMixin';
     import authMixin from '../../../../lib/mixin/authMixin';
     import vAuthorize from './authorize/authorize';
+    import vCheckLog from './checkLog/checkLog';
     import vRecordViewFiles from '../../../Common/recordViewFiles/recordViewFiles';
     export default {
         name: 'archived',
         mixins: [comMixin, authMixin],
-        components: {vAuthorize, vRecordViewFiles},
+        components: {vAuthorize, vRecordViewFiles, vCheckLog},
         computed: {
             _tableColumns() {
-                let column = [{ title: '操作', width: 180, align: 'center',
+                let column = [{ title: '操作', width: 270, align: 'center',
                     render: (h, params) => {
                         let list = [];
 
@@ -151,6 +160,20 @@
                                 }
                             }
                         }, '查看'));
+
+                        list.push(h('Button', {
+                            props: {
+                                type: 'info',
+                                size: 'small',
+                                icon: 'ios-eye'
+                            },
+                            on: {
+                                click: () => {
+                                    this.modal_checkLog_props.archiveId = params.row.archiveId;
+                                    this.$refs.modal_checkLog.modalValue = true;
+                                }
+                            }
+                        }, '查阅日志'));
 
                         list.push(h('Button', {
                             props: {
@@ -220,8 +243,10 @@
 
                 // 添加档案类型
                 modal_addDict: false,
+                modal_dict_title: '添加字典',
                 loading_add: false,
                 formData: {
+                    id: '',
                     // type: '',
                     // description: '',
                     label: '',
@@ -241,6 +266,10 @@
                 },
 
                 modal_recordViewFiles_props: {
+                    archiveId: ''
+                },
+
+                modal_checkLog_props: {
                     archiveId: ''
                 }
 
@@ -283,27 +312,64 @@
             },
             // 新建档案
             onClick_newArchiveType() {
+                this.modal_dict_title = '新增字典';
+                this.formData.id = '';
+                this.formData.label = '';
+                this.formData.sort = '';
                 this.modal_addDict = true;
+            },
+            // 修改档案
+            onClick_updateArchiveType() {
+                this.modal_dict_title = '编辑字典';
+                this.dict_archiveType.forEach(val => {
+                    if (val.value === this.searchParams.condition.archiveType) {
+                        this.formData.id = val.id;
+                        this.formData.label = val.label;
+                        this.formData.sort = val.sort;
+                    }
+                });
+
+                this.modal_addDict = true;
+
             },
             // 新建档案保存
             addDict_click() {
                 this.loading_add = true;
                 this.$refs.formAdd.validate((valid) => {
                     if (valid) {
-                        this.$http({
-                            method: 'post',
-                            url: '/archive/addArchiveType',
-                            data: JSON.stringify(this.formData)
-                        }).then((res) => {
+                        if (this.formData.id) {
                             this.loading_add = false;
-                            if (res.code === 'SUCCESS') {
-                                this.$Message.success('添加成功!');
-                                this.getDicts(['archiveType']);
-                                this.modal_addDict = false;
-                            }
-                        }).catch(() => {
-                            this.loading_add = false;
-                        })
+                            this.$http({
+                                method: 'post',
+                                url: '/dict/update',
+                                data: JSON.stringify(this.formData)
+                            }).then(res => {
+                                if(res.code === 'SUCCESS') {
+                                    this.$Message.success({
+                                        content: '更新成功！'
+                                    });
+                                    this.getDicts(['archiveType']);
+                                    this.modal_addDict = false;
+                                }
+                            })
+                        }
+                        else {
+                            this.$http({
+                                method: 'post',
+                                url: '/archive/addArchiveType',
+                                data: JSON.stringify(this.formData)
+                            }).then((res) => {
+                                this.loading_add = false;
+                                if (res.code === 'SUCCESS') {
+                                    this.$Message.success('添加成功!');
+                                    this.getDicts(['archiveType']);
+                                    this.modal_addDict = false;
+                                }
+                            }).catch(() => {
+                                this.loading_add = false;
+                            })
+                        }
+
                     }
                     else {
                         this.loading_add = false;
@@ -338,7 +404,7 @@
 
             .left-panel {
                 float: left;
-                width: 150px;
+                width: 180px;
 
                 .dict-list {
                     .item {
@@ -356,7 +422,7 @@
             }
             .right-panel {
                 float: left;
-                width: calc(100% - 150px);
+                width: calc(100% - 180px);
             }
         }
     }
