@@ -85,7 +85,7 @@
 
         <Modal v-model="modal_addDict"
                :title="modal_dict_title"
-               draggable
+
                ok-text="保存"
                :width="400">
             <Form ref="formAdd"
@@ -143,7 +143,7 @@
         components: {vAuthorize, vRecordViewFiles, vCheckLog},
         computed: {
             _tableColumns() {
-                let column = [{ title: '操作', width: 270, align: 'center',
+                let column = [{ title: '操作', width: 370, align: 'center',
                     render: (h, params) => {
                         let list = [];
 
@@ -188,6 +188,37 @@
                                 }
                             }
                         }, '授权'));
+
+                        list.push(h('Button', {
+                            props: {
+                                type: 'error',
+                                size: 'small',
+                                icon: 'md-arrow-back'
+                            },
+                            on: {
+                                click: () => {
+                                    this.$Modal.confirm({
+                                        title: '撤回归档',
+                                        content: `确定要把<${params.row.archiveTitle}>撤回归档?`,
+                                        onOk: () => {
+                                            this.$http({
+                                                method: 'get',
+                                                url: '/archive/cancelArchive',
+                                                params: {
+                                                    archiveId: params.row.archiveId
+                                                }
+                                            }).then((res) => {
+                                                if (res.code === 'SUCCESS') {
+                                                    this.$Message.success('撤回成功!');
+                                                    this.getData();
+                                                }
+                                            })
+                                        }
+                                    })
+
+                                }
+                            }
+                        }, '撤回归档'));
 
                         return h('div',{
                             style: { },
@@ -341,7 +372,7 @@
                             this.loading_add = false;
                             this.$http({
                                 method: 'post',
-                                url: '/dict/update',
+                                url: '/archive/updateArchiveType',
                                 data: JSON.stringify(this.formData)
                             }).then(res => {
                                 if(res.code === 'SUCCESS') {

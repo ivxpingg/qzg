@@ -70,9 +70,12 @@
             <Page prev-text="上一页"
                   next-text="下一页"
                   show-total
+                  show-sizer
+                  :page-size-opts="[10, 20, 30, 40, 50]"
                   :current="searchParams.current"
                   :page-size="searchParams.size"
                   :total="searchParams.total"
+                  @on-page-size-change="onPageSizeChange"
                   @on-change="onPageChange"></Page>
         </div>
 
@@ -242,6 +245,9 @@
             'searchParams.current'() {
                 this.getData();
             },
+            'searchParams.size'() {
+                this.getData();
+            },
             'searchParams.condition': {
                 deep: true,
                 handler() {
@@ -265,12 +271,12 @@
             // 归档
             toArchive(archiveType, row) {
                 this.$http({
-                    method: 'get',
+                    method: 'post',
                     url: '/archive/handleArchive',
-                    params: {
-                        archiveId: row.archiveId,
+                    data: JSON.stringify({
+                        archiveIds:  row.archiveId,
                         archiveType: archiveType
-                    }
+                    })
                 }).then((res) => {
                     if (res.code === 'SUCCESS') {
                         this.$Message.success('归档成功!');
@@ -292,12 +298,12 @@
                 };
 
                 this.$http({
-                    method: 'get',
+                    method: 'post',
                     url: '/archive/handleArchive',
-                    params: {
-                        archiveId: ids,
+                    data: JSON.stringify({
+                        archiveIds: ids,
                         archiveType: archiveType
-                    }
+                    })
                 }).then((res) => {
                     if (res.code === 'SUCCESS') {
                         this.$Message.success('归档成功!');

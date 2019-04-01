@@ -7,6 +7,9 @@ export default {
         onPageChange(current) {
             this.searchParams.current = current;
         },
+        onPageSizeChange(size) {
+            this.searchParams.size = size;
+        },
         /**
          * 获取单个数据字典
          * @param type [String]
