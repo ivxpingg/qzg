@@ -40,7 +40,7 @@
                     },
                     { title: '申请人', width: 120, align: 'center', key: 'applyPerson' },
                     { title: '申请用途', minWidth: 150, align: 'center', key: 'useFor' },
-                    { title: '审核人', width: 120, align: 'center', key: 'audit' },
+                    { title: '审核人', width: 120, align: 'center', key: 'auditor' },
                     { title: '通过时间', width: 150, align: 'center', key: 'auditTime',
                         render: (h, params) => {
                             return h('div', this.timeFormat(params.row.auditTime, 'YYYY-MM-DD HH:mm:ss'));

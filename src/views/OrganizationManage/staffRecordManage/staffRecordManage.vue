@@ -45,10 +45,7 @@
             <Button type="primary" icon="md-add" @click="addOutStaff">新增编外人员</Button>
             <Button type="info" icon="md-clipboard" @click="openRecordView">人事变动记录</Button>
             <Button type="info" icon="md-download" @click="onClick_exportExcel">导出花名册</Button>
-            <Upload ref="upload" :action="action" :show-upload-list="true" :on-success="onSuccess_upload" :on-error="onSuccess_error">
-                <Button type="primary" icon="ios-cloud-upload-outline" >导入员工信息</Button>
-            </Upload>
-            <Button type="info" icon="md-download" to="/员工信息导入模板.xlsm" target="_blank" download="员工信息导入模板.xlsm">下载模板</Button>
+            <Button type="primary" @click="onClick_import">导入</Button>
             <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">
                 <Option v-for="item in dict_employeeType"
                         :key="item.id"
@@ -89,12 +86,36 @@
         <!--人事调整-->
         <vStaffAdjust ref="modal_staffAdjust"
                       :employeeId="staffAdjust_employeeId"
-                      :employeeName="staffAdjust_employeeName"></vStaffAdjust>
+                      :employeeName="staffAdjust_employeeName" @modal-callback="resetProps" ></vStaffAdjust>
         <!--人事变动记录-->
         <vRecordView ref="modal_recordView"></vRecordView>
 
         <!--导出-->
         <vExportExcel ref="modal_exportExcel"></vExportExcel>
+
+        <!--导入-->
+        <Modal v-model="modal_import"
+               footer-hide
+               title="导入">
+            <Form inline :label-width="60">
+                <FormItem label="">
+                    <Upload ref="upload_import" :action="action_import" :show-upload-list="true" :on-success="onSuccess_upload" :on-error="onSuccess_error">
+                        <Button type="primary" icon="ios-cloud-upload-outline" >导入员工信息</Button>
+                    </Upload>
+                </FormItem>
+                <FormItem>
+                    <Button type="info" icon="md-download" to="/员工信息导入模板.xlsm" target="_blank" download="员工信息导入模板.xlsm">下载员工信息导入模板</Button>
+                </FormItem>
+                <FormItem label="">
+                    <Upload ref="upload_exprot" :action="action_update" :show-upload-list="true" :on-success="onSuccess_upload" :on-error="onSuccess_error">
+                        <Button type="primary" icon="ios-cloud-upload-outline" >更新员工信息</Button>
+                    </Upload>
+                </FormItem>
+                <FormItem>
+                    <Button type="info" icon="md-download" to="/员工信息导入模板.xlsm" target="_blank" download="员工信息更新模板.xlsm">下载员工信息更新模板</Button>
+                </FormItem>
+            </Form>
+        </Modal>
     </div>
 </template>
 
@@ -202,8 +223,11 @@
                 }];
                 return this.auth_update || this.auth_del ? this.tableColumns.concat(column) : this.tableColumns.concat(column);
             },
-            action() {
+            action_import() {
                 return Config[Config.env].origin + Config[Config.env].ajaxUrl + '/employee/exportEmployee';
+            },
+            action_update() {
+                return Config[Config.env].origin + Config[Config.env].ajaxUrl + '/employee/exportUpdateEmployee';
             }
         },
         data() {
@@ -263,6 +287,9 @@
                 dict_employeeStatus: [],
                 dict_employeeType: [],
                 dict_department: [],
+
+                // 导入弹框
+                modal_import: false
             };
         },
         watch: {
@@ -282,6 +309,13 @@
             this.getDeparmentList('', 'dict_department');
         },
         methods: {
+            // 重置传入子组件参数
+            resetProps() {
+                this.inStaff_employeeId = '';
+                this.outStaff_employeeId = '';
+                this.staffAdjust_employeeId = '';
+                this.workRecord_employeeId = '';
+            },
             onChage_daterange(value) {
                 this.searchParams.condition.beginTime = value[0];
                 this.searchParams.condition.endTime = value[1];
@@ -331,21 +365,27 @@
                 if (response.code === 'SUCCESS') {
                     this.$Message.success('上传成功');
                     this.getData();
-                    this.$refs.upload.clearFiles();
+                    this.$refs.upload_import.clearFiles();
+                    this.$refs.upload_exprot.clearFiles();
                 }
                 else {
                     this.$Message.error({
                         content: response.msg,
                         duration: 5
                     });
-                    this.$refs.upload.clearFiles();
+                    this.$refs.upload_import.clearFiles();
+                    this.$refs.upload_exprot.clearFiles();
                 }
             },
             onSuccess_error() {
                 this.$Message.error('上传失败');
-                this.$refs.upload.clearFiles();
-            }
+                this.$refs.upload_import.clearFiles();
+                this.$refs.upload_exprot.clearFiles();
+            },
 
+            onClick_import() {
+                this.modal_import = true;
+            }
         }
     }
 </script>

@@ -45,7 +45,7 @@
         <!--培训课程add/edit/view-->
         <vCourseHandle ref="modal_courseHandle"
                        :type="courseHandleType"
-                       :courseId="currentRow.courseId"></vCourseHandle>
+                       :courseId="currentRow.courseId" @modal-callback="getData"></vCourseHandle>
         <!--通知-->
         <vNotificationCourse ref="modal_notificationCourse"
                              :courseId="modal_notificationCourse_props.courseId"

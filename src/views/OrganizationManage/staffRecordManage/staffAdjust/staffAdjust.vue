@@ -32,7 +32,7 @@
                     <Option v-for="item in jobList"
                             :key="item.jobId"
                             :value="item.jobId"
-                            :label="item.departmentName + '-' + item.dutyName"></Option>
+                            :label="item.dutyName"></Option>
                 </Select>
 
                 <Input v-else v-model="formData.changeResult" readonly />

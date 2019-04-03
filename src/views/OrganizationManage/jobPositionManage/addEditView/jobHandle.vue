@@ -158,7 +158,7 @@
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
                         Object.assign(this.formData, res.data, {
-                            wageLevels: res.data.wageLevel.split(',')
+                            wageLevels: res.data.wageLevel ? res.data.wageLevel.split(',') : []
                         });
                     }
                 })

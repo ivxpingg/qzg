@@ -66,8 +66,6 @@
                         <Input v-model="formData.phone" placeholder="请输入联系电话" :style="formInputStyle" />
                     </FormItem>
 
-
-
                     <FormItem label="入伍年月:">
                         <DatePicker :value="formData.joinArmyDate"
                                     :style="formInputStyle"
@@ -99,23 +97,22 @@
                         </Select>
                     </FormItem>
                     <FormItem label="职级:">
-                        <!--<Select :value="formData.jobLevel" readonly disabled :style="formInputStyle">-->
-                            <!--<Option v-for="item in dict_jobLevel"-->
-                                    <!--:key="item.id"-->
-                                    <!--:value="item.value"-->
-                                    <!--:label="item.label"></Option>-->
-                        <!--</Select>-->
-                        <Input :value="formData.jobLevelLabel" placeholder="自动载入" readonly :style="formInputStyle" />
+                        <Select v-model="formData.jobLevel" :style="formInputStyle">
+                            <Option v-for="item in dict_jobLevel"
+                                    :key="item.id"
+                                    :value="item.value"
+                                    :label="item.label"></Option>
+                        </Select>
+                        <!--<Input :value="formData.jobLevelLabel" placeholder="自动载入" readonly :style="formInputStyle" />-->
                     </FormItem>
                     <FormItem label="工资职级:">
-                        <!--<Input v-model="formData.wageLevelLabel" placeholder="请输入民族" :style="formInputStyle" />-->
-                        <!--<Select :value="formData.wageLevel" readonly disabled :style="formInputStyle">-->
-                            <!--<Option v-for="item in dict_wageLevel"-->
-                                    <!--:key="item.id"-->
-                                    <!--:value="item.value"-->
-                                    <!--:label="item.label"></Option>-->
-                        <!--</Select>-->
-                        <Input :value="formData.wageLevelLabel" placeholder="自动载入" readonly :style="formInputStyle" />
+                        <Select v-model="formData.wageLevel_attr" multiple :style="formInputStyle">
+                            <Option v-for="item in dict_wageLevel"
+                                    :key="item.id"
+                                    :value="item.value"
+                                    :label="item.label"></Option>
+                        </Select>
+                        <!--<Input :value="formData.wageLevelLabel" placeholder="自动载入" readonly :style="formInputStyle" />-->
                     </FormItem>
                     <FormItem label="任职时间:">
                         <DatePicker :value="formData.onJobTime"
@@ -132,16 +129,16 @@
                                     placeholder="选择时间"></DatePicker>
                     </FormItem>
                     <FormItem label="员工状态:" prop="employeeStatus">
-                        <div style="width: 670px;">
-                            <Select v-model="formData.employeeStatus" :style="formInputStyle">
-                                <Option v-for="item in dict_employeeStatus"
-                                        :key="item.id"
-                                        :value="item.value"
-                                        :label="item.label"></Option>
-                            </Select>
-                        </div>
+                        <Select v-model="formData.employeeStatus" :style="formInputStyle">
+                            <Option v-for="item in dict_employeeStatus"
+                                    :key="item.id"
+                                    :value="item.value"
+                                    :label="item.label"></Option>
+                        </Select>
                     </FormItem>
-
+                    <FormItem label="编制:">
+                        <Input v-model="formData.authorizedStrength" placeholder="请输入编制" :style="formInputStyle" />
+                    </FormItem>
                     <template v-for="(item, idx) in formData.employeeSchoolList">
                         <FormItem label="毕业院校:" :key="idx + '0'">
                             <Input v-model="item.school" placeholder="请输入毕业院校"  style="width: 130px;" />
@@ -159,13 +156,13 @@
                             <Input v-model="item.major" placeholder="请输入专业" style="width: 130px;"  />
                         </FormItem>
                         <FormItem label="学历:" :key="idx + '3'" :label-width="60">
-                            <Select v-model="item.education" style="width: 130px;" >
-                                <Option v-for="item in dict_education"
-                                        :key="item.id"
-                                        :value="item.value"
-                                        :label="item.label"></Option>
-                            </Select>
-                            <!--<Input v-model="item.education" placeholder="请输入学历" style="width: 130px;"  />-->
+                            <!--<Select v-model="item.education" style="width: 130px;" >-->
+                                <!--<Option v-for="item in dict_education"-->
+                                        <!--:key="item.id"-->
+                                        <!--:value="item.value"-->
+                                        <!--:label="item.label"></Option>-->
+                            <!--</Select>-->
+                            <Input v-model="item.education" :key="item.id" placeholder="请输入学历" style="width: 130px;"  />
                         </FormItem>
                         <FormItem v-if="idx === 0 && !isView" :label-width="0">
                             <Button type="error" size="small" @click="removeEmployeeSchool(item, idx)" style="margin-right: 5px;">删除</Button>
@@ -269,11 +266,13 @@
                     jobId: '',       // 职务ID
                     jobLevel: '',    // 职级
                     jobLevelLabel: '',
+                    wageLevel_attr: [],
                     wageLevel: '',   // 工资职级
                     wageLevelLabel: '',
                     onJobTime: '',   // 任职时间
                     nowJobTime: '',  // 现任职时间
                     employeeStatus: '',
+                    authorizedStrength: '', // 编制
                     employeeSchoolList: [
                         // {
                         //     school: '',    // 毕业院校
@@ -315,23 +314,24 @@
                     }
                 }
             },
-            'formData.departmentId'(val) {
-                if (val) {
-                    this.getJobList('jobList', val);
-                }
-            },
-            'formData.jobId'(val) {
-                for (let i = 0; i < this.jobList.length; i++) {
-                    if (this.jobList[i].jobId === val) {
-                        this.formData.jobLevelLabel = this.jobList[i].jobLevelLabel;
-                        this.formData.wageLevelLabel = this.jobList[i].wageLevelLabel;
-                    }
-                }
-            }
+            // 'formData.departmentId'(val) {
+            //     if (val) {
+            //         this.getJobList('jobList', val);
+            //     }
+            // },
+            // 'formData.jobId'(val) {
+            //     for (let i = 0; i < this.jobList.length; i++) {
+            //         if (this.jobList[i].jobId === val) {
+            //             this.formData.jobLevelLabel = this.jobList[i].jobLevelLabel;
+            //             this.formData.wageLevelLabel = this.jobList[i].wageLevelLabel;
+            //         }
+            //     }
+            // }
         },
         mounted() {
             this.getDicts(['sex', 'jobLevel', 'wageLevel', 'employeeStatus', 'education', 'schoolType']);
             this.getDeparmentList('', 'departmentList');
+            this.getJobList('jobList', '');
         },
         methods: {
             // 初始化表单数据
@@ -377,6 +377,7 @@
                             birthday: this.timeFormat(res.data.birthday, 'YYYY-MM-DD'),
                             onJobTime: this.timeFormat(res.data.onJobTime, 'YYYY-MM-DD'),
                             nowJobTime: this.timeFormat(res.data.nowJobTime, 'YYYY-MM-DD'),
+                            wageLevel_attr: res.data.wageLevel ? res.data.wageLevel.split(',') : [],
                             jobLevelLabel: res.data.jobLevelLabel || '',
                             wageLevelLabel:  res.data.wageLevelLabel || '',
                         });
@@ -390,6 +391,11 @@
                 this.saveBtnLoading = true;
                 this.$refs.form.validate((valid) => {
                     if (valid) {
+                        if (this.formData.wageLevel_attr) {
+                            this.formData.wageLevel = this.formData.wageLevel_attr.join(',');
+                        }
+
+
                         if (this.type === 'add') {
                             this.addSubmit();
                         }

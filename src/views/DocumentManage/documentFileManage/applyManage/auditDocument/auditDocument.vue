@@ -41,8 +41,8 @@
                     </div>
                 </FormItem>
             </template>
-            <FormItem v-if="formData.applyStatus === 'wait_audit'" label="审核意见:" prop="auditContent">
-                <Input type="textarea" v-model="submitForm.auditContent" :rows="3"  style="width: 570px;"/>
+            <FormItem v-if="formData.applyStatus === 'wait_audit'" key="wait_audit" label="审核意见:" prop="auditContent">
+                <Input type="textarea" key="wait_audit" v-model="submitForm.auditContent" :rows="3"  style="width: 570px;"/>
             </FormItem>
         </Form>
 
