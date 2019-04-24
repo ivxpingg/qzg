@@ -1,8 +1,8 @@
 <template>
     <div class="logManage-container">
         <vIvxFilterBox>
-            <Form inline>
-                <FormItem label="操作类型:" :label-width="65">
+            <Form inline :label-width="70">
+                <FormItem label="操作类型:">
                     <Select v-model="searchParams.condition.operateType" style="width: 100px;">
                         <Option v-for="item in dict_operateType"
                                 :key="item.id"
@@ -10,32 +10,32 @@
                                 :label="item.label"></Option>
                     </Select>
                 </FormItem>
-                <FormItem label="操作人:" :label-width="65">
+                <FormItem label="操作人:">
                     <Input v-model="searchParams.condition.operator"
                            style="width: 120px;"
                            placeholder="操作人"/>
                 </FormItem>
-                <FormItem label="档案名称:" :label-width="65">
+                <FormItem label="档案名称:">
                     <Input v-model="searchParams.condition.archiveTitle"
                            style="width: 200px;"
                            placeholder="档案名称"/>
                 </FormItem>
-                <FormItem label="操作结果:" :label-width="65">
+                <FormItem label="操作结果:">
                     <Input v-model="searchParams.condition.result"
                            style="width: 100px;"
                            placeholder="操作结果"/>
                 </FormItem>
-                <FormItem label="操作时间:" :label-width="65">
+                <FormItem label="操作时间:">
                     <DatePicker ref="datePicker"
                                 type="daterange"
                                 @on-change="onChage_daterange"
                                 placeholder="选择时间"
                                 style="width: 200px;"></DatePicker>
                 </FormItem>
-                <FormItem>
+                <FormItem  :label-width="0">
                     <Button type="primary" icon="ios-search" @click="getData">检索</Button>
                 </FormItem>
-                <FormItem>
+                <FormItem :label-width="0">
                     <Button type="primary" icon="md-refresh" @click="resetSearchParams">重置</Button>
                 </FormItem>
             </Form>

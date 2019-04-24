@@ -2,7 +2,7 @@
     <div class="toArchive-container">
         <vIvxFilterBox>
             <Form inline>
-                <FormItem label="文件来源:" :label-width="65">
+                <FormItem label="文件来源:" :label-width="70">
                     <Select v-model="searchParams.condition.archiveSource">
                         <Option v-for="item in dict_archiveSource"
                                 :key="item.id"
@@ -23,7 +23,7 @@
                            style="width: 120px;"
                            placeholder="文件关键字"/>
                 </FormItem>
-                <FormItem label="创建人:" :label-width="55">
+                <FormItem label="创建人:" :label-width="60">
                     <Input v-model="searchParams.condition.operator"
                            style="width: 100px;"
                            placeholder="创建人"/>

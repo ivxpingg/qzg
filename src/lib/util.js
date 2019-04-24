@@ -42,14 +42,14 @@ export const getBreadCrumbList = (routeMetched, homeRoute) => {
  * @description 本地存储和获取标签导航列表
  */
 export const setTagNavListInLocalstorage = list => {
-    localStorage.tagNaveList_six = JSON.stringify(list);
+    localStorage.tagNaveList_oa = JSON.stringify(list);
 };
 /**
  * @returns {Array} 其中的每个元素只包含路由原信息中的name, path, meta三项
  */
 
 export const getTagNavListFromLocalstorage = () => {
-    const list = localStorage.tagNaveList_six;
+    const list = localStorage.tagNaveList_oa;
     return list ? JSON.parse(list) : []
 };
 

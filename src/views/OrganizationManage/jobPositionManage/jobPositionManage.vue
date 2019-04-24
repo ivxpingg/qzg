@@ -2,7 +2,7 @@
     <div class="jobPositionManage-container">
         <vIvxFilterBox>
             <Form inline>
-                <FormItem label="归属部门:" :label-width="65">
+                <FormItem label="归属部门:" :label-width="70">
                     <Select v-model="searchParams.condition.departmentId" style="width: 200px;">
                         <Option v-for="item in departmentList"
                                 :key="item.departmentId"
@@ -10,7 +10,7 @@
                                 :label="item.unitName + '-' + item.departmentName"></Option>
                     </Select>
                 </FormItem>
-                <FormItem label="关键字:" :label-width="65">
+                <FormItem label="关键字:" :label-width="70">
                     <Input v-model="searchParams.condition.searchKey"
                            style="width: 120px;"
                            placeholder="请输入关键字"/>

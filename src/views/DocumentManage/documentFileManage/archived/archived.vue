@@ -2,7 +2,7 @@
     <div class="archived-container">
         <vIvxFilterBox>
             <Form inline>
-                <FormItem label="文件来源:" :label-width="65">
+                <FormItem label="文件来源:" :label-width="70">
                     <Select v-model="searchParams.condition.archiveSource">
                         <Option v-for="item in dict_archiveSource"
                                 :key="item.id"
@@ -23,7 +23,7 @@
                            style="width: 120px;"
                            placeholder="文件关键字"/>
                 </FormItem>
-                <FormItem label="创建人:" :label-width="55">
+                <FormItem label="创建人:" :label-width="60">
                     <Input v-model="searchParams.condition.operator"
                            style="width: 100px;"
                            placeholder="创建人"/>
@@ -128,6 +128,17 @@
         <!--查阅日志-->
         <vCheckLog ref="modal_checkLog"
                    :archiveId="modal_checkLog_props.archiveId"></vCheckLog>
+
+
+        <Modal v-model="modal_ue"
+               title="编辑"
+               :width="1060"
+               @on-ok="saveContent">
+            <div style="width:1024px; position: relative;">
+                <script id="editor" type="text/plain" style="width:1024px; height:500px;"></script>
+            </div>
+        </Modal>
+
     </div>
 </template>
 
@@ -143,7 +154,7 @@
         components: {vAuthorize, vRecordViewFiles, vCheckLog},
         computed: {
             _tableColumns() {
-                let column = [{ title: '操作', width: 370, align: 'center',
+                let column = [{ title: '操作', width: 460, align: 'center',
                     render: (h, params) => {
                         let list = [];
 
@@ -160,6 +171,26 @@
                                 }
                             }
                         }, '查看'));
+
+                        list.push(h('Button', {
+                            props: {
+                                type: 'info',
+                                size: 'small',
+                                icon: 'ios-eye'
+                            },
+                            on: {
+                                click: () => {
+                                    this.modal_ue_props.archiveId = params.row.archiveId;
+                                    this.modal_ue = true;
+                                    setTimeout(() => {
+                                        if (!this.ueditor) {
+                                            this.ueditor = UE.getEditor('editor');
+                                        }
+                                        this.getContent();
+                                    }, 100);
+                                }
+                            }
+                        }, '编辑'));
 
                         list.push(h('Button', {
                             props: {
@@ -228,6 +259,10 @@
                 }];
                 return this.tableColumns.concat(column);
             }
+        },
+        beforeDestroy() {
+            UE.delEditor('editor');
+            this.ueditor = null;
         },
         data() {
             return {
@@ -302,7 +337,14 @@
 
                 modal_checkLog_props: {
                     archiveId: ''
-                }
+                },
+
+                // 富文本编辑
+                modal_ue: false,
+                modal_ue_props: {
+                    archiveId: ''
+                },
+                ueditor: null
 
             };
         },
@@ -424,6 +466,44 @@
                     this.tableLoading = false;
                 })
             },
+
+
+            // 根据档案ID(archiveId) 获取富文本框内容
+            getContent() {
+                this.ueditor.setContent('');
+                this.$http({
+                    method: 'get',
+                    url: '/archive/viewArchiveContent',
+                    params: {
+                        archiveId: this.modal_ue_props.archiveId,
+                    }
+                }).then((res) => {
+                    if (res.code === 'SUCCESS') {
+                        this.ueditor.setContent(res.data.archiveContent || '');
+                    }
+                }).catch(() => {
+
+                })
+            },
+
+            // 保存富文本框内容
+            saveContent() {
+                this.$http({
+                    method: 'post',
+                    url: '/archive/updateArchiveContent',
+                    data: JSON.stringify({
+                        archiveId: this.modal_ue_props.archiveId,
+                        archiveContent: this.ueditor.getContent()
+                    })
+                }).then((res) => {
+                    if (res.code === 'SUCCESS') {
+                        this.$Message.success('保存成功!');
+                    }
+                }).catch(() => {
+
+                })
+            }
+
         }
     }
 </script>

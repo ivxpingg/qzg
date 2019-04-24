@@ -152,8 +152,6 @@
             }
         },
         mounted() {
-
-
             this.getMenuList().then(() => {
                 /**
                  * @description 初始化设置面包屑导航和标签导航

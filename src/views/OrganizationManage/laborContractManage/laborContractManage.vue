@@ -2,7 +2,7 @@
     <div class="laborContractManage-container">
         <vIvxFilterBox>
             <Form inline>
-                <FormItem label="归属部门:" :label-width="65">
+                <FormItem label="归属部门:" :label-width="70">
                     <Select v-model="searchParams.condition.departmentId" style="width: 200px;">
                         <Option v-for="item in departmentList"
                                 :key="item.departmentId"
@@ -10,7 +10,7 @@
                                 :label="item.unitName + '-' + item.departmentName"></Option>
                     </Select>
                 </FormItem>
-                <FormItem label="关键字:" :label-width="65">
+                <FormItem label="关键字:" :label-width="70">
                     <Input v-model="searchParams.condition.searchKey"
                            style="width: 120px;"
                            placeholder="请输入关键字"/>
@@ -101,6 +101,38 @@
                                 }
                             }
                         }, '签订记录'));
+
+                        list.push(h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small',
+                                icon: 'ios-create'
+                            },
+                            on: {
+                                click: () => {
+                                    this.$Modal.confirm({
+                                        title: '解除',
+                                        content: `确定要解除《${params.row.employeeName}》的劳动合同?`
+                                    });
+                                }
+                            }
+                        }, '解除'));
+
+                        list.push(h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small',
+                                icon: 'ios-create'
+                            },
+                            on: {
+                                click: () => {
+                                    this.$Modal.confirm({
+                                        title: '解除',
+                                        content: `确定要变更《${params.row.employeeName}》的劳动合同?`
+                                    });
+                                }
+                            }
+                        }, '变更'));
 
 
                         return h('div',{

@@ -2,7 +2,7 @@
     <div class="trainingSchoolManage-container">
         <vIvxFilterBox>
             <Form inline>
-                <FormItem label="课程状态:" :label-width="65">
+                <FormItem label="课程状态:" :label-width="70">
                     <Select v-model="searchParams.condition.courseStatus" style="width: 120px;">
                         <Option v-for="item in dict_courseStatus"
                                 :key="item.id"
@@ -10,7 +10,7 @@
                                 :label="item.label"></Option>
                     </Select>
                 </FormItem>
-                <FormItem label="关键字:" :label-width="65">
+                <FormItem label="关键字:" :label-width="70">
                     <Input v-model="searchParams.condition.searchKey"
                            style="width: 120px;"
                            placeholder="请输入关键字"/>

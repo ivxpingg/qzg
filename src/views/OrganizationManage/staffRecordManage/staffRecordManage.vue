@@ -2,7 +2,7 @@
     <div class="staffRecordManage-container">
         <vIvxFilterBox>
             <Form inline>
-                <FormItem label="归属部门:" :label-width="65">
+                <FormItem label="归属部门:" :label-width="70">
                     <Select v-model="searchParams.condition.departmentId">
                         <Option v-for="item in dict_department"
                                 :key="item.departmentId"
@@ -10,7 +10,7 @@
                                 :label="item.unitName + '-' + item.departmentName"></Option>
                     </Select>
                 </FormItem>
-                <FormItem label="员工状态:" :label-width="65">
+                <FormItem label="员工状态:" :label-width="70">
                     <Select v-model="searchParams.condition.employeeStatus" style="width: 70px;">
                         <Option v-for="item in dict_employeeStatus"
                                 :key="item.id"
