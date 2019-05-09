@@ -1,6 +1,6 @@
 <template>
     <Modal v-model="modalValue"
-           title="人事变动记录"
+           title="花名册"
            :width="1200"
            footer-hide
            @on-visible-change="onVisibleChange">

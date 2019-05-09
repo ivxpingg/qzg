@@ -201,6 +201,7 @@
 
                 this.getFilesList(this.resourceId, this.fileType).then(data => {
                     this.formData.defaultFiles = data;
+                    this.formData.fileIds = data.map(v => v.fileId);
                 })
 
             },

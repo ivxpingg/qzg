@@ -3,7 +3,7 @@
         <vIvxFilterBox>
             <Form inline>
                 <FormItem label="课程状态:" :label-width="70">
-                    <Select v-model="searchParams.condition.courseStatus" style="width: 120px;">
+                    <Select v-model="searchParams.condition.courseStatus" clearable style="width: 120px;">
                         <Option v-for="item in dict_courseStatus"
                                 :key="item.id"
                                 :value="item.value"

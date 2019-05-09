@@ -43,7 +43,8 @@
                 <Input v-model="formData.require" placeholder="请输入培训要求" :style="formInputStyle" />
             </FormItem>
             <FormItem label="培训学时:" prop="period">
-                <Input v-model="formData.period" placeholder="请输入培训学时" :style="formInputStyle" />
+                <InputNumber v-model="formData.period" :min="1" :style="formInputStyle"></InputNumber>
+                <!--<Input v-model="formData.period" type="number" placeholder="请输入培训学时" :style="formInputStyle" />-->
             </FormItem>
             <FormItem label="培训内容:" prop="courseContent">
                 <Input v-model="formData.courseContent" placeholder="请输入培训内容" :style="formInputStyle" />
@@ -57,8 +58,8 @@
                 </Select>
                 <!--<Input v-model="formData.courseType" placeholder="请输入培训类型" :style="formInputStyle" />-->
             </FormItem>
-            <FormItem >
-                <div style="width: 690px;">
+            <FormItem label="附件:" prop="fileIds">
+                <div v-if="!isView" style="width: 690px;">
                     <vWebUploader
                             v-if="modalValue"
                             ref="webUploader"
@@ -69,7 +70,11 @@
                         <Button type="primary" icon="ios-cloud-upload-outline">上传附件</Button>
                     </vWebUploader>
                 </div>
+                <div v-else style="width: 690px;">
+                    <Button type="primary" @click="getFilesList">查看附件</Button>
+                </div>
             </FormItem>
+
         </Form>
 
         <div slot="footer">
@@ -78,15 +83,20 @@
                     :loading="saveBtnLoading"
                     @click="save">保存</Button>
         </div>
+
+        <!--查看附件-->
+        <vViewFiles ref="modal_viewFiles" :data="courseFiles"></vViewFiles>
+
     </Modal>
 </template>
 
 <script>
     import modalMixin from '../../../../lib/mixin/modalMixin';
     import comMixin from '../../../../lib/mixin/comMixin';
+    import viewFilesMixin from '../../../Common/viewFiles/mixin';
     export default {
         name: 'courseHandle',  // 课程管理
-        mixins: [modalMixin, comMixin],
+        mixins: [modalMixin, comMixin, viewFilesMixin],
         props: {
             /**
              * 类型
@@ -137,16 +147,30 @@
                     endTime: '',
                     address: '',  // 培训地址
                     require: '',  // 培训要求
-                    period: '',   // 培训学时
+                    period: 1,   // 培训学时
                     courseContent: '',  // 培训内容
                     courseType: '',     // 课程类型
                     fileIds: []         // 附件
                 },
-                rules: {},
+                rules: {
+                  courseName: [{ required: true, message: '培训名称不能为空！', trigger: 'blur' }],
+                  departmentId: [{ required: true, message: '请选择归属单位！', trigger: 'blur' }],
+                  startTime: [{ required: true, message: '开始时间不能为空！', trigger: 'blur' }],
+                  endTime: [{ required: true, message: '结束时间不能为空！', trigger: 'blur' }],
+                  address: [{ required: true, message: '培训地址不能为空！', trigger: 'blur' }],
+                  require: [{ required: true, message: '培训要求不能为空！', trigger: 'blur' }],
+                  period: [{ required: true, type: 'number', message: '请输入整数！', trigger: 'blur' }],
+                  courseContent: [{ required: true, message: '培训内容不能为空！', trigger: 'blur' }],
+                  courseType: [{ required: true, message: '请选择培训类型！', trigger: 'blur' }],
+                  fileIds: [{ required: true, type: 'array', message: '请选择培训类型！', trigger: 'blur' }]
+                },
 
                 // 字典
                 dict_departmentList: [],
-                dict_courseType: []
+                dict_courseType: [],
+
+                // 附件列表
+                courseFiles: []
             };
         },
         watch: {
@@ -187,6 +211,22 @@
                 if (response.code === 'SUCCESS') {
                     this.formData.fileIds = fileList.map(v => v.response.fileId);
                 }
+            },
+
+            getFilesList () {
+              this.$refs.modal_viewFiles.modalValue = true;
+              this.$http({
+                method: 'get',
+                url: '/file/attachList',
+                params: {
+                  relationId: this.formData.courseId,
+                  fileType: 'course_file'
+                }
+              }).then(res => {
+                if(res.code === 'SUCCESS') {
+                  this.courseFiles = res.data || [];
+                }
+              });
             },
 
             getData() {

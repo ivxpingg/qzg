@@ -73,7 +73,8 @@
                 rules: {
                     unitName: [{ required: true, message: '单位名称不能为空！', trigger: 'blur' }],
                     departmentName: [{ required: true, message: '部门名称不能为空！', trigger: 'blur' }],
-                    intro: [{ required: true, message: '部门简介不能为空！', trigger: 'blur' }],
+                    intro: [{ required: true, message: '部门简介不能为空！', trigger: 'blur' },
+                      { max: 500, message: '部门简介不能超过500字！', trigger: 'blur' }],
                 },
 
             };

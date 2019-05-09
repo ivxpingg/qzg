@@ -23,11 +23,11 @@
                            style="width: 120px;"
                            placeholder="文件关键字"/>
                 </FormItem>
-                <FormItem label="创建人:" :label-width="60">
-                    <Input v-model="searchParams.condition.operator"
-                           style="width: 100px;"
-                           placeholder="创建人"/>
-                </FormItem>
+                <!--<FormItem label="创建人:" :label-width="60">-->
+                    <!--<Input v-model="searchParams.condition.operator"-->
+                           <!--style="width: 100px;"-->
+                           <!--placeholder="请输入"/>-->
+                <!--</FormItem>-->
                 <FormItem label="时间:" :label-width="45">
                     <DatePicker ref="datePicker"
                                 type="daterange"

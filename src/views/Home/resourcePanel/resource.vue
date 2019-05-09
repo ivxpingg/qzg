@@ -108,10 +108,17 @@
                                 },
                                 on: {
                                     click: () => {
-                                        // this.propsRow.resourceId = params.row.resourceId;
                                         this.resourcesFiles = [];
                                         this.getData_vViewFile(params.row.resourceId, 'learning_resource', 'resourcesFiles');
                                         this.$refs.modal_viewFiles.modalValue = true;
+
+                                      this.$http({
+                                        method: 'get',
+                                        url: '/resource/updateViewPage',
+                                        params: {
+                                          resourceId: params.row.resourceId
+                                        }
+                                      });
 
                                     }
                                 }

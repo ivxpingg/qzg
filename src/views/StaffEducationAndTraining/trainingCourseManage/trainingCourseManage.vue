@@ -97,8 +97,9 @@
                             },
                             on: {
                                 click: () => {
-                                    if (this.auth_update) { this.courseHandleType = 'edit'; }
-                                    else { this.courseHandleType = 'view'; }
+                                    // if (this.auth_update) { this.courseHandleType = 'edit'; }
+                                    // else { this.courseHandleType = 'view'; }
+                                    this.courseHandleType = 'view';
                                     this.currentRow.courseId = params.row.courseId;
                                     this.$refs.modal_courseHandle.modalValue = true;
                                 }

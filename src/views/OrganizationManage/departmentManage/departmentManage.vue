@@ -124,7 +124,7 @@
                     { title: '部门名称', minWidth: 120, align: 'center', key: 'departmentName' },
                     { title: '创建人', width: 100, align: 'center', key: 'createName' },
                     { title: '在岗人数', width: 120, align: 'center', key: 'onDutyNum' },
-                    { title: '简介', minWidth: 120, align: 'center', key: 'intro' },
+                    { title: '简介', minWidth: 120, align: 'center', key: 'intro', tooltip: true },
                 ],
                 tableData: [
                     {

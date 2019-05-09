@@ -3,7 +3,7 @@
         <vIvxFilterBox>
             <Form inline>
                 <FormItem label="资源类型:" :label-width="70">
-                    <Select v-model="searchParams.condition.resourceId" style="width: 120px;">
+                    <Select v-model="searchParams.condition.resourceType" clearable style="width: 120px;">
                         <Option v-for="item in dict_resourceType"
                                 :key="item.id"
                                 :value="item.value"
@@ -213,7 +213,7 @@
                     size: 10,          // 每页几行
                     total: 0,           // 总行数
                     condition: {
-                        resourceId: '',
+                        resourceType: '',
                         searchKey: ''
                     }
                 },
@@ -263,15 +263,16 @@
         methods: {
             addResources() {
                 this.modal_resourcesHandle_props.type = 'add';
-                this.modal_resourcesHandle_props.resourceId = '';
+                this.modal_resourcesHandle_props.resourceType = '';
                 this.$refs.modal_resourcesHandle.modalValue = true;
             },
             resetSearchParams() {
-                this.searchParams.condition.resourceId = '';
+                this.searchParams.condition.resourceType = '';
                 this.searchParams.condition.searchKey = '';
             },
             getData() {
                 this.tableLoading = true;
+                this.modal_resourcesHandle_props.resourceId = '';
                 this.$http({
                     method: 'post',
                     url: '/resource/list',

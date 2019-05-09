@@ -130,10 +130,9 @@
                     method: 'post',
                     url: '/course/list',
                     data: JSON.stringify( {
-                        current: 1,        // 当前第几页
+                        current: 1,         // 当前第几页
                         size: 100,          // 每页几行
-                        total: 0,           // 总行数
-                        condition: {}
+                        total: 0            // 总行数
                     })
                 }).then((res) => {
                     this.tableLoading = false;

@@ -3,7 +3,7 @@
         <vIvxFilterBox>
             <Form inline>
                 <FormItem label="课程名称:" :label-width="70">
-                    <Select v-model="searchParams.condition.courseId" style="width: 220px;">
+                    <Select v-model="searchParams.condition.courseId" clearable style="width: 220px;">
                         <Option v-for="item in dict_courseList"
                                 :key="item.courseId"
                                 :value="item.courseId"
@@ -177,6 +177,7 @@
         },
         mounted() {
             this.getData();
+            this.getCourseList();
         },
         methods: {
             addCredential() {
@@ -186,6 +187,22 @@
                 this.searchParams.condition.courseId = '';
                 this.searchParams.condition.searchKey = '';
             },
+          getCourseList() {
+            this.$http({
+              method: 'post',
+              url: '/course/list',
+              data: JSON.stringify( {
+                current: 1,         // 当前第几页
+                size: 100,          // 每页几行
+                total: 0            // 总行数
+              })
+            }).then((res) => {
+              this.tableLoading = false;
+              if (res.code === 'SUCCESS') {
+                this.dict_courseList = res.data.records;
+              }
+            })
+          },
             getData() {
                 this.tableLoading = true;
                 this.$http({

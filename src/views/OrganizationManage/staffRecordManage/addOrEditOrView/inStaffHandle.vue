@@ -287,6 +287,7 @@
                     idNumber: [{ required: true, message: '身份证不能为空！', trigger: 'blur' },
                         { max: 18, message: '请输入正确身份证号码！', trigger: 'blur' }],
                     phone: [{ required: true, message: '电话号码不能为空！', trigger: 'blur' }],
+                    employeeStatus: [{ required: true, message: '请选择员工状态！', trigger: 'blur' }]
                 },
 
                 // 字典

@@ -182,6 +182,7 @@
                     idNumber: [{ required: true, message: '身份证不能为空！', trigger: 'blur' },
                         { max: 18, message: '请输入正确身份证号码！', trigger: 'blur' }],
                     phone: [{ required: true, message: '电话号码不能为空！', trigger: 'blur' }],
+                    employeeStatus: [{ required: true, message: '请选择员工状态！', trigger: 'blur' }]
                 },
 
                 // 字典
@@ -273,12 +274,12 @@
                     url: '/employee/add',
                     data: JSON.stringify(this.formData)
                 }).then(res => {
+                  this.saveBtnLoading = false;
                     if(res.code === 'SUCCESS') {
                         this.$Message.success({
                             content: '添加员工成功！'
                         });
                         this.$emit('modal-callback');
-                        this.saveBtnLoading = false;
                         this.modalValue = false;
                         // 表单初始化
                     }
@@ -292,12 +293,12 @@
                     url: '/employee/update',
                     data: JSON.stringify(this.formData)
                 }).then(res => {
+                  this.saveBtnLoading = false;
                     if(res.code === 'SUCCESS') {
                         this.$Message.success({
                             content: '更新员工成功！'
                         });
                         this.$emit('modal-callback');
-                        this.saveBtnLoading = false;
                         this.modalValue = false;
                         // 表单初始化
                     }

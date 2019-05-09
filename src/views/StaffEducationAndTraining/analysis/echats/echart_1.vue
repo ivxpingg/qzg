@@ -84,16 +84,54 @@
             resetOption(data) {
                 let myOPtion = this.chart.getOption();
                 myOPtion.xAxis[0].data = [];
-                myOPtion.series[0].data = [];
+                myOPtion.series = [];
 
                 let format = this.selectValue === 'month' ? 'M月' : 'D日';
 
-                data.forEach(val => {
-                    myOPtion.xAxis[0].data.push(this.$moment(val.insTime).format(format));
-                    myOPtion.series[0].data.push(val.visitNum);
-                });
 
-                this.chart.setOption(myOPtion);
+              let times = [];
+              let series = {};
+              data.forEach(v => {
+                if (times.indexOf(v.insTime) === -1) {
+                  times.push(v.insTime);
+                }
+
+                if (v.resourceName) {
+                  if (series[v.resourceName]) {
+                    series[v.resourceName].push(v);
+                  } else {
+                    // myOPtion.xAxis[0].data.push(v.resourceName);
+                    myOPtion.series.push({
+                      name: v.resourceName,
+                      data: [],
+                      type: 'line',
+                      smooth: true
+                    });
+                    series[v.resourceName] = [];
+                    series[v.resourceName].push(v);
+                  }
+                }
+              });
+
+              times.forEach(v => {
+                myOPtion.xAxis[0].data.push(this.$moment(v).format(format));
+                myOPtion.series.forEach(item => {
+                  item.data.push(0);
+                });
+              });
+
+              myOPtion.series.forEach(v => {
+                series[v.name].forEach(d => {
+                  v.data[times.indexOf(d.insTime)] = d.visitNum;
+                });
+              });
+                // data.forEach(val => {
+                //     myOPtion.xAxis[0].data.push(this.$moment(val.insTime).format(format));
+                //     myOPtion.series[0].data.push(val.visitNum);
+                // });
+
+                this.chart.setOption(myOPtion, true);
+                this.chart.resize();
             }
         }
     }
