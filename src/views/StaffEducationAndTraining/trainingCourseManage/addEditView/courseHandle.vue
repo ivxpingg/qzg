@@ -162,7 +162,7 @@
                   period: [{ required: true, type: 'number', message: '请输入整数！', trigger: 'blur' }],
                   courseContent: [{ required: true, message: '培训内容不能为空！', trigger: 'blur' }],
                   courseType: [{ required: true, message: '请选择培训类型！', trigger: 'blur' }],
-                  fileIds: [{ required: true, type: 'array', message: '请选择培训类型！', trigger: 'blur' }]
+                  fileIds: [{ required: true, type: 'array', message: '请上传附件！', trigger: 'blur' }]
                 },
 
                 // 字典
@@ -208,9 +208,18 @@
             },
             // 文件上传成功
             onUploadSuccess(response, file, fileList) {
-                if (response.code === 'SUCCESS') {
-                    this.formData.fileIds = fileList.map(v => v.response.fileId);
+                // if (response.code === 'SUCCESS') {
+                //     this.formData.fileIds = fileList.map(v => v.response.fileId);
+                // }
+
+              this.formData.fileIds = fileList.map(v => {
+                if (v.fileId) {
+                  return v.fileId;
                 }
+                else {
+                  return v.response.fileId;
+                }
+              });
             },
 
             getFilesList () {

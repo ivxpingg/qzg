@@ -152,7 +152,12 @@
                         this.resetFormData();
                     }
                 }
-            }
+            },
+          type (val) {
+              if (val === 'add') {
+                this.resetFormData();
+              }
+          }
         },
         mounted() {
             this.getDicts(['resourceType']);
