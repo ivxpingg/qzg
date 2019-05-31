@@ -93,7 +93,7 @@
                             return h('div', this.timeFormat(params.row.archiveTime, 'YYYY-MM-DD HH:mm:ss'));
                         }
                     },
-                    { title: '文件名称', minWdth: 120, align: 'center', key: 'archiveTitle' },
+                    { title: '文件名称', minWidth: 120, align: 'center', key: 'archiveTitle' },
                     { title: '来源', width: 120, align: 'center', key: 'archiveSourceLabel' },
                     { title: '权限类型', width: 100, align: 'center', key: 'permissionLabel' },
                     { title: '申请状态', width: 100, align: 'center', key: 'applyStatusLabel' },
