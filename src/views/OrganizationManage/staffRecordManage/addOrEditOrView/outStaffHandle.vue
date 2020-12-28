@@ -83,6 +83,13 @@
                                     @on-change="onChage_onJobTime"
                                     placeholder="选择时间"></DatePicker>
                     </FormItem>
+                    <FormItem label="入党年月:">
+                        <DatePicker :value="formData.joinPartyDate"
+                                    :style="formInputStyle"
+                                    type="month"
+                                    @on-change="onChage_joinPartyDate"
+                                    placeholder="选择时间"></DatePicker>
+                    </FormItem>
                     <FormItem label="员工状态:" prop="employeeStatus">
                         <Select v-model="formData.employeeStatus" :style="formInputStyle">
                             <Option v-for="item in dict_employeeStatus"
@@ -168,6 +175,7 @@
                     employeeType: 'out_staff', // 员工类型-在编员工
                     headPortrait: '',
                     employeeName: '',  // 员工名称
+                    joinPartyDate: '', // 入党日期
                     sex: '',
                     birthday: '',
                     idNumber: '',
@@ -222,6 +230,7 @@
             },
             onChage_birthday(value) { this.formData.birthday = value; },
             onChage_onJobTime(value) { this.formData.onJobTime = value; },
+            onChage_joinPartyDate(value) { this.formData.joinPartyDate = value; },
             // 头像上传成功
             onUploadSuccess(response, file, fileList) {
                 if (response.code === 'SUCCESS') {
@@ -232,20 +241,25 @@
             getData() {
                 this.$http({
                     method: 'get',
-                    url: '/',
+                    url: '/employee/query',
                     params: {
                         employeeId: this.employeeId
                     }
                 }).then(res => {
                     if(res.code === 'SUCCESS') {
-                        this.$Message.success({
-                            content: '添加部门成功！'
+                        Object.assign(this.formData, res.data, {
+                            birthday: this.timeFormat(res.data.birthday, 'YYYY-MM-DD'),
+                            onJobTime: this.timeFormat(res.data.onJobTime, 'YYYY-MM-DD'),
+                            nowJobTime: this.timeFormat(res.data.nowJobTime, 'YYYY-MM-DD')
                         });
-                        this.$emit('modal-callback');
-                        this.saveBtnLoading = false;
-                        this.modalValue = false;
-                        // 表单初始化
-                        this.resetFormData();
+                        // this.$Message.success({
+                        //     content: '添加部门成功！'
+                        // });
+                        // this.$emit('modal-callback');
+                        // this.saveBtnLoading = false;
+                        // this.modalValue = false;
+                        // // 表单初始化
+                        // this.resetFormData();
                     }
                 }).catch(e => {
                     this.saveBtnLoading = false;

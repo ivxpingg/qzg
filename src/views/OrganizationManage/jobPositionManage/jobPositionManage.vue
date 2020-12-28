@@ -154,7 +154,8 @@
                         }
                     },
                     { title: '职务名称', width: 120, align: 'center', key: 'dutyName' },
-                    { title: '归属单位', width: 120, align: 'center', key: 'unitName' },
+                    // { title: '劳务派遣', width: 120, align: 'center', key: 'wageLevelLabel'},
+                    // { title: '归属单位', width: 120, align: 'center', key: 'unitName' },
                     { title: '职级', width: 120, align: 'center', key: 'jobLevelLabel' },
                     { title: '工资职级', width: 200, align: 'center', key: 'wageLevelLabel' }
                 ],

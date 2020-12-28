@@ -10,6 +10,25 @@
                                 :label="item.unitName + '-' + item.departmentName"></Option>
                     </Select>
                 </FormItem>
+                <FormItem label="归属单位:" :label-width="70">
+                    <Select v-model="searchParams.condition.departmentIds">
+                        <Option v-for="item in dict_unitList"
+                                :key="item.departmentIds"
+                                :value="item.departmentIds"
+                                :label="item.unitName"></Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="人员类型:" :label-width="70">
+                    <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">
+                        <Option value=""
+                                :key="123"
+                                label="全部"></Option>
+                        <Option v-for="item in dict_employeeType"
+                                :key="item.id"
+                                :value="item.value"
+                                :label="item.label"></Option>
+                    </Select>
+                </FormItem>
                 <FormItem label="关键字:" :label-width="70">
                     <Input v-model="searchParams.condition.searchKey"
                            style="width: 120px;"
@@ -152,7 +171,9 @@
                     total: 0,           // 总行数
                     condition: {
                         departmentId: '',
-                        searchKey: ''
+                        searchKey: '',
+                        departmentIds: '',
+                        employeeType: ''
                     }
                 },
                 tableColumns: [
@@ -178,12 +199,12 @@
                 ],
                 tableData: [
                     {
-                        // insTime: '2018-09-21 08:50:08',
-                        // employeeName: '小陈',
-                        // signDate: '2018-09-21',
-                        // expirationDate: '2018-09-21',
-                        // contractStatusLabel: '合同期',
-                        // createName: '陈主任'
+                        insTime: '2018-09-21 08:50:08',
+                        employeeName: '小陈',
+                        signDate: '2018-09-21',
+                        expirationDate: '2018-09-21',
+                        contractStatusLabel: '合同期',
+                        createName: '陈主任'
                     }
                 ],
                 tableLoading: false,
@@ -195,12 +216,16 @@
                 },
 
                 // 字典
-                departmentList: []
+                departmentList: [],
+                dict_employeeType: [],
+                dict_unitList: []
             };
         },
         mounted() {
             this.getData();
             this.getDeparmentList('', 'departmentList');
+            this.getDicts(['employeeType']);  // 员工类型
+            this.getUnitList('dict_unitList');  // 归属单位
         },
         watch: {
             'searchParams.current'() {

@@ -148,6 +148,17 @@
                 }
             };
         },
+        watch: {
+            'searchParams.current'() {
+                this.getData();
+            },
+            'searchParams.condition': {
+                deep: true,
+                handler() {
+                    this.getData();
+                }
+            }
+        },
         methods: {
             getData() {
                 this.editCurrentRow.departmentId = '';

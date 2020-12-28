@@ -293,13 +293,13 @@
                     { title: '状态', width: 120, align: 'center', key: 'archiveStatusLabel' }
                 ],
                 tableData: [
-                    {
-                        insTime: '2018-09-21  08:50:08',
-                        archiveNo: '闽泉港{2019}2号',
-                        archiveTitle: '文件标题xxxxxxxxxxxxxx',
-                        archiveSourceLabel: '省厅',
-                        archiveStatusLabel: '待归档'
-                    }
+                    // {
+                    //     insTime: '2018-09-21  08:50:08',
+                    //     archiveNo: '闽泉港{2019}2号',
+                    //     archiveTitle: '文件标题xxxxxxxxxxxxxx',
+                    //     archiveSourceLabel: '省厅',
+                    //     archiveStatusLabel: '待归档'
+                    // }
                 ],
                 tableLoading: false,
                 // 字典

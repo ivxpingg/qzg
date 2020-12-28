@@ -152,7 +152,7 @@
             return {
                 searchParams: {
                     current: 1,        // 当前第几页
-                    size: 10,          // 每页几行
+                    size: 3,          // 每页几行
                     total: 0,           // 总行数
                     condition: {
                         archiveSource: '',
@@ -295,7 +295,7 @@
                 if (ids === '') {
                     this.$Message.info('请选择要归档的文档');
                     return
-                };
+                }
 
                 this.$http({
                     method: 'post',

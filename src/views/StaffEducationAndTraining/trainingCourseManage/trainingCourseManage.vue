@@ -2,14 +2,23 @@
     <div class="trainingCourseManage-container">
         <vIvxFilterBox>
             <Form inline>
-                <FormItem label="归属部门:" :label-width="70">
-                    <Select v-model="searchParams.condition.departmentId" style="width: 220px;">
+                <FormItem label="归属单位:" :label-width="70">
+                    <Select v-model="searchParams.condition.departmentIds" clearable>
+                        <Option v-for="item in dict_unitList"
+                                :key="item.departmentIds"
+                                :value="item.departmentIds"
+                                :label="item.unitName"></Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="归属部门:" :label-width="70" >
+                    <Select v-model="searchParams.condition.departmentId" clearable style="width: 220px;">
                         <Option v-for="item in dict_departmentList"
                                 :key="item.departmentId"
                                 :value="item.departmentId"
                                 :label="item.unitName + '-' + item.departmentName"></Option>
                     </Select>
                 </FormItem>
+
                 <FormItem label="关键字:" :label-width="70">
                     <Input v-model="searchParams.condition.searchKey"
                            style="width: 120px;"
@@ -169,6 +178,7 @@
                     total: 0,           // 总行数
                     condition: {
                         departmentId: '',
+                        departmentIds: '',
                         searchKey: ''
                     }
                 },
@@ -214,12 +224,14 @@
                     courseId: ''
                 },
 
-                dict_departmentList: []
+                dict_departmentList: [],
+                dict_unitList: []
             };
         },
         mounted() {
             this.getDeparmentList('', 'dict_departmentList');
             this.getData();
+            this.getUnitList('dict_unitList');  // 归属单位
         },
         methods: {
             // 重置子组件参数
@@ -236,6 +248,7 @@
             },
             resetSearchParams() {
                 this.searchParams.condition.departmentId = '';
+                this.searchParams.condition.departmentIds = '';
                 this.searchParams.condition.searchKey = '';
             },
             getData() {

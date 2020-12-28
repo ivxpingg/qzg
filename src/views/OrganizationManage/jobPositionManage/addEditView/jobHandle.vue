@@ -14,14 +14,14 @@
             <FormItem label="岗位名称:" prop="dutyName">
                 <Input v-model="formData.dutyName" placeholder="请输入岗位名称" :style="formInputStyle" />
             </FormItem>
-            <FormItem label="归属单位:" prop="departmentId">
-                <Select v-model="formData.departmentId" :style="formInputStyle">
-                    <Option v-for="item in departmentList"
-                            :key="item.departmentId"
-                            :value="item.departmentId"
-                            :label="item.unitName + '-' + item.departmentName"></Option>
-                </Select>
-            </FormItem>
+<!--            <FormItem label="归属单位:" prop="departmentId">-->
+<!--                <Select v-model="formData.departmentId" :style="formInputStyle">-->
+<!--                    <Option v-for="item in departmentList"-->
+<!--                            :key="item.departmentId"-->
+<!--                            :value="item.departmentId"-->
+<!--                            :label="item.unitName + '-' + item.departmentName"></Option>-->
+<!--                </Select>-->
+<!--            </FormItem>-->
             <FormItem label="职级:" prop="jobLevel">
                 <Select v-model="formData.jobLevel" :style="formInputStyle">
                     <Option v-for="item in dict_jobLevel"
@@ -30,6 +30,14 @@
                             :label="item.label"></Option>
                 </Select>
             </FormItem>
+<!--            <FormItem label="劳务派遣:">-->
+<!--                <Select v-model="formData.labor" :style="formInputStyle">-->
+<!--                    <Option v-for="item in dict_labor"-->
+<!--                            :key="item.id"-->
+<!--                            :value="item.value"-->
+<!--                            :label="item.label"></Option>-->
+<!--                </Select>-->
+<!--            </FormItem>-->
             <FormItem label="工资职级:" prop="wageLevel">
                 <Select v-model="formData.wageLevels" multiple :style="formInputStyle">
                     <Option v-for="item in dict_wageLevel"
@@ -107,22 +115,24 @@
                 formData: {
                     jobId: '',
                     dutyName: '',
-                    departmentId: '',
+                    // departmentId: '',
                     jobLevel: '',
                     wageLevel: '',   // 传给后台用的
                     wageLevels: [],  // 展示用的
-                    intro: ''
+                    intro: '',
+                    labor: ''   // 劳务派遣
                 },
                 rules: {
                     dutyName: [{ required: true, message: '岗位不能为空！', trigger: 'blur' }],
-                    departmentId: [{ required: true, message: '岗位不能为空！', trigger: 'blur' }],
+                    // departmentId: [{ required: true, message: '岗位不能为空！', trigger: 'blur' }],
                     jobLevel: [{ required: true, message: '职级不能为空！', trigger: 'blur' }],
-                    wageLevel: [{ required: true, message: '工资职级不能为空！', trigger: 'blur' }]
+                    // wageLevel: [{ required: true, message: '工资职级不能为空！', trigger: 'blur' }]
                 },
 
                 departmentList: [],
                 dict_jobLevel: [],
-                dict_wageLevel: []
+                dict_wageLevel: [],
+                // dict_labor: []
             };
         },
         watch: {

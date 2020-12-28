@@ -25,7 +25,7 @@
                     <div class="text-center-center" style="margin-top: 5px;">
                         共
                         <span v-if="readonly">{{data.row_1_value_4}}</span>
-                        <Input v-else v-model="data.row_1_value_4" size="small" style="width: 45px;"/> 天
+                        <Input v-else v-model="data.row_1_value_4" size="small" number style="width: 45px;"/> 天
                     </div>
 
                 </Col>

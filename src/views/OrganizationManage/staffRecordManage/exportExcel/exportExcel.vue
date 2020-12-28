@@ -7,6 +7,22 @@
         <vIvxFilterBox>
             <Form inline>
 
+                <FormItem label="归属单位:" :label-width="70">
+                    <Select v-model="searchParams.condition.departmentIds" clearable>
+                        <Option v-for="item in dict_unitList"
+                                :key="item.departmentIds"
+                                :value="item.departmentIds"
+                                :label="item.unitName"></Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="归属部门:" :label-width="70">
+                    <Select v-model="searchParams.condition.departmentId" clearable>
+                        <Option v-for="item in dict_department"
+                                :key="item.departmentId"
+                                :value="item.departmentId"
+                                :label="item.unitName + '-' + item.departmentName"></Option>
+                    </Select>
+                </FormItem>
                 <FormItem label="员工状态:" :label-width="65">
                     <Select v-model="searchParams.condition.employeeStatus" clearable>
                         <Option v-for="item in dict_employeeStatus"
@@ -107,6 +123,8 @@
                     condition: {
                         employeeStatus: '',
                         employeeType: 'in_staff',
+                        departmentIds: '',
+                        departmentId: '',
                         beginTime: '',
                         endTime: '',
                         fields: ['insTime',
@@ -538,6 +556,8 @@
                 // 字典
                 dict_employeeStatus: [],
                 dict_employeeType: [],
+                dict_department: [],  // 部门列表
+                dict_unitList: [],  // 单位列表
 
 
                 // 导出历史纪录
@@ -558,7 +578,8 @@
         },
         mounted() {
             this.getDicts(['employeeStatus', 'employeeType']);
-
+            this.getDeparmentList('', 'dict_department');
+            this.getUnitList('dict_unitList');
             this.getData();
         },
         methods: {

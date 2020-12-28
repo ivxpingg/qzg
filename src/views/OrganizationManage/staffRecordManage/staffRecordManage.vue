@@ -2,12 +2,31 @@
     <div class="staffRecordManage-container">
         <vIvxFilterBox>
             <Form inline>
+                <FormItem label="归属单位:" :label-width="70">
+                    <Select v-model="searchParams.condition.departmentIds" clearable>
+                        <Option v-for="item in dict_unitList"
+                                :key="item.departmentIds"
+                                :value="item.departmentIds"
+                                :label="item.unitName"></Option>
+                    </Select>
+                </FormItem>
                 <FormItem label="归属部门:" :label-width="70">
-                    <Select v-model="searchParams.condition.departmentId">
+                    <Select v-model="searchParams.condition.departmentId" clearable>
                         <Option v-for="item in dict_department"
                                 :key="item.departmentId"
                                 :value="item.departmentId"
                                 :label="item.unitName + '-' + item.departmentName"></Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="人员类型:" :label-width="70">
+                    <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">
+                        <Option value=""
+                                :key="123"
+                                label="全部"></Option>
+                        <Option v-for="item in dict_employeeType"
+                                :key="item.id"
+                                :value="item.value"
+                                :label="item.label"></Option>
                     </Select>
                 </FormItem>
                 <FormItem label="员工状态:" :label-width="70">
@@ -46,12 +65,12 @@
             <Button type="info" icon="md-clipboard" @click="openRecordView">人事变动记录</Button>
             <Button type="info" icon="md-download" @click="onClick_exportExcel">导出花名册</Button>
             <Button type="primary" @click="onClick_import">导入</Button>
-            <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">
-                <Option v-for="item in dict_employeeType"
-                        :key="item.id"
-                        :value="item.value"
-                        :label="item.label"></Option>
-            </Select>
+<!--            <Select v-model="searchParams.condition.employeeType" style="width: 100px; float: right;">-->
+<!--                <Option v-for="item in dict_employeeType"-->
+<!--                        :key="item.id"-->
+<!--                        :value="item.value"-->
+<!--                        :label="item.label"></Option>-->
+<!--            </Select>-->
         </vIvxFilterBox>
 
         <div class="ivx-table-box">
@@ -135,7 +154,7 @@
         components: {vInStaffHandle, vOutStaffHandle, vWorkRecord, vStaffAdjust, vRecordView, vExportExcel},
         computed: {
             _tableColumns() {
-                let column = [{ title: '操作', minWidth: 360, align: 'center',
+                let column = [{ title: '操作',minWidth: 440, align: 'center',
                     render: (h, params) => {
                         let list = [];
                         if (this.auth_update) {
@@ -215,6 +234,39 @@
                             }, '人事调整'));
                         }
 
+                        if (this.auth_del) {
+                            list.push(h('Button', {
+                                props: {
+                                    type: 'error',
+                                    size: 'small',
+                                    icon: 'ios-trash'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.$Modal.confirm({
+                                            title: '提示',
+                                            content: `确定要删除《${params.row.employeeName}》员工？`,
+                                            onOk: () => {
+
+                                                this.$http({
+                                                    method: 'get',
+                                                    url: '/employee/delete',
+                                                    params: {
+                                                        employeeId: params.row.employeeId
+                                                    }
+                                                }).then((res) => {
+                                                    if (res.code === 'SUCCESS') {
+                                                        this.$Message.success('删除成功！');
+                                                        this.getData();
+                                                    }
+                                                }).catch(() => {})
+                                            }
+                                        })
+                                    }
+                                }
+                            }, '删除'));
+                        }
+
                         return h('div',{
                             style: { },
                             class: 'ivx-table-cell-handle'
@@ -240,9 +292,10 @@
                         departmentId: '',
                         employeeStatus: '',
                         employeeName: '',
-                        employeeType: 'in_staff',
+                        employeeType: '',  // in_staff
                         beginTime: '',
-                        endTime: ''
+                        endTime: '',
+                        departmentIds: ''
                     }
                 },
                 tableColumns: [
@@ -256,13 +309,26 @@
                     { title: '部门', width: 120, align: 'center', key: 'departmentName' },
                     { title: '联系电话', width: 120, align: 'center', key: 'phone' },
                     { title: '职务', width: 120, align: 'center', key: 'dutyName' },
+                    { title: '参加工作时间', width: 120, align: 'center', key: 'onJobTime',
+                        render: (h, params) => {
+                            return h('div', this.timeFormat(params.row.onJobTime, 'YYYY-MM-DD'));
+                        }
+                    },
+                    { title: '入党时间', width: 120, align: 'center', key: 'joinPartyDate',
+                        render: (h, params) => {
+                            return h('div', this.timeFormat(params.row.joinPartyDate, 'YYYY-MM'));
+                        }
+                    },
+                    { title: '员工类型', width: 100, align: 'center', key: 'employeeTypeLabel' },
                     { title: '状态', width: 100, align: 'center', key: 'employeeStatusLabel' }
                 ],
                 tableData: [
                     {
+                        departmentId: '1233',
                         insTime: '2018-09-21  08:50:08',
                         employeeName: '沈晓晓',
                         departmentName: '办公室',
+                        employeeType: 'in_staff',
                         phone: '19020112121',
                         dutyName: '主任',
                         employeeStatusLabel: '离职'
@@ -286,7 +352,8 @@
                 // 字典
                 dict_employeeStatus: [],
                 dict_employeeType: [],
-                dict_department: [],
+                dict_department: [],  // 部门列表
+                dict_unitList: [],  // 单位列表
 
                 // 导入弹框
                 modal_import: false
@@ -307,6 +374,7 @@
             this.getData();
             this.getDicts(['employeeStatus', 'employeeType']);
             this.getDeparmentList('', 'dict_department');
+            this.getUnitList('dict_unitList');
         },
         methods: {
             // 重置传入子组件参数

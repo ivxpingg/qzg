@@ -54,7 +54,13 @@
                         <Input :value="age"  placeholder="自动计算" readonly  :style="formInputStyle"/>
                     </FormItem>
                     <FormItem label="民族:">
-                        <Input v-model="formData.nation" placeholder="请输入民族" :style="formInputStyle" />
+                        <Select v-model="formData.nation" :style="formInputStyle">
+                            <Option v-for="item in dict_nation"
+                                    :key="item.id"
+                                    :value="item.value"
+                                    :label="item.label"></Option>
+                        </Select>
+<!--                        <Input v-model="formData.nation" placeholder="请输入民族" :style="formInputStyle" />-->
                     </FormItem>
                     <FormItem label="籍贯:">
                         <Input v-model="formData.nativePlace" placeholder="请输入籍贯" :style="formInputStyle" />
@@ -297,6 +303,7 @@
                 dict_employeeStatus: [],
                 dict_education: [],
                 dict_schoolType: [],
+                dict_nation: [],  // 民族
                 departmentList: [],
                 jobList: [],
 
@@ -330,7 +337,7 @@
             // }
         },
         mounted() {
-            this.getDicts(['sex', 'jobLevel', 'wageLevel', 'employeeStatus', 'education', 'schoolType']);
+            this.getDicts(['sex', 'jobLevel', 'wageLevel', 'employeeStatus', 'education', 'schoolType', 'nation']);
             this.getDeparmentList('', 'departmentList');
             this.getJobList('jobList', '');
         },
