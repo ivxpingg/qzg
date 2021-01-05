@@ -152,7 +152,7 @@
             return {
                 searchParams: {
                     current: 1,        // 当前第几页
-                    size: 3,          // 每页几行
+                    size: 10,          // 每页几行
                     total: 0,           // 总行数
                     condition: {
                         archiveSource: '',
@@ -209,7 +209,7 @@
                     },
                     { title: '时间', width: 150, align: 'center', key: 'insTime',
                         render: (h, params) => {
-                            return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
+                            return h('div', this.timeFormat(params.row.archiveTime, 'YYYY-MM-DD HH:mm:ss'));
                         }
                     },
                     { title: '文号', width: 180, align: 'center', key: 'archiveNo' },

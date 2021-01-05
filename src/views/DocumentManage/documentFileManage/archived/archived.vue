@@ -282,9 +282,9 @@
                 },
                 tableColumns: [
                     { title: '序号', width: 65, align: 'center', type: 'index', },
-                    { title: '时间', width: 150, align: 'center', key: 'insTime',
+                    { title: '时间', width: 150, align: 'center', key: 'archiveTime',
                         render: (h, params) => {
-                            return h('div', this.timeFormat(params.row.insTime, 'YYYY-MM-DD HH:mm:ss'));
+                            return h('div', this.timeFormat(params.row.archiveTime, 'YYYY-MM-DD HH:mm:ss'));
                         }
                     },
                     { title: '文号', width: 150, align: 'center', key: 'archiveNo' },
